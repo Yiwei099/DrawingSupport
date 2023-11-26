@@ -16,8 +16,6 @@ class Drawing private constructor() {
             instance ?: synchronized(this) {
                 instance ?: Drawing().also { instance = it }
             }
-
-        private val baseRect by lazy { Rect() }
     }
 
     //<editor-fold desc="绘制">
@@ -75,34 +73,4 @@ class Drawing private constructor() {
     fun getNewCanvas(bitmap: Bitmap) = Canvas(bitmap).apply { drawColor(Color.WHITE) }
 
     //</editor-fold desc="图片与画布">
-
-    //<editor-fold desc="内容参数(宽，高)">
-    /**
-     * 获取当前内容高度
-     * @param paint 画笔
-     * @param text 内容
-     */
-    fun getFontHeight(paint: Paint, text: String): Int {
-        paint.getTextBounds(text, 0, text.length, baseRect)
-        return baseRect.height()
-    }
-
-    /**
-     * 获取当前内容宽度
-     * @param paint 画笔
-     * @param text 内容
-     */
-    fun getFontWidth(paint: Paint, text: String): Int {
-        paint.getTextBounds(text, 0, text.length, baseRect)
-        return baseRect.width()
-    }
-
-    /**
-     * 获取当前内容宽度
-     * @param paint 画笔
-     * @param text 内容
-     */
-    fun measureText(paint: Paint, text: String) = paint.measureText(text)
-
-    //</editor-fold desc="内容参数(宽，高)">
 }

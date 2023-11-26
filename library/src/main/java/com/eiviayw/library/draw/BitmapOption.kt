@@ -6,18 +6,18 @@ package com.eiviayw.library.draw
  * @Date: 2023-09-25 22:00
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  *
- * 图片绘制参数
+ * 图片绘制标准参数 同一类型图片使用同一套标准参数
  * 封装成独立的对象，方便应用不同的图片
  */
 class BitmapOption(
     val maxWidth: Int = 576,//画布宽度
-    val topIndentation: Int = 20,//顶部方向边距
-    val bottomIndentation: Int = 20,//底部方向边距
-    val startIndentation: Int = 20,//结束方向边距
-    val endIndentation: Int = 20,//结束方向边距
+    val topIndentation: Float = 20f,//顶部方向边距
+    val bottomIndentation: Float = 20f,//底部方向边距
+    val startIndentation: Float = 20f,//开始方向边距
+    val endIndentation: Float = 20f,//结束方向边距
     val perLineSpace: Int = 14,//标准行距
-    val subPerLineSpace: Int = 8,//副标题行距
-    val bottomBlankHeight: Int = 100,//底部留白
+    val subPerLineSpace: Int = 8,//小行距
+    val bottomBlankHeight: Int = 10,//底部留白
     val antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
 ){
     /**
