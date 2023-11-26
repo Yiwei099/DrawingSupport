@@ -1,4 +1,4 @@
-package com.yyw.drawsupport.bean
+package com.eiviayw.library.bean
 
 import android.graphics.Typeface
 

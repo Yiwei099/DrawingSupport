@@ -1,4 +1,4 @@
-package com.yyw.drawsupport.bean
+package com.eiviayw.library.bean
 
 /**
  * Created with Android Studio.

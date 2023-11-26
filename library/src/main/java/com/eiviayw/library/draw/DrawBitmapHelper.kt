@@ -1,8 +1,8 @@
-package com.yyw.drawsupport.draw
+package com.eiviayw.library.draw
 
 import android.graphics.Paint
-import com.yyw.drawsupport.bean.BaseSourceData
-import com.yyw.drawsupport.util.SerializationUtils
+import com.eiviayw.library.bean.BaseSourceData
+import com.eiviayw.library.util.SerializationUtils
 
 /**
  * Created with Android Studio.

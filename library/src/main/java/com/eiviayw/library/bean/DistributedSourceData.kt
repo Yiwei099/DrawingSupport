@@ -1,8 +1,8 @@
-package com.yyw.drawsupport.bean
+package com.eiviayw.library.bean
 
-import com.yyw.drawsupport.bean.item.CenterItem
-import com.yyw.drawsupport.bean.item.EndItem
-import com.yyw.drawsupport.bean.item.StartItem
+import com.eiviayw.library.bean.item.CenterItem
+import com.eiviayw.library.bean.item.EndItem
+import com.eiviayw.library.bean.item.StartItem
 
 
 /**

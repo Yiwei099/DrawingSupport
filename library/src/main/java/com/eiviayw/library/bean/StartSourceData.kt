@@ -1,4 +1,4 @@
-package com.yyw.drawsupport.bean
+package com.eiviayw.library.bean
 
 import android.graphics.Typeface
 
@@ -16,4 +16,4 @@ data class StartSourceData(
     val mTextSize:Int,
     val mTextTypeface:Typeface = Typeface.DEFAULT,
     val indentation:Int = 0,//缩进
-):BaseSourceData(mID,mTextSize,mTextTypeface)
+): BaseSourceData(mID,mTextSize,mTextTypeface)

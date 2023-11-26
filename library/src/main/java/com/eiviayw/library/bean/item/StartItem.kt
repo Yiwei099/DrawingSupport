@@ -1,7 +1,7 @@
-package com.yyw.drawsupport.bean.item
+package com.eiviayw.library.bean.item
 
 import android.graphics.Typeface
-import com.yyw.drawsupport.bean.BaseSourceData
+import com.eiviayw.library.bean.BaseSourceData
 
 /**
  * Created with Android Studio.
