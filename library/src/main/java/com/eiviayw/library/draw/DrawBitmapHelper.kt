@@ -1,11 +1,18 @@
 package com.eiviayw.library.draw
 
+import android.graphics.Bitmap
 import android.graphics.Paint
 import android.graphics.Rect
 import android.text.TextUtils
-import com.eiviayw.library.bean.Element
-import com.eiviayw.library.bean.SourceParam
-import com.eiviayw.library.util.SerializationUtils
+import com.eiviayw.library.Constant
+import com.eiviayw.library.bean.element.BaseElement
+import com.eiviayw.library.bean.element.BitmapElement
+import com.eiviayw.library.bean.element.LineElement
+import com.eiviayw.library.bean.element.TextElement
+import com.eiviayw.library.bean.param.BaseParam
+import com.eiviayw.library.bean.param.LineParam
+import com.eiviayw.library.bean.param.SourceParam
+import java.io.ByteArrayOutputStream
 
 /**
  * Created with Android Studio.
@@ -22,7 +29,7 @@ object DrawBitmapHelper {
      * @param bitmapType 图片类型
      * @param sourceData 图片数据源
      */
-    fun convert(bitmapType: Int, sourceData: List<SourceParam>) {
+    fun convert(bitmapType: Int, sourceData: List<BaseParam>): ByteArray {
         //获取当前图片样式模版
         val bitmapOption = optionMap[bitmapType] ?: BitmapOption()
         val mainPaint = Paint().apply {
@@ -30,47 +37,284 @@ object DrawBitmapHelper {
             isAntiAlias = bitmapOption.antiAlias
             isFilterBitmap = bitmapOption.antiAlias
         }
-        convertSourceDataToElement(bitmapOption, sourceData, mainPaint)
+        val result = convertSourceDataToElement(bitmapOption, sourceData, mainPaint)
+
+        val bitmap = Drawing.getInstance().createBimap(bitmapOption.maxWidth, result.second.toInt())
+        val canvas = Drawing.getInstance().getNewCanvas(bitmap)
+
+        result.first.forEach {
+            when (it) {
+                is TextElement -> {
+                    mainPaint.textSize = it.size
+                    mainPaint.typeface = it.typeface
+                    Drawing.getInstance().drawText(it, bitmapOption, canvas, mainPaint)
+                }
+
+                is BitmapElement -> {
+
+                }
+
+                is LineElement -> {
+                    mainPaint.textSize = it.size
+                    mainPaint.typeface = it.typeface
+                    Drawing.getInstance().drawLine(it, canvas, mainPaint)
+                }
+
+                else -> {
+
+                }
+            }
+        }
+
+        val resultArray = compressBitmapToByteArray(bitmap)
+        bitmap.recycle()
+        return resultArray
     }
 
     private fun convertSourceDataToElement(
         bitmapOption: BitmapOption,
-        sourceData: List<SourceParam>,
+        sourceData: List<BaseParam>,
         paint: Paint
-    ): List<Element> {
-        val result = mutableListOf<Element>()
+    ): Pair<List<BaseElement>, Float> {
+        val result = mutableListOf<BaseElement>()
 
-        var y = bitmapOption.topIndentation
+        var startYInCanvas = bitmapOption.topIndentation
 
-        val maxWidth = bitmapOption.maxWidth
+        val maxWidth = bitmapOption.getEffectiveWidth()
         val defaultStartX = bitmapOption.startIndentation
 
-        val perLineSpace = bitmapOption.perLineSpace
+        val subPerLineSpace = bitmapOption.subPerLineSpace
 
         sourceData.forEach { sourceItem ->
-            //填充画笔
-            paint.textSize = sourceItem.size
-            paint.typeface = sourceItem.typeface
+            when(sourceItem){
+                is SourceParam ->{
+                    //填充画笔
+                    paint.textSize = sourceItem.size
+                    paint.typeface = sourceItem.typeface
 
-            val startContent = sourceItem.startContent
-            if (!isEmpty(startContent)) {
-                val elementMaxWidth = maxWidth.minus(sourceItem.startWeight)
-                val measure = measureText(paint, startContent)
-                val width = measure.first
-                val height = measure.second
+                    var firstTextHeight = 0f
+                    var secondTextHeight = 0f
+                    var thirdTextHeight = 0f
 
-                if (width < elementMaxWidth) {
-                    //不需要换行处理
+                    val firstMaxWidth = maxWidth.times(sourceItem.firstWeight)
+                    val secondMaxWidth = maxWidth.times(sourceItem.secondWeight)
+                    val thirdMaxWidth = maxWidth.times(sourceItem.thirdWeight)
+
+                    val firstText = sourceItem.firstText
+                    if (!isEmpty(firstText)) {
+                        firstTextHeight = handleTextParamToElement(
+                            firstMaxWidth,
+                            sourceItem,
+                            paint,
+                            firstText,
+                            sourceItem.firstTextAlign,
+                            result,
+                            defaultStartX,
+                            startYInCanvas,subPerLineSpace
+                        )
+                    }
+
+                    val secondText = sourceItem.secondText
+                    if (!isEmpty(secondText)) {
+                        secondTextHeight = handleTextParamToElement(
+                            secondMaxWidth,
+                            sourceItem,
+                            paint,
+                            secondText,
+                            sourceItem.secondTextAlign,
+                            result,
+                            firstMaxWidth.toFloat(),
+                            startYInCanvas,subPerLineSpace
+                        )
+                    }
+
+                    val thirdText = sourceItem.thirdText
+                    if (!isEmpty(thirdText)) {
+                        thirdTextHeight = handleTextParamToElement(
+                            thirdMaxWidth,
+                            sourceItem,
+                            paint,
+                            thirdText,
+                            sourceItem.thirdTextAlign,
+                            result,
+                            secondMaxWidth.toFloat(),
+                            startYInCanvas,subPerLineSpace
+                        )
+                    }
+
+                    startYInCanvas += getMaxFromMany(
+                        firstTextHeight,
+                        secondTextHeight,
+                        thirdTextHeight
+                    ).plus(bitmapOption.perLineSpace)
+                }
+
+                is LineParam ->{
+                    paint.textSize = sourceItem.size
+                    paint.typeface = sourceItem.typeface
+                    val width = maxWidth.times(sourceItem.weight)
+                    val measure = measureText(paint, "-")
+                    val height = measure.second
                     result.add(
-                        Element(startX = defaultStartX, endX = defaultStartX.plus(width),
-                        startY = y,endY = y.plus(height), size = sourceItem.size, typeface = sourceItem.typeface)
+                        LineElement().apply {
+                            setStartXValue(startX)
+                            setEndXValue(startX.plus(width).toFloat())
+                            setStartYValue(startYInCanvas)
+                            setEndYValue(startYInCanvas)
+                            setTextSize(sourceItem.size)
+                            setFaceType(sourceItem.typeface)
+                        }
                     )
-                }else{
-                    //需要换行处理
+                    startYInCanvas += height.plus(bitmapOption.perLineSpace)
+                }
+                else ->{
+
+                }
+            }
+
+
+        }
+        return Pair(result, startYInCanvas)
+    }
+
+    private fun handleTextParamToElement(
+        elementMaxWidth: Double,
+        sourceItem: SourceParam,
+        paint: Paint,
+        text: String,
+        align: Int,
+        result: MutableList<BaseElement>,
+        defaultStartX: Float,
+        startYInCanvas: Float,
+        subPerLineSpace:Int
+    ): Float {
+        var endYInCanvas = 0f
+        var itemY = 0f
+        val measure = measureText(paint, text)
+        val width = measure.first
+        val height = measure.second
+
+        if (width < elementMaxWidth) {
+            //不需要换行处理
+            endYInCanvas = startYInCanvas.plus(height)
+            itemY = height.toFloat()
+            val startX = if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width)).toFloat() else defaultStartX
+            result.add(
+                TextElement(
+                    text = text,
+                    align = align,
+                    textWidth = width,
+                    maxWidth = elementMaxWidth
+                ).apply {
+                    setStartXValue(startX)
+                    setEndXValue(startX.plus(width))
+                    setStartYValue(startYInCanvas)
+                    setEndYValue(endYInCanvas)
+                    setTextSize(sourceItem.size)
+                    setFaceType(sourceItem.typeface)
+                }
+            )
+        } else {
+            //需要换行处理
+            val textCharArr = text.split(" ")
+            if (textCharArr.size == 1) {
+                val resultY = convertEnterLineElement(
+                    text,
+                    align,
+                    height,
+                    startYInCanvas,
+                    defaultStartX,
+                    elementMaxWidth,
+                    paint,
+                    sourceItem,
+                    result,subPerLineSpace
+                )
+                itemY += resultY.second
+                endYInCanvas = resultY.first
+            } else {
+                textCharArr.forEach { char ->
+                    val resultY = convertEnterLineElement(
+                        char,
+                        align,
+                        height,
+                        startYInCanvas,
+                        defaultStartX,
+                        elementMaxWidth,
+                        paint,
+                        sourceItem,
+                        result,subPerLineSpace
+                    )
+                    itemY += resultY.second
+                    endYInCanvas = resultY.first
                 }
             }
         }
-        return result
+
+        return itemY
+    }
+
+    private fun convertEnterLineElement(
+        text: String,
+        align: Int,
+        textHeight: Int,
+        startYInCanvas: Float,
+        defaultStartX: Float,
+        elementMaxWidth: Double,
+        paint: Paint,
+        sourceItem: SourceParam,
+        result: MutableList<BaseElement>,
+        subPerLineSpace:Int
+    ): Pair<Float, Float> {
+        var tempStartYInCanvas = startYInCanvas
+        val char = text.toCharArray()
+        val charBuilder = StringBuilder()
+        val tempCharBuilder = StringBuilder()
+        var sumItemY = 0f
+        for (index in char.indices) {
+            //迭代字符
+            val value = char[index]
+
+            val tempWidth = measureText(paint, tempCharBuilder.append(value).toString()).first
+
+            val lastChar = index == char.size.minus(1)
+            val fullWidth = tempWidth > elementMaxWidth
+            if (fullWidth || lastChar) {
+                if (!fullWidth) {
+                    //没达到最大宽度，但是已是最后一个字符，需要把最后的字符添加进来，否则会漏掉
+                    charBuilder.append(value)
+                }
+                val width = measureText(paint, charBuilder.toString()).first
+                val startX = if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width)).toFloat() else defaultStartX
+                result.add(
+                    TextElement(
+                        text = charBuilder.toString(),
+                        align = align,
+                        textWidth = width,
+                        maxWidth = elementMaxWidth
+                    ).apply {
+                        setStartXValue(startX)
+                        setEndXValue(startX.plus(width))
+                        setStartYValue(tempStartYInCanvas)
+                        setEndYValue(tempStartYInCanvas.plus(textHeight))
+                        setTextSize(sourceItem.size)
+                        setFaceType(sourceItem.typeface)
+                    }
+                )
+                tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
+                sumItemY = sumItemY.plus(textHeight)
+                charBuilder.setLength(0)
+                tempCharBuilder.setLength(0)
+                if (fullWidth) {
+                    tempStartYInCanvas = tempStartYInCanvas.plus(subPerLineSpace)
+                    sumItemY = sumItemY.plus(subPerLineSpace)
+                    charBuilder.append(value)
+                }
+            } else {
+                charBuilder.append(value)
+            }
+
+        }
+        return Pair(tempStartYInCanvas, sumItemY)
     }
 
     //<editor-fold desc="图片模版参数管理">
@@ -99,7 +343,25 @@ object DrawBitmapHelper {
     }
     //</editor-fold desc="图片模版参数管理">
 
+    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
+        val ops = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
+        return ops.toByteArray()
+    }
+
     private fun isEmpty(str: String?): Boolean = TextUtils.isEmpty(str)
+
+    private fun getMaxFromMany(vararg values: Float): Float {
+        var max = 0f
+        values.forEach {
+            max = if (it > max) {
+                it
+            } else {
+                max
+            }
+        }
+        return max
+    }
 
     /**
      * 获取当前内容宽度与高度

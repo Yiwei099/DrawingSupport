@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
-import android.graphics.Rect
+import com.eiviayw.library.Constant
+import com.eiviayw.library.bean.element.LineElement
+import com.eiviayw.library.bean.element.TextElement
 
 class Drawing private constructor() {
     companion object {
@@ -30,36 +32,45 @@ class Drawing private constructor() {
      * @param paint 画笔
      */
     fun drawLine(
-        startX: Float,
-        endX: Float,
-        startY: Float,
-        endY: Float,
+        element: LineElement,
         canvas: Canvas,
         paint: Paint
     ) {
-        canvas.drawLine(startX, startY, endX, endY, paint)
+        canvas.drawLine(element.startX, element.startY, element.endX, element.endY, paint)
     }
 
     /**
      * 绘制文字
-     * @param text 内容
-     * @param x X轴起点
-     * @param y Y轴终点
+     * @param textElement 元素块数据
+     * @param bitmapOption 画布固定参数
      * @param canvas 画布
      * @param paint 画笔
      */
     fun drawText(
-        text:String,
-        x: Float,
-        y: Float,
+        textElement: TextElement,
+        bitmapOption: BitmapOption,
         canvas: Canvas,
         paint: Paint
     ) {
-        canvas.drawText(text,x,y, paint)
+        when (textElement.align) {
+            Constant.ALIGN_CENTER -> {
+                val startX =
+                    getCenterStart(bitmapOption.maxWidth).minus(textElement.textWidth.div(2))
+                        .toFloat()
+                canvas.drawText(textElement.text, startX, textElement.startY, paint)
+            }
+            else -> {
+                canvas.drawText(textElement.text, textElement.startX, textElement.startY, paint)
+            }
+        }
+
     }
     //</editor-fold desc="绘制">
 
     //<editor-fold desc="图片与画布">
+
+    //居中对齐
+    private fun getCenterStart(width: Int) = width.div(2)
 
     /**
      * 创建图片
