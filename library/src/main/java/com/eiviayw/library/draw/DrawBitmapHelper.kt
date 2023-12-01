@@ -71,6 +71,12 @@ object DrawBitmapHelper {
         return resultArray
     }
 
+    /**
+     * 业务数据源转换成绘制元素
+     * @param bitmapOption 当前图像的标准参数
+     * @param sourceData 业务数据源
+     * @param paint 画笔
+     */
     private fun convertSourceDataToElement(
         bitmapOption: BitmapOption,
         sourceData: List<BaseParam>,
@@ -227,7 +233,7 @@ object DrawBitmapHelper {
                     elementMaxWidth,
                     paint,
                     sourceItem,
-                    result,subPerLineSpace
+                    result
                 )
                 itemY += resultY.second
                 endYInCanvas = resultY.first
@@ -242,7 +248,7 @@ object DrawBitmapHelper {
                         elementMaxWidth,
                         paint,
                         sourceItem,
-                        result,subPerLineSpace
+                        result
                     )
                     itemY += resultY.second
                     endYInCanvas = resultY.first
@@ -262,8 +268,7 @@ object DrawBitmapHelper {
         elementMaxWidth: Double,
         paint: Paint,
         sourceItem: SourceParam,
-        result: MutableList<BaseElement>,
-        subPerLineSpace:Int
+        result: MutableList<BaseElement>
     ): Pair<Float, Float> {
         var tempStartYInCanvas = startYInCanvas
         val char = text.toCharArray()
@@ -305,8 +310,6 @@ object DrawBitmapHelper {
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
-                    tempStartYInCanvas = tempStartYInCanvas.plus(subPerLineSpace)
-                    sumItemY = sumItemY.plus(subPerLineSpace)
                     charBuilder.append(value)
                 }
             } else {
