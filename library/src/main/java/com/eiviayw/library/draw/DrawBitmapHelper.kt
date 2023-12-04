@@ -11,7 +11,7 @@ import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 import com.eiviayw.library.bean.param.BaseParam
 import com.eiviayw.library.bean.param.LineParam
-import com.eiviayw.library.bean.param.SourceParam
+import com.eiviayw.library.bean.param.TextParam
 import java.io.ByteArrayOutputStream
 
 /**
@@ -91,9 +91,9 @@ object DrawBitmapHelper {
 
         val subPerLineSpace = bitmapOption.subPerLineSpace
 
-        sourceData.forEach { sourceItem ->
-            when(sourceItem){
-                is SourceParam ->{
+        for (index in sourceData.indices) {
+            when (val sourceItem = sourceData[index]) {
+                is TextParam -> {
                     //填充画笔
                     paint.textSize = sourceItem.size
                     paint.typeface = sourceItem.typeface
@@ -116,7 +116,7 @@ object DrawBitmapHelper {
                             sourceItem.firstTextAlign,
                             result,
                             defaultStartX,
-                            startYInCanvas,subPerLineSpace
+                            startYInCanvas, subPerLineSpace
                         )
                     }
 
@@ -130,7 +130,7 @@ object DrawBitmapHelper {
                             sourceItem.secondTextAlign,
                             result,
                             firstMaxWidth.toFloat(),
-                            startYInCanvas,subPerLineSpace
+                            startYInCanvas, subPerLineSpace
                         )
                     }
 
@@ -144,18 +144,26 @@ object DrawBitmapHelper {
                             sourceItem.thirdTextAlign,
                             result,
                             secondMaxWidth.toFloat(),
-                            startYInCanvas,subPerLineSpace
+                            startYInCanvas, subPerLineSpace
                         )
                     }
 
-                    startYInCanvas += getMaxFromMany(
+                    startYInCanvas = getMaxFromMany(
                         firstTextHeight,
                         secondTextHeight,
                         thirdTextHeight
-                    ).plus(bitmapOption.perLineSpace)
+                    )
+                    if (index < sourceData.size - 1) {
+                        val nextItem = sourceData[index + 1]
+                        if (nextItem is TextParam) {
+                            startYInCanvas += bitmapOption.perLineSpace
+                        } else if (nextItem is LineParam) {
+                            startYInCanvas += bitmapOption.subPerLineSpace
+                        }
+                    }
                 }
 
-                is LineParam ->{
+                is LineParam -> {
                     paint.textSize = sourceItem.size
                     paint.typeface = sourceItem.typeface
                     val width = maxWidth.times(sourceItem.weight)
@@ -163,48 +171,58 @@ object DrawBitmapHelper {
                     val height = measure.second
                     result.add(
                         LineElement().apply {
-                            setStartXValue(startX)
-                            setEndXValue(startX.plus(width).toFloat())
-                            setStartYValue(startYInCanvas)
-                            setEndYValue(startYInCanvas)
+                            setStartXValue(defaultStartX)
+                            setEndXValue(width.toFloat())
+                            setStartYValue(startYInCanvas.minus(height))
+                            setEndYValue(startYInCanvas.minus(height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
                         }
                     )
-                    startYInCanvas += height.plus(bitmapOption.perLineSpace)
+                    startYInCanvas += height
+                    if (index < sourceData.size - 1) {
+                        val nextItem = sourceData[index + 1]
+                        if (nextItem is TextParam) {
+                            startYInCanvas = startYInCanvas.plus(bitmapOption.perLineSpace)
+                                .plus(bitmapOption.perLineSpace)
+                        } else if (nextItem is LineParam) {
+                            startYInCanvas += bitmapOption.subPerLineSpace
+                        }
+                    }
                 }
-                else ->{
+
+                else -> {
 
                 }
             }
-
-
         }
+
         return Pair(result, startYInCanvas)
     }
 
     private fun handleTextParamToElement(
         elementMaxWidth: Double,
-        sourceItem: SourceParam,
+        sourceItem: TextParam,
         paint: Paint,
         text: String,
         align: Int,
         result: MutableList<BaseElement>,
         defaultStartX: Float,
         startYInCanvas: Float,
-        subPerLineSpace:Int
+        subPerLineSpace: Int
     ): Float {
         var endYInCanvas = 0f
         var itemY = 0f
         val measure = measureText(paint, text)
         val width = measure.first
-        val height = measure.second
 
         if (width < elementMaxWidth) {
             //不需要换行处理
-            endYInCanvas = startYInCanvas.plus(height)
-            itemY = height.toFloat()
-            val startX = if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width)).toFloat() else defaultStartX
+            endYInCanvas = startYInCanvas.plus(measure.second)
+            itemY = measure.second.toFloat()
+            val startX =
+                if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width))
+                    .toFloat() else defaultStartX
             result.add(
                 TextElement(
                     text = text,
@@ -221,65 +239,50 @@ object DrawBitmapHelper {
                 }
             )
         } else {
-            //需要换行处理
-            val textCharArr = text.split(" ")
-            if (textCharArr.size == 1) {
-                val resultY = convertEnterLineElement(
-                    text,
-                    align,
-                    height,
-                    startYInCanvas,
-                    defaultStartX,
-                    elementMaxWidth,
-                    paint,
-                    sourceItem,
-                    result
-                )
-                itemY += resultY.second
-                endYInCanvas = resultY.first
-            } else {
-                textCharArr.forEach { char ->
-                    val resultY = convertEnterLineElement(
-                        char,
-                        align,
-                        height,
-                        startYInCanvas,
-                        defaultStartX,
-                        elementMaxWidth,
-                        paint,
-                        sourceItem,
-                        result
-                    )
-                    itemY += resultY.second
-                    endYInCanvas = resultY.first
-                }
-            }
+            val resultY = convertEnterLineElement(
+                text,
+                align,
+                startYInCanvas,
+                defaultStartX,
+                elementMaxWidth,
+                paint,
+                sourceItem,
+                result, subPerLineSpace
+            )
+            itemY += resultY.second
+            endYInCanvas = resultY.first
         }
 
-        return itemY
+        return endYInCanvas
+//        return itemY
     }
 
     private fun convertEnterLineElement(
         text: String,
         align: Int,
-        textHeight: Int,
         startYInCanvas: Float,
         defaultStartX: Float,
         elementMaxWidth: Double,
         paint: Paint,
-        sourceItem: SourceParam,
-        result: MutableList<BaseElement>
+        sourceItem: TextParam,
+        result: MutableList<BaseElement>,
+        subPerLineSpace: Int
     ): Pair<Float, Float> {
         var tempStartYInCanvas = startYInCanvas
         val char = text.toCharArray()
         val charBuilder = StringBuilder()
         val tempCharBuilder = StringBuilder()
         var sumItemY = 0f
+        var textHeight = 0
         for (index in char.indices) {
             //迭代字符
             val value = char[index]
 
-            val tempWidth = measureText(paint, tempCharBuilder.append(value).toString()).first
+            val tempMeasure = measureText(paint, tempCharBuilder.append(value).toString())
+            val tempWidth = tempMeasure.first
+            if (textHeight == 0) {
+                textHeight = tempMeasure.second
+            }
 
             val lastChar = index == char.size.minus(1)
             val fullWidth = tempWidth > elementMaxWidth
@@ -289,7 +292,9 @@ object DrawBitmapHelper {
                     charBuilder.append(value)
                 }
                 val width = measureText(paint, charBuilder.toString()).first
-                val startX = if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width)).toFloat() else defaultStartX
+                val startX =
+                    if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width))
+                        .toFloat() else defaultStartX
                 result.add(
                     TextElement(
                         text = charBuilder.toString(),
@@ -310,6 +315,8 @@ object DrawBitmapHelper {
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
+                    tempStartYInCanvas = tempStartYInCanvas.plus(subPerLineSpace)
+                    tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }
             } else {

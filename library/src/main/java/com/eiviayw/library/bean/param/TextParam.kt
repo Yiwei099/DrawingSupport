@@ -9,7 +9,7 @@ import com.eiviayw.library.Constant
  * @Date: 2023-11-26 20:49
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  */
-data class SourceParam(
+data class TextParam(
     val firstText:String = "",//第一项内容
     val secondText:String = "",//第二项内容
     val thirdText:String = "",//第三项内容
