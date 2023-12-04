@@ -7,6 +7,8 @@ import android.os.Bundle
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
+import com.eiviayw.drawingsupport.bean.Goods
+import com.eiviayw.drawingsupport.bean.Order
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.BaseParam
 import com.eiviayw.library.bean.param.LineDashedParam
@@ -24,18 +26,78 @@ class MainActivity : AppCompatActivity() {
         val im = findViewById<ImageView>(R.id.imResult)
 
         findViewById<TextView>(R.id.tvRefresh).setOnClickListener {
-            val bitmap = libraryTest()
+            val bitmap = libraryTest(generateOrder(), generateGoodsData())
             im.setImageBitmap(bitmap)
         }
     }
 
+    private fun generateOrder() = Order(
+        orderType = "Dine in",
+        orderNo = "RO2023112214162097857023-012345678中哈哈是的cdefghijklmnopqrstuvwxyz",
+        tableNo = "J-1",
+        orderTime = "2023-12-02 17:20",
+        subTotal = "$100.50",
+        total = "$100.00",
+        qua = "4",
+        cashierID = "Yiwei099",
+        shopName = "Hey Tea",
+        shopContact = "020-10086",
+        shopAddress = "广东·广州"
+    )
 
-    private fun libraryTest(): Bitmap {
+    private fun generateGoodsData() = mutableListOf<Goods>().apply {
+        add(
+            Goods(
+                goodsName = "多肉葡萄",
+                price = "$28.00",
+                qua = "2",
+                totalPrice = "$56.00"
+            )
+        )
+
+        add(
+            Goods(
+                goodsName = "多肉葡萄，芝芝芒芒，芝芝莓莓，酷黑莓桑，多肉青提，椰椰芒芒",
+                price = "$18.00",
+                qua = "2",
+                totalPrice = "$36.00"
+            )
+        )
+
+        add(
+            Goods(
+                goodsName = "Test printing ultra long text with automatic line wrapping",
+                price = "$16.00",
+                qua = "2",
+                totalPrice = "$32.00"
+            )
+        )
+
+        add(
+            Goods(
+                goodsName = "Mixed 中英 Chinese 超长混合 and 测试 English 效果",
+                price = "$28.00",
+                qua = "1",
+                totalPrice = "$28.00"
+            )
+        )
+
+        add(
+            Goods(
+                goodsName = "Latte",
+                price = "$14.00",
+                qua = "2",
+                totalPrice = "$28.00"
+            )
+        )
+    }
+
+    private fun libraryTest(order: Order, goodsData: List<Goods>): Bitmap {
         val result = mutableListOf<BaseParam>()
         result.add(
             TextParam(
                 firstText = "Tax Invoice",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)
@@ -45,8 +107,8 @@ class MainActivity : AppCompatActivity() {
 
         result.add(
             TextParam(
-                firstText = "Gomenu linckin",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstText = order.shopName,
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)
@@ -55,8 +117,8 @@ class MainActivity : AppCompatActivity() {
 
         result.add(
             TextParam(
-                firstText = "深圳",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstText = order.shopAddress,
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)
@@ -65,8 +127,8 @@ class MainActivity : AppCompatActivity() {
 
         result.add(
             TextParam(
-                firstText = "020-10086",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstText = order.shopContact,
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)
@@ -75,18 +137,8 @@ class MainActivity : AppCompatActivity() {
 
         result.add(
             TextParam(
-                firstText = "GST:020-10010",
-                firstTextAlign = Constant.ALIGN_CENTER,
-                firstWeight = 1.0,
-            ).apply {
-                setTextSize(26f)
-            }
-        )
-
-        result.add(
-            TextParam(
-                firstText = "Order#:J-1",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstText = "Order#:${order.tableNo}",
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)
@@ -97,10 +149,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Served by",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.5,
-                secondText = "Master",
-                secondTextAlign = Constant.ALIGN_END,
+                secondText = order.cashierID,
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
                 secondWeight = 0.5,
             ).apply {
                 setTextSize(26f)
@@ -110,10 +162,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Order Date",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.3,
-                secondText = "22/11/2023 15:10",
-                secondTextAlign = Constant.ALIGN_END,
+                secondText = order.orderTime,
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
                 secondWeight = 0.7
             ).apply {
                 setTextSize(26f)
@@ -123,10 +175,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Transaction#",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.4,
-                secondText = "RO2023112214162097857023-012345678中哈哈是的cdefghijklmnopqrstuvwxyz",
-                secondTextAlign = Constant.ALIGN_END,
+                secondText = order.orderNo,
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
                 secondWeight = 0.6
             ).apply {
                 setTextSize(26f)
@@ -138,10 +190,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Name",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.7,
                 secondText = "AMT",
-                secondTextAlign = Constant.ALIGN_END,
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
                 secondWeight = 0.3
             ).apply {
                 setTextSize(26f)
@@ -150,60 +202,40 @@ class MainActivity : AppCompatActivity() {
 
         result.add(LineDashedParam())
 
-        result.add(
-            TextParam(
-                firstText = "生椰拿铁",
-                firstTextAlign = Constant.ALIGN_START,
-                firstWeight = 0.7,
-                secondText = "$9.9",
-                secondTextAlign = Constant.ALIGN_END,
-                secondWeight = 0.3
-            ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
-            }
-        )
-        result.add(
-            TextParam(
-                firstText = "1 x 9.9",
-                firstTextAlign = Constant.ALIGN_START,
-                firstWeight = 0.7
-            ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
-            }
-        )
-        result.add(
-            TextParam(
-                firstText = "Test printing ultra long text with automatic line wrapping",
-                firstTextAlign = Constant.ALIGN_START,
-                firstWeight = 0.7,
-                secondText = "$9.9",
-                secondTextAlign = Constant.ALIGN_END,
-                secondWeight = 0.3,
-            ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
-            }
-        )
-        result.add(
-            TextParam(
-                firstText = "1 x 9.9",
-                firstTextAlign = Constant.ALIGN_START,
-                firstWeight = 0.7
-            ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
-            }
-        )
+        goodsData.forEach {
+            result.add(
+                TextParam(
+                    firstText = it.goodsName,
+                    firstTextAlign = Constant.Companion.Align.ALIGN_START,
+                    firstWeight = 0.7,
+                    secondText = it.totalPrice,
+                    secondTextAlign = Constant.Companion.Align.ALIGN_END,
+                    secondWeight = 0.3
+                ).apply {
+                    setTextSize(26f)
+                    setFaceType(Typeface.DEFAULT_BOLD)
+                }
+            )
+
+            result.add(
+                TextParam(
+                    firstText = "${it.qua} x ${it.price}",
+                    firstTextAlign = Constant.Companion.Align.ALIGN_START,
+                    firstWeight = 0.7
+                ).apply {
+                    setTextSize(26f)
+                    setFaceType(Typeface.DEFAULT_BOLD)
+                }
+            )
+        }
         result.add(LineDashedParam())
         result.add(
             TextParam(
                 firstText = "Subtotal",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.7,
-                secondTextAlign = Constant.ALIGN_END,
-                secondText = "$19.8",
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
+                secondText = order.subTotal,
                 secondWeight = 0.3
             ).apply {
                 setTextSize(26f)
@@ -213,10 +245,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Total",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.7,
-                secondTextAlign = Constant.ALIGN_END,
-                secondText = "$19.8",
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
+                secondText = order.total,
                 secondWeight = 0.3
             ).apply {
                 setTextSize(26f)
@@ -227,10 +259,10 @@ class MainActivity : AppCompatActivity() {
         result.add(
             TextParam(
                 firstText = "Cash payment",
-                firstTextAlign = Constant.ALIGN_START,
+                firstTextAlign = Constant.Companion.Align.ALIGN_START,
                 firstWeight = 0.7,
-                secondTextAlign = Constant.ALIGN_END,
-                secondText = "$19.8",
+                secondTextAlign = Constant.Companion.Align.ALIGN_END,
+                secondText = order.total,
                 secondWeight = 0.3
             ).apply {
                 setTextSize(26f)
@@ -239,8 +271,8 @@ class MainActivity : AppCompatActivity() {
 
         result.add(
             TextParam(
-                firstText = "Dine in",
-                firstTextAlign = Constant.ALIGN_CENTER,
+                firstText = order.orderType,
+                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
                 firstWeight = 1.0,
             ).apply {
                 setTextSize(26f)

@@ -11,17 +11,21 @@ class Constant private constructor() {
                 instance ?: Constant().also { instance = it }
             }
 
-        /**
-         * 开始对齐
-         */
-        const val ALIGN_START = 0
-        /**
-         * 居中对齐
-         */
-        const val ALIGN_CENTER = 1
-        /**
-         * 结束对齐
-         */
-        const val ALIGN_END = 2
+        interface Align{
+            companion object{
+                /**
+                 * 开始对齐
+                 */
+                const val ALIGN_START = 0
+                /**
+                 * 居中对齐
+                 */
+                const val ALIGN_CENTER = 1
+                /**
+                 * 结束对齐
+                 */
+                const val ALIGN_END = 2
+            }
+        }
     }
 }
