@@ -9,7 +9,7 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.BaseParam
-import com.eiviayw.library.bean.param.LineParam
+import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.draw.DrawBitmapHelper
@@ -133,7 +133,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        result.add(LineParam())
+        result.add(LineDashedParam())
 
         result.add(
             TextParam(
@@ -148,7 +148,7 @@ class MainActivity : AppCompatActivity() {
             }
         )
 
-        result.add(LineParam())
+        result.add(LineDashedParam())
 
         result.add(
             TextParam(
@@ -196,7 +196,7 @@ class MainActivity : AppCompatActivity() {
                 setFaceType(Typeface.DEFAULT_BOLD)
             }
         )
-        result.add(LineParam())
+        result.add(LineDashedParam())
         result.add(
             TextParam(
                 firstText = "Subtotal",

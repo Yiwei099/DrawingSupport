@@ -4,7 +4,9 @@ import android.graphics.Bitmap
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
+import android.graphics.Path
 import com.eiviayw.library.Constant
+import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 
@@ -23,11 +25,8 @@ class Drawing private constructor() {
     //<editor-fold desc="绘制">
 
     /**
-     * 绘制线条
-     * @param startX X轴起点
-     * @param endX X轴终点
-     * @param startY Y轴起点
-     * @param endY Y轴终点
+     * 绘制实线
+     * @param element 元素块数据
      * @param canvas 画布
      * @param paint 画笔
      */
@@ -37,6 +36,23 @@ class Drawing private constructor() {
         paint: Paint
     ) {
         canvas.drawLine(element.startX, element.startY, element.endX, element.endY, paint)
+    }
+
+    /**
+     * 绘制虚线
+     * @param element 元素块数据
+     * @param canvas 画布
+     * @param paint 画笔
+     */
+    fun drawDashedLine(
+        element: LineDashedElement,
+        canvas: Canvas,paint: Paint
+    ){
+        val mPath = Path()
+        mPath.moveTo(element.startX, element.startY)
+        mPath.lineTo(element.endX, element.startY)
+        mPath.close()
+        canvas.drawPath(mPath, paint)
     }
 
     /**

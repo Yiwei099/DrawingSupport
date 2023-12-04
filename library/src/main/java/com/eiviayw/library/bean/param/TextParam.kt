@@ -8,6 +8,7 @@ import com.eiviayw.library.Constant
  * @Author: YYW
  * @Date: 2023-11-26 20:49
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
+ * 文本
  */
 data class TextParam(
     val firstText:String = "",//第一项内容

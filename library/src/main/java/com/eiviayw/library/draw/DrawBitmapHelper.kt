@@ -1,15 +1,20 @@
 package com.eiviayw.library.draw
 
 import android.graphics.Bitmap
+import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
+import android.graphics.Path
 import android.graphics.Rect
 import android.text.TextUtils
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.element.BaseElement
 import com.eiviayw.library.bean.element.BitmapElement
+import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 import com.eiviayw.library.bean.param.BaseParam
+import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.TextParam
 import java.io.ByteArrayOutputStream
@@ -43,6 +48,9 @@ object DrawBitmapHelper {
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
         result.first.forEach {
+            mainPaint.pathEffect = null
+            mainPaint.style = Paint.Style.FILL
+            mainPaint.color = Color.BLACK
             when (it) {
                 is TextElement -> {
                     mainPaint.textSize = it.size
@@ -58,6 +66,14 @@ object DrawBitmapHelper {
                     mainPaint.textSize = it.size
                     mainPaint.typeface = it.typeface
                     Drawing.getInstance().drawLine(it, canvas, mainPaint)
+                }
+
+                is LineDashedElement ->{
+                    val effects = DashPathEffect(floatArrayOf(it.on, it.off), 0f)
+                    mainPaint.pathEffect = effects
+                    mainPaint.style = Paint.Style.STROKE
+
+                   Drawing.getInstance().drawDashedLine(it,canvas,mainPaint)
                 }
 
                 else -> {
@@ -171,6 +187,34 @@ object DrawBitmapHelper {
                     val height = measure.second
                     result.add(
                         LineElement().apply {
+                            setStartXValue(defaultStartX)
+                            setEndXValue(width.toFloat())
+                            setStartYValue(startYInCanvas.minus(height))
+                            setEndYValue(startYInCanvas.minus(height))
+                            setTextSize(sourceItem.size)
+                            setFaceType(sourceItem.typeface)
+                        }
+                    )
+                    startYInCanvas += height
+                    if (index < sourceData.size - 1) {
+                        val nextItem = sourceData[index + 1]
+                        if (nextItem is TextParam) {
+                            startYInCanvas = startYInCanvas.plus(bitmapOption.perLineSpace)
+                                .plus(bitmapOption.perLineSpace)
+                        } else if (nextItem is LineParam) {
+                            startYInCanvas += bitmapOption.subPerLineSpace
+                        }
+                    }
+                }
+
+                is LineDashedParam ->{
+                    paint.textSize = sourceItem.size
+                    paint.typeface = sourceItem.typeface
+                    val width = maxWidth.times(sourceItem.weight)
+                    val measure = measureText(paint, "-")
+                    val height = measure.second
+                    result.add(
+                        LineDashedElement(on = sourceItem.on, off = sourceItem.off).apply {
                             setStartXValue(defaultStartX)
                             setEndXValue(width.toFloat())
                             setStartYValue(startYInCanvas.minus(height))
