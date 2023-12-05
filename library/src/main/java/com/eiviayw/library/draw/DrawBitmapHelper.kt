@@ -68,12 +68,12 @@ object DrawBitmapHelper {
                     Drawing.getInstance().drawLine(it, canvas, mainPaint)
                 }
 
-                is LineDashedElement ->{
+                is LineDashedElement -> {
                     val effects = DashPathEffect(floatArrayOf(it.on, it.off), 0f)
                     mainPaint.pathEffect = effects
                     mainPaint.style = Paint.Style.STROKE
 
-                   Drawing.getInstance().drawDashedLine(it,canvas,mainPaint)
+                    Drawing.getInstance().drawDashedLine(it, canvas, mainPaint)
                 }
 
                 else -> {
@@ -109,6 +109,7 @@ object DrawBitmapHelper {
 
         for (index in sourceData.indices) {
             when (val sourceItem = sourceData[index]) {
+
                 is TextParam -> {
                     //填充画笔
                     paint.textSize = sourceItem.size
@@ -207,7 +208,7 @@ object DrawBitmapHelper {
                     }
                 }
 
-                is LineDashedParam ->{
+                is LineDashedParam -> {
                     paint.textSize = sourceItem.size
                     paint.typeface = sourceItem.typeface
                     val width = maxWidth.times(sourceItem.weight)
@@ -265,7 +266,11 @@ object DrawBitmapHelper {
             endYInCanvas = startYInCanvas.plus(measure.second)
             itemY = measure.second.toFloat()
             val startX =
-                if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width))
+                if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
+                    elementMaxWidth.minus(
+                        width
+                    )
+                )
                     .toFloat() else defaultStartX
             result.add(
                 TextElement(
@@ -337,7 +342,9 @@ object DrawBitmapHelper {
                 }
                 val width = measureText(paint, charBuilder.toString()).first
                 val startX =
-                    if (align == Constant.ALIGN_END) defaultStartX.plus(elementMaxWidth.minus(width))
+                    if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
+                        elementMaxWidth.minus(width)
+                    )
                         .toFloat() else defaultStartX
                 result.add(
                     TextElement(

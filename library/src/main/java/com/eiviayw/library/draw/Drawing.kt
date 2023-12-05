@@ -69,7 +69,7 @@ class Drawing private constructor() {
         paint: Paint
     ) {
         when (textElement.align) {
-            Constant.ALIGN_CENTER -> {
+            Constant.Companion.Align.ALIGN_CENTER -> {
                 val startX =
                     getCenterStart(bitmapOption.maxWidth).minus(textElement.textWidth.div(2))
                         .toFloat()

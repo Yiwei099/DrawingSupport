@@ -11,7 +11,7 @@
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:text="刷新"
+        android:text="预览"
         android:textSize="22sp"
         android:padding="10dp"/>
 
