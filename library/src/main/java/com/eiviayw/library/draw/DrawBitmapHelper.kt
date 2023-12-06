@@ -20,6 +20,8 @@ import com.eiviayw.library.bean.param.TextParam
 import java.io.ByteArrayOutputStream
 
 /**
+ * 指路：https://github.com/Yiwei099
+ *
  * Created with Android Studio.
  * @Author: YYW
  * @Date: 2023-09-21 21:43

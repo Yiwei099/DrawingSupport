@@ -3,6 +3,8 @@ package com.eiviayw.library.provide
 import com.eiviayw.library.bean.param.BaseParam
 
 /**
+ * 指路：https://github.com/Yiwei099
+ *
  * Created with Android Studio.
  * @Author: YYW
  * @Date: 2023-09-25 22:17

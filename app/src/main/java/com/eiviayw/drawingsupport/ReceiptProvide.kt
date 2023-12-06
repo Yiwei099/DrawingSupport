@@ -9,6 +9,16 @@ import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.provide.BaseProvide
 
+/**
+ * 指路：https://github.com/Yiwei099
+ *
+ * Created with Android Studio.
+ * @Author: YYW
+ * @Date: 2023-11-26 20:39
+ * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
+ *
+ * 收据数据提供者
+ */
 class ReceiptProvide:BaseProvide(){
     override fun generateDrawParam(): List<BaseParam> {
         return super.generateDrawParam()

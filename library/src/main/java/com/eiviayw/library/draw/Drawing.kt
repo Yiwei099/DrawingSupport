@@ -10,6 +10,14 @@ import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 
+/**
+ * 指路：https://github.com/Yiwei099
+ *
+ * Created with Android Studio.
+ * @Author: YYW
+ * @Date: 2023-09-25 22:17
+ * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
+ */
 class Drawing private constructor() {
     companion object {
         @Volatile

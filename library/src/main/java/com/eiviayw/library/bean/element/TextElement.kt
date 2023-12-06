@@ -3,6 +3,8 @@ package com.eiviayw.library.bean.element
 import android.graphics.Typeface
 
 /**
+ * 指路：https://github.com/Yiwei099
+ *
  * Created with Android Studio.
  * @Author: YYW
  * @Date: 2023-11-26 20:39

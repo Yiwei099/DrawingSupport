@@ -16,6 +16,15 @@ import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.draw.DrawBitmapHelper
 
+/**
+ * 指路：https://github.com/Yiwei099
+ *
+ * Created with Android Studio.
+ * @Author: YYW
+ * @Date: 2023-11-26 20:39
+ * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
+ * 元素块基类
+ */
 class MainActivity : AppCompatActivity() {
     private var bitmap: Bitmap? = null
 
