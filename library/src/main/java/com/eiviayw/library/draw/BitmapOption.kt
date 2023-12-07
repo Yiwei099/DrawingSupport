@@ -14,7 +14,6 @@ package com.eiviayw.library.draw
 class BitmapOption(
     val maxWidth: Int = 576,//画布宽度
     val topIndentation: Float = 20f,//顶部方向边距
-    val bottomIndentation: Float = 20f,//底部方向边距
     val startIndentation: Float = 20f,//开始方向边距
     val endIndentation: Float = 20f,//结束方向边距
     val perLineSpace: Int = 14,//标准行距

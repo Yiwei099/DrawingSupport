@@ -4,7 +4,6 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
-import android.graphics.Path
 import android.graphics.Rect
 import android.text.TextUtils
 import com.eiviayw.library.Constant
@@ -16,6 +15,7 @@ import com.eiviayw.library.bean.element.TextElement
 import com.eiviayw.library.bean.param.BaseParam
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.LineParam
+import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import java.io.ByteArrayOutputStream
 
@@ -111,75 +111,63 @@ object DrawBitmapHelper {
 
         for (index in sourceData.indices) {
             when (val sourceItem = sourceData[index]) {
+                is MultiElementParam -> {
+
+                    val firstItem = handleMultiParamItem(
+                        sourceItem.param1,
+                        paint,
+                        maxWidth,
+                        defaultStartX,
+                        startYInCanvas,
+                        subPerLineSpace,
+                        result
+                    )
+                    val secondItem = handleMultiParamItem(
+                        sourceItem.param2,
+                        paint,
+                        maxWidth,
+                        firstItem.first,
+                        startYInCanvas,
+                        subPerLineSpace,
+                        result
+                    )
+                    val thirdItem = handleMultiParamItem(
+                        sourceItem.param3,
+                        paint,
+                        maxWidth,
+                        secondItem.first,
+                        startYInCanvas,
+                        subPerLineSpace,
+                        result
+                    )
+
+                    startYInCanvas = getMaxFromMany(
+                        firstItem.second,
+                        secondItem.second,
+                        thirdItem.second
+                    )
+
+                    startYInCanvas =
+                        handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption, false)
+                }
 
                 is TextParam -> {
                     //填充画笔
                     paint.textSize = sourceItem.size
                     paint.typeface = sourceItem.typeface
 
-                    var firstTextHeight = 0f
-                    var secondTextHeight = 0f
-                    var thirdTextHeight = 0f
-
-                    val firstMaxWidth = maxWidth.times(sourceItem.firstWeight)
-                    val secondMaxWidth = maxWidth.times(sourceItem.secondWeight)
-                    val thirdMaxWidth = maxWidth.times(sourceItem.thirdWeight)
-
-                    val firstText = sourceItem.firstText
-                    if (!isEmpty(firstText)) {
-                        firstTextHeight = handleTextParamToElement(
-                            firstMaxWidth,
-                            sourceItem,
-                            paint,
-                            firstText,
-                            sourceItem.firstTextAlign,
-                            result,
-                            defaultStartX,
-                            startYInCanvas, subPerLineSpace
-                        )
-                    }
-
-                    val secondText = sourceItem.secondText
-                    if (!isEmpty(secondText)) {
-                        secondTextHeight = handleTextParamToElement(
-                            secondMaxWidth,
-                            sourceItem,
-                            paint,
-                            secondText,
-                            sourceItem.secondTextAlign,
-                            result,
-                            firstMaxWidth.toFloat(),
-                            startYInCanvas, subPerLineSpace
-                        )
-                    }
-
-                    val thirdText = sourceItem.thirdText
-                    if (!isEmpty(thirdText)) {
-                        thirdTextHeight = handleTextParamToElement(
-                            thirdMaxWidth,
-                            sourceItem,
-                            paint,
-                            thirdText,
-                            sourceItem.thirdTextAlign,
-                            result,
-                            secondMaxWidth.toFloat(),
-                            startYInCanvas, subPerLineSpace
-                        )
-                    }
-
-                    startYInCanvas = getMaxFromMany(
-                        firstTextHeight,
-                        secondTextHeight,
-                        thirdTextHeight
+                    startYInCanvas = handleTextParamToElement(
+                        maxWidth.toDouble(),
+                        sourceItem,
+                        paint,
+                        sourceItem.text,
+                        sourceItem.align,
+                        result,
+                        defaultStartX,
+                        startYInCanvas, subPerLineSpace
                     )
-                    if (index < sourceData.size - 1) {
-                        val nextItem = sourceData[index + 1]
-                        if (nextItem is TextParam) {
-                            startYInCanvas += bitmapOption.perLineSpace
-                        } else if (nextItem is LineParam) {
-                            startYInCanvas += bitmapOption.subPerLineSpace
-                        }
-                    }
+                    startYInCanvas =
+                        handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption, false)
                 }
 
                 is LineParam -> {
@@ -199,15 +187,8 @@ object DrawBitmapHelper {
                         }
                     )
                     startYInCanvas += height
-                    if (index < sourceData.size - 1) {
-                        val nextItem = sourceData[index + 1]
-                        if (nextItem is TextParam) {
-                            startYInCanvas = startYInCanvas.plus(bitmapOption.perLineSpace)
-                                .plus(bitmapOption.perLineSpace)
-                        } else if (nextItem is LineParam) {
-                            startYInCanvas += bitmapOption.subPerLineSpace
-                        }
-                    }
+
+                    startYInCanvas = handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption,true)
                 }
 
                 is LineDashedParam -> {
@@ -227,15 +208,7 @@ object DrawBitmapHelper {
                         }
                     )
                     startYInCanvas += height
-                    if (index < sourceData.size - 1) {
-                        val nextItem = sourceData[index + 1]
-                        if (nextItem is TextParam) {
-                            startYInCanvas = startYInCanvas.plus(bitmapOption.perLineSpace)
-                                .plus(bitmapOption.perLineSpace)
-                        } else if (nextItem is LineParam) {
-                            startYInCanvas += bitmapOption.subPerLineSpace
-                        }
-                    }
+                    startYInCanvas = handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption,true)
                 }
 
                 else -> {
@@ -245,6 +218,28 @@ object DrawBitmapHelper {
         }
 
         return Pair(result, startYInCanvas)
+    }
+
+    private fun handlePerLineSpace(
+        index: Int,
+        sourceData: List<BaseParam>,
+        startYInCanvas: Float,
+        bitmapOption: BitmapOption,
+        isLineParam: Boolean
+    ): Float {
+        var startYInCanvas1 = startYInCanvas
+        if (index < sourceData.size - 1) {
+            val nextItem = sourceData[index + 1]
+            if (nextItem is TextParam || nextItem is MultiElementParam) {
+                startYInCanvas1 += bitmapOption.perLineSpace
+                if (isLineParam) {
+                    startYInCanvas1 += bitmapOption.perLineSpace
+                }
+            } else if (nextItem is LineParam) {
+                startYInCanvas1 += bitmapOption.subPerLineSpace
+            }
+        }
+        return startYInCanvas1
     }
 
     private fun handleTextParamToElement(
@@ -378,6 +373,54 @@ object DrawBitmapHelper {
 
         }
         return Pair(tempStartYInCanvas, sumItemY)
+    }
+
+    /**
+     * 处理混排业务元素
+     * @param item 元素
+     * @param paint 画笔
+     * @param maxWidth 画布最大宽度
+     * @param defaultStartX X的起始位置
+     * @param startYInCanvas Y的起始位置
+     * @param subPerLineSpace 小行距
+     * @param result 绘制元素数组
+     * @return 当前元素的宽高数据
+     */
+    private fun handleMultiParamItem(
+        item: BaseParam,
+        paint: Paint,
+        maxWidth: Float,
+        defaultStartX: Float,
+        startYInCanvas: Float,
+        subPerLineSpace: Int,
+        result: MutableList<BaseElement>
+    ): Pair<Float, Float> {
+        when (item) {
+            is TextParam -> {
+                //填充画笔
+                paint.textSize = item.size
+                paint.typeface = item.typeface
+
+                val itemWidth = maxWidth.times(item.weight)
+
+                val itemHeight = handleTextParamToElement(
+                    itemWidth,
+                    item,
+                    paint,
+                    item.text,
+                    item.align,
+                    result,
+                    defaultStartX,
+                    startYInCanvas, subPerLineSpace
+                )
+                return Pair(itemWidth.toFloat(), itemHeight)
+            }
+
+            else -> {
+                //暂未支持的类型
+                return Pair(defaultStartX, 0f)
+            }
+        }
     }
 
     //<editor-fold desc="图片模版参数管理">

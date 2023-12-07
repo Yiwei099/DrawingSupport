@@ -35,5 +35,15 @@ class Constant private constructor() {
                 const val ALIGN_END = 2
             }
         }
+
+        interface Gravity{
+            companion object{
+                const val TOP = 0
+
+                const val BOTTOM = 1
+
+                const val CENTER = 2
+            }
+        }
     }
 }
