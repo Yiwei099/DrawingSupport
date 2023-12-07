@@ -20,6 +20,7 @@ open class BaseElement(
     var endY: Float = 0f,
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var size: Float = 26f,//内容字号
+    var perLineSpace: Int = 10,//行距
 ){
     fun setStartXValue(x: Float) {
         startX = x
@@ -41,5 +42,9 @@ open class BaseElement(
     }
     fun setFaceType(value:Typeface){
         typeface = value
+    }
+
+    fun setLineSpace(height:Int){
+        perLineSpace = height
     }
 }

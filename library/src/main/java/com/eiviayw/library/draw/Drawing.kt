@@ -1,11 +1,13 @@
 package com.eiviayw.library.draw
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
 import com.eiviayw.library.Constant
+import com.eiviayw.library.bean.element.GraphicsElement
 import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
@@ -87,7 +89,20 @@ class Drawing private constructor() {
                 canvas.drawText(textElement.text, textElement.startX, textElement.startY, paint)
             }
         }
+    }
 
+    fun drawGraphics(
+        graphicsElement: GraphicsElement,
+        canvas: Canvas,
+        paint: Paint
+    ){
+        val bitmap = BitmapFactory.decodeByteArray(
+            graphicsElement.bitmapData,
+            0,
+            graphicsElement.bitmapData.size
+        )
+        canvas.drawBitmap(bitmap,graphicsElement.startX,graphicsElement.startY,paint)
+        bitmap.recycle()
     }
     //</editor-fold desc="绘制">
 

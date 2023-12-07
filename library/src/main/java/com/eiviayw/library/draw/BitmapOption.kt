@@ -16,8 +16,6 @@ class BitmapOption(
     val topIndentation: Float = 20f,//顶部方向边距
     val startIndentation: Float = 20f,//开始方向边距
     val endIndentation: Float = 20f,//结束方向边距
-    val perLineSpace: Int = 14,//标准行距
-    val subPerLineSpace: Int = 6,//小行距
     val bottomBlankHeight: Int = 10,//底部留白
     val antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
 ){
@@ -25,4 +23,6 @@ class BitmapOption(
      * 图片内容有效宽度
      */
     fun getEffectiveWidth() = maxWidth - endIndentation
+
+    fun getCenterX() = getEffectiveWidth().div(2)
 }

@@ -1,14 +1,17 @@
 package com.eiviayw.drawingsupport
 
+import android.graphics.Bitmap
 import android.graphics.Typeface
 import com.eiviayw.drawingsupport.bean.Goods
 import com.eiviayw.drawingsupport.bean.Order
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.BaseParam
+import com.eiviayw.library.bean.param.GraphicsParam
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.provide.BaseProvide
+import java.io.ByteArrayOutputStream
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -25,10 +28,26 @@ class ReceiptProvide:BaseProvide(){
         return super.generateDrawParam()
     }
 
-    fun convertDrawParam(order: Order,goodsData:List<Goods>) = mutableListOf<BaseParam>().apply {
+    fun convertDrawParam(order: Order,goodsData:List<Goods>,bitmap: Bitmap) = mutableListOf<BaseParam>().apply {
         addAll(convertOrderHeader(order))
         addAll(convertOrderGoods(goodsData))
         addAll(convertOrderFooter(order))
+        add(GraphicsParam(
+            compressBitmapToByteArray(bitmap),
+            bitmap.width,
+            bitmap.height
+        ).apply {
+            setLineSpace(30)
+        })
+        add(
+            TextParam(
+                text = "00002",
+                align = Constant.Companion.Align.ALIGN_CENTER,
+            ).apply {
+                setTextSize(26f)
+                setFaceType(Typeface.DEFAULT_BOLD)
+            }
+        )
     }
 
     private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
@@ -129,11 +148,14 @@ class ReceiptProvide:BaseProvide(){
                     weight = 0.6,
                 ).apply {
                     setTextSize(26f)
+                    setLineSpace(10)
                 }
             )
         )
 
-        add(LineDashedParam())
+        add(LineDashedParam().apply {
+            setLineSpace(30)
+        })
 
         add(
             MultiElementParam(
@@ -150,18 +172,22 @@ class ReceiptProvide:BaseProvide(){
                 ).apply {
                     setTextSize(26f)
                 }
-            )
+            ).apply {
+                setLineSpace(0)
+            }
         )
 
-        add(LineDashedParam())
+        add(LineDashedParam().apply {
+            setLineSpace(30)
+        })
     }
 
     private fun convertOrderGoods(goodsData: List<Goods>) = mutableListOf<BaseParam>().apply {
-        goodsData.forEach {
+        goodsData.forEachIndexed { index, it ->
             add(
                 MultiElementParam(
                     param1 = TextParam(
-                        text = it.goodsName,
+                        text = "${index.plus(1)}.${it.goodsName}",
                         weight = 0.7,
                     ).apply {
                         setTextSize(26f)
@@ -175,7 +201,9 @@ class ReceiptProvide:BaseProvide(){
                         setTextSize(26f)
                         setFaceType(Typeface.DEFAULT_BOLD)
                     }
-                )
+                ).apply {
+                    setLineSpace(8)
+                }
             )
 
             add(
@@ -184,6 +212,7 @@ class ReceiptProvide:BaseProvide(){
                     align = Constant.Companion.Align.ALIGN_START,
                     weight = 0.7
                 ).apply {
+                    if (index == goodsData.size -1) setLineSpace(0) else setLineSpace(18)
                     setTextSize(26f)
                     setFaceType(Typeface.DEFAULT_BOLD)
                 }
@@ -192,7 +221,28 @@ class ReceiptProvide:BaseProvide(){
     }
 
     private fun convertOrderFooter(order: Order) = mutableListOf<BaseParam>().apply {
-        add(LineDashedParam())
+        add(LineDashedParam().apply {
+            setLineSpace(30)
+        })
+
+        add(
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Count",
+                    weight = 0.5,
+                ).apply {
+                    setTextSize(26f)
+                },
+                param2 = TextParam(
+                    text = order.qua,
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.5,
+                ).apply {
+                    setTextSize(26f)
+                }
+            )
+        )
+
         add(
             MultiElementParam(
                 param1 = TextParam(
@@ -234,24 +284,6 @@ class ReceiptProvide:BaseProvide(){
         add(
             MultiElementParam(
                 param1 = TextParam(
-                    text = "Items",
-                    weight = 0.5,
-                ).apply {
-                    setTextSize(26f)
-                },
-                param2 = TextParam(
-                    text = order.qua,
-                    align = Constant.Companion.Align.ALIGN_END,
-                    weight = 0.5,
-                ).apply {
-                    setTextSize(26f)
-                }
-            )
-        )
-
-        add(
-            MultiElementParam(
-                param1 = TextParam(
                     text = "Cash payment",
                     weight = 0.5,
                 ).apply {
@@ -276,5 +308,11 @@ class ReceiptProvide:BaseProvide(){
                 setFaceType(Typeface.DEFAULT_BOLD)
             }
         )
+    }
+
+    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
+        val ops = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
+        return ops.toByteArray()
     }
 }

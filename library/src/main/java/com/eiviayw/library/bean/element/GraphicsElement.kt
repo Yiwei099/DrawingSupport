@@ -9,6 +9,6 @@ package com.eiviayw.library.bean.element
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  * 位图元素块
  */
-class BitmapElement(
-    val bitmapArray: ByteArray,
+class GraphicsElement(
+    val bitmapData: ByteArray,
 ): BaseElement()

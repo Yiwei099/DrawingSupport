@@ -6,13 +6,15 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Rect
 import android.text.TextUtils
+import android.util.Half.toFloat
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.element.BaseElement
-import com.eiviayw.library.bean.element.BitmapElement
+import com.eiviayw.library.bean.element.GraphicsElement
 import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 import com.eiviayw.library.bean.param.BaseParam
+import com.eiviayw.library.bean.param.GraphicsParam
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
@@ -60,10 +62,6 @@ object DrawBitmapHelper {
                     Drawing.getInstance().drawText(it, bitmapOption, canvas, mainPaint)
                 }
 
-                is BitmapElement -> {
-
-                }
-
                 is LineElement -> {
                     mainPaint.textSize = it.size
                     mainPaint.typeface = it.typeface
@@ -76,6 +74,12 @@ object DrawBitmapHelper {
                     mainPaint.style = Paint.Style.STROKE
 
                     Drawing.getInstance().drawDashedLine(it, canvas, mainPaint)
+                }
+
+                is GraphicsElement -> {
+                    mainPaint.textSize = it.size
+                    mainPaint.typeface = it.typeface
+                    Drawing.getInstance().drawGraphics(it, canvas, mainPaint)
                 }
 
                 else -> {
@@ -107,8 +111,6 @@ object DrawBitmapHelper {
         val maxWidth = bitmapOption.getEffectiveWidth()
         val defaultStartX = bitmapOption.startIndentation
 
-        val subPerLineSpace = bitmapOption.subPerLineSpace
-
         for (index in sourceData.indices) {
             when (val sourceItem = sourceData[index]) {
                 is MultiElementParam -> {
@@ -119,7 +121,6 @@ object DrawBitmapHelper {
                         maxWidth,
                         defaultStartX,
                         startYInCanvas,
-                        subPerLineSpace,
                         result
                     )
                     val secondItem = handleMultiParamItem(
@@ -128,7 +129,6 @@ object DrawBitmapHelper {
                         maxWidth,
                         firstItem.first,
                         startYInCanvas,
-                        subPerLineSpace,
                         result
                     )
                     val thirdItem = handleMultiParamItem(
@@ -137,7 +137,6 @@ object DrawBitmapHelper {
                         maxWidth,
                         secondItem.first,
                         startYInCanvas,
-                        subPerLineSpace,
                         result
                     )
 
@@ -147,8 +146,7 @@ object DrawBitmapHelper {
                         thirdItem.second
                     )
 
-                    startYInCanvas =
-                        handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption, false)
+                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
                 is TextParam -> {
@@ -164,10 +162,9 @@ object DrawBitmapHelper {
                         sourceItem.align,
                         result,
                         defaultStartX,
-                        startYInCanvas, subPerLineSpace
+                        startYInCanvas
                     )
-                    startYInCanvas =
-                        handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption, false)
+                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
                 is LineParam -> {
@@ -184,11 +181,11 @@ object DrawBitmapHelper {
                             setEndYValue(startYInCanvas.minus(height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
+                            setLineSpace(sourceItem.perLineSpace)
                         }
                     )
-                    startYInCanvas += height
+                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
 
-                    startYInCanvas = handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption,true)
                 }
 
                 is LineDashedParam -> {
@@ -205,41 +202,38 @@ object DrawBitmapHelper {
                             setEndYValue(startYInCanvas.minus(height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
+                            setLineSpace(sourceItem.perLineSpace)
                         }
                     )
-                    startYInCanvas += height
-                    startYInCanvas = handlePerLineSpace(index, sourceData, startYInCanvas, bitmapOption,true)
+                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
+                }
+
+                is GraphicsParam -> {
+                    paint.textSize = sourceItem.size
+                    paint.typeface = sourceItem.typeface
+                    result.add(
+                        GraphicsElement(sourceItem.bitmapData).apply {
+                            setStartXValue(bitmapOption.getCenterX().minus(sourceItem.width.div(2)))
+                            setEndXValue(defaultStartX.plus(sourceItem.width))
+                            setStartYValue(startYInCanvas)
+                            setEndYValue(startYInCanvas.plus(sourceItem.height))
+                            setTextSize(sourceItem.size)
+                            setFaceType(sourceItem.typeface)
+                            setLineSpace(sourceItem.perLineSpace)
+                        }
+                    )
+
+                    startYInCanvas =
+                        startYInCanvas.plus(sourceItem.height).plus(sourceItem.perLineSpace)
                 }
 
                 else -> {
-
+                    //更多类型正在推出中
                 }
             }
         }
 
         return Pair(result, startYInCanvas)
-    }
-
-    private fun handlePerLineSpace(
-        index: Int,
-        sourceData: List<BaseParam>,
-        startYInCanvas: Float,
-        bitmapOption: BitmapOption,
-        isLineParam: Boolean
-    ): Float {
-        var startYInCanvas1 = startYInCanvas
-        if (index < sourceData.size - 1) {
-            val nextItem = sourceData[index + 1]
-            if (nextItem is TextParam || nextItem is MultiElementParam) {
-                startYInCanvas1 += bitmapOption.perLineSpace
-                if (isLineParam) {
-                    startYInCanvas1 += bitmapOption.perLineSpace
-                }
-            } else if (nextItem is LineParam) {
-                startYInCanvas1 += bitmapOption.subPerLineSpace
-            }
-        }
-        return startYInCanvas1
     }
 
     private fun handleTextParamToElement(
@@ -251,17 +245,14 @@ object DrawBitmapHelper {
         result: MutableList<BaseElement>,
         defaultStartX: Float,
         startYInCanvas: Float,
-        subPerLineSpace: Int
     ): Float {
         var endYInCanvas = 0f
-        var itemY = 0f
         val measure = measureText(paint, text)
         val width = measure.first
 
         if (width < elementMaxWidth) {
             //不需要换行处理
             endYInCanvas = startYInCanvas.plus(measure.second)
-            itemY = measure.second.toFloat()
             val startX =
                 if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
                     elementMaxWidth.minus(
@@ -293,14 +284,12 @@ object DrawBitmapHelper {
                 elementMaxWidth,
                 paint,
                 sourceItem,
-                result, subPerLineSpace
+                result
             )
-            itemY += resultY.second
             endYInCanvas = resultY.first
         }
 
         return endYInCanvas
-//        return itemY
     }
 
     private fun convertEnterLineElement(
@@ -312,7 +301,6 @@ object DrawBitmapHelper {
         paint: Paint,
         sourceItem: TextParam,
         result: MutableList<BaseElement>,
-        subPerLineSpace: Int
     ): Pair<Float, Float> {
         var tempStartYInCanvas = startYInCanvas
         val char = text.toCharArray()
@@ -363,7 +351,7 @@ object DrawBitmapHelper {
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
-                    tempStartYInCanvas = tempStartYInCanvas.plus(subPerLineSpace)
+                    tempStartYInCanvas = tempStartYInCanvas.plus(sourceItem.perLineSpace)
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }
@@ -382,7 +370,6 @@ object DrawBitmapHelper {
      * @param maxWidth 画布最大宽度
      * @param defaultStartX X的起始位置
      * @param startYInCanvas Y的起始位置
-     * @param subPerLineSpace 小行距
      * @param result 绘制元素数组
      * @return 当前元素的宽高数据
      */
@@ -392,7 +379,6 @@ object DrawBitmapHelper {
         maxWidth: Float,
         defaultStartX: Float,
         startYInCanvas: Float,
-        subPerLineSpace: Int,
         result: MutableList<BaseElement>
     ): Pair<Float, Float> {
         when (item) {
@@ -402,7 +388,6 @@ object DrawBitmapHelper {
                 paint.typeface = item.typeface
 
                 val itemWidth = maxWidth.times(item.weight)
-
                 val itemHeight = handleTextParamToElement(
                     itemWidth,
                     item,
@@ -411,7 +396,7 @@ object DrawBitmapHelper {
                     item.align,
                     result,
                     defaultStartX,
-                    startYInCanvas, subPerLineSpace
+                    startYInCanvas
                 )
                 return Pair(itemWidth.toFloat(), itemHeight)
             }

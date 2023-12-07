@@ -26,4 +26,8 @@ data class TextParam(
     fun setFaceType(type:Typeface){
         typeface = type
     }
+
+    fun setLineSpace(height:Int){
+        perLineSpace = height
+    }
 }
