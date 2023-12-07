@@ -121,7 +121,6 @@ object DrawBitmapHelper {
                         maxWidth,
                         defaultStartX,
                         startYInCanvas,
-                        result
                     )
                     val secondItem = handleMultiParamItem(
                         sourceItem.param2,
@@ -129,7 +128,6 @@ object DrawBitmapHelper {
                         maxWidth,
                         firstItem.first,
                         startYInCanvas,
-                        result
                     )
                     val thirdItem = handleMultiParamItem(
                         sourceItem.param3,
@@ -137,14 +135,47 @@ object DrawBitmapHelper {
                         maxWidth,
                         secondItem.first,
                         startYInCanvas,
-                        result
                     )
 
-                    startYInCanvas = getMaxFromMany(
+                    val maxItemHeight = getMaxFromMany(
                         firstItem.second,
                         secondItem.second,
                         thirdItem.second
                     )
+
+                    /*if (maxItemHeight == firstItem.second){
+                        //第一个元素最高
+                        if (sourceItem.param2.gravity == Constant.Companion.Gravity.CENTER){
+                            secondItem.third.forEach {
+
+                            }
+                        }else if (sourceItem.param2.gravity == Constant.Companion.Gravity.BOTTOM){
+                            secondItem.third.forEach {
+
+                            }
+                        }else{
+                            //nothing to do
+                        }
+
+                        if (sourceItem.param3.gravity == Constant.Companion.Gravity.CENTER){
+                            thirdItem.third.forEach {
+
+                            }
+                        }else if (sourceItem.param3.gravity == Constant.Companion.Gravity.BOTTOM){
+                            thirdItem.third.forEach {
+
+                            }
+                        }else{
+                            //nothing to do
+                        }
+                    }else if (maxItemHeight == secondItem.second){
+                        //第二个元素最高
+
+                    }else{
+                        //第三个元素最高
+                    }*/
+
+                    startYInCanvas = maxItemHeight
 
                     startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
@@ -154,16 +185,17 @@ object DrawBitmapHelper {
                     paint.textSize = sourceItem.size
                     paint.typeface = sourceItem.typeface
 
-                    startYInCanvas = handleTextParamToElement(
+                    val elementResult = handleTextParamToElement(
                         maxWidth.toDouble(),
                         sourceItem,
                         paint,
                         sourceItem.text,
                         sourceItem.align,
-                        result,
                         defaultStartX,
                         startYInCanvas
                     )
+                    startYInCanvas = elementResult.first
+                    result.addAll(elementResult.second)
                     startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
@@ -242,10 +274,10 @@ object DrawBitmapHelper {
         paint: Paint,
         text: String,
         align: Int,
-        result: MutableList<BaseElement>,
         defaultStartX: Float,
         startYInCanvas: Float,
-    ): Float {
+    ): Pair<Float,List<BaseElement>> {
+        val result = mutableListOf<BaseElement>()
         var endYInCanvas = 0f
         val measure = measureText(paint, text)
         val width = measure.first
@@ -284,12 +316,12 @@ object DrawBitmapHelper {
                 elementMaxWidth,
                 paint,
                 sourceItem,
-                result
             )
             endYInCanvas = resultY.first
+            result.addAll(resultY.third)
         }
 
-        return endYInCanvas
+        return Pair(endYInCanvas,result)
     }
 
     private fun convertEnterLineElement(
@@ -300,8 +332,8 @@ object DrawBitmapHelper {
         elementMaxWidth: Double,
         paint: Paint,
         sourceItem: TextParam,
-        result: MutableList<BaseElement>,
-    ): Pair<Float, Float> {
+    ): Triple<Float, Float,List<BaseElement>> {
+        val result = mutableListOf<BaseElement>()
         var tempStartYInCanvas = startYInCanvas
         val char = text.toCharArray()
         val charBuilder = StringBuilder()
@@ -360,7 +392,7 @@ object DrawBitmapHelper {
             }
 
         }
-        return Pair(tempStartYInCanvas, sumItemY)
+        return Triple(tempStartYInCanvas, sumItemY,result)
     }
 
     /**
@@ -370,7 +402,6 @@ object DrawBitmapHelper {
      * @param maxWidth 画布最大宽度
      * @param defaultStartX X的起始位置
      * @param startYInCanvas Y的起始位置
-     * @param result 绘制元素数组
      * @return 当前元素的宽高数据
      */
     private fun handleMultiParamItem(
@@ -379,8 +410,7 @@ object DrawBitmapHelper {
         maxWidth: Float,
         defaultStartX: Float,
         startYInCanvas: Float,
-        result: MutableList<BaseElement>
-    ): Pair<Float, Float> {
+    ): Triple<Float, Float,List<BaseElement>> {
         when (item) {
             is TextParam -> {
                 //填充画笔
@@ -394,16 +424,15 @@ object DrawBitmapHelper {
                     paint,
                     item.text,
                     item.align,
-                    result,
                     defaultStartX,
                     startYInCanvas
                 )
-                return Pair(itemWidth.toFloat(), itemHeight)
+                return Triple(itemWidth.toFloat(), itemHeight.first,itemHeight.second)
             }
 
             else -> {
                 //暂未支持的类型
-                return Pair(defaultStartX, 0f)
+                return Triple(defaultStartX, 0f, emptyList<BaseElement>())
             }
         }
     }

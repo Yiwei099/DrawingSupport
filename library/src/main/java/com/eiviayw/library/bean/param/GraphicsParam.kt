@@ -12,8 +12,4 @@ class GraphicsParam(
     val bitmapData: ByteArray,
     val width:Int,
     val height: Int,
-):BaseParam(){
-    fun setLineSpace(height:Int){
-        perLineSpace = height
-    }
-}
+):BaseParam()

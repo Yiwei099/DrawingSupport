@@ -11,8 +11,4 @@ package com.eiviayw.library.bean.param
  */
 class LineParam(
     val weight:Double = 1.0
-):BaseParam(){
-    fun setLineSpace(height:Int){
-        perLineSpace = height
-    }
-}
+):BaseParam()

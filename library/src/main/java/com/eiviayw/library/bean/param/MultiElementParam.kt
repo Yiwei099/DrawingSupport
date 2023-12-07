@@ -13,8 +13,4 @@ data class MultiElementParam(
     val param1:BaseParam = BaseParam(),
     val param2:BaseParam = BaseParam(),
     val param3:BaseParam = BaseParam(),
-):BaseParam(){
-    fun setLineSpace(height:Int){
-        perLineSpace = height
-    }
-}
+):BaseParam()

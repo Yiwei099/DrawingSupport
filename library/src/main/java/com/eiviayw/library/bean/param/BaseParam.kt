@@ -1,6 +1,7 @@
 package com.eiviayw.library.bean.param
 
 import android.graphics.Typeface
+import com.eiviayw.library.Constant
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -15,4 +16,5 @@ open class BaseParam(
     var size: Float = 26f,//内容字号
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var perLineSpace: Int = 10,//行距
+    val gravity:Int = Constant.Companion.Gravity.TOP,//元素对齐方式，默认顶部对齐
 )

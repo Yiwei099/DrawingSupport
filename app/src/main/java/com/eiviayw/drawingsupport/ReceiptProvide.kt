@@ -37,15 +37,15 @@ class ReceiptProvide:BaseProvide(){
             bitmap.width,
             bitmap.height
         ).apply {
-            setLineSpace(30)
+            perLineSpace = 30
         })
         add(
             TextParam(
                 text = "00002",
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
     }
@@ -56,8 +56,8 @@ class ReceiptProvide:BaseProvide(){
                 text = "Tax Invoice",
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
@@ -66,7 +66,7 @@ class ReceiptProvide:BaseProvide(){
                 text = order.shopName,
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
             }
         )
 
@@ -75,7 +75,8 @@ class ReceiptProvide:BaseProvide(){
                 text = order.shopAddress,
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
@@ -84,7 +85,8 @@ class ReceiptProvide:BaseProvide(){
                 text = order.shopContact,
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
@@ -93,8 +95,8 @@ class ReceiptProvide:BaseProvide(){
                 text = "Order#:${order.tableNo}",
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
@@ -104,14 +106,14 @@ class ReceiptProvide:BaseProvide(){
                     text = "Served by",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.cashierID,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             )
         )
@@ -122,14 +124,14 @@ class ReceiptProvide:BaseProvide(){
                     text = "Order Date",
                     weight = 0.3,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.orderTime,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.7,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             )
         )
@@ -140,21 +142,21 @@ class ReceiptProvide:BaseProvide(){
                     text = "Transaction#",
                     weight = 0.4,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.orderNo,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.6,
                 ).apply {
-                    setTextSize(26f)
-                    setLineSpace(10)
+                    perLineSpace = 10
+                    size = 26f
                 }
             )
         )
 
         add(LineDashedParam().apply {
-            setLineSpace(30)
+            perLineSpace = 30
         })
 
         add(
@@ -163,22 +165,22 @@ class ReceiptProvide:BaseProvide(){
                     text = "Name",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = "AMT",
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             ).apply {
-                setLineSpace(0)
+                perLineSpace = 0
             }
         )
 
         add(LineDashedParam().apply {
-            setLineSpace(30)
+            perLineSpace = 30
         })
     }
 
@@ -190,19 +192,19 @@ class ReceiptProvide:BaseProvide(){
                         text = "${index.plus(1)}.${it.goodsName}",
                         weight = 0.7,
                     ).apply {
-                        setTextSize(26f)
-                        setFaceType(Typeface.DEFAULT_BOLD)
+                        size = 26f
+                        typeface = Typeface.DEFAULT_BOLD
                     },
                     param2 = TextParam(
                         text = it.totalPrice,
                         align = Constant.Companion.Align.ALIGN_END,
                         weight = 0.3,
                     ).apply {
-                        setTextSize(26f)
-                        setFaceType(Typeface.DEFAULT_BOLD)
+                        size = 26f
+                        typeface = Typeface.DEFAULT_BOLD
                     }
                 ).apply {
-                    setLineSpace(8)
+                    perLineSpace = 8
                 }
             )
 
@@ -212,9 +214,9 @@ class ReceiptProvide:BaseProvide(){
                     align = Constant.Companion.Align.ALIGN_START,
                     weight = 0.7
                 ).apply {
-                    if (index == goodsData.size -1) setLineSpace(0) else setLineSpace(18)
-                    setTextSize(26f)
-                    setFaceType(Typeface.DEFAULT_BOLD)
+                   perLineSpace =  if (index == goodsData.size -1) 0 else 18
+                    size = 26f
+                    typeface = Typeface.DEFAULT_BOLD
                 }
             )
         }
@@ -222,7 +224,7 @@ class ReceiptProvide:BaseProvide(){
 
     private fun convertOrderFooter(order: Order) = mutableListOf<BaseParam>().apply {
         add(LineDashedParam().apply {
-            setLineSpace(30)
+            perLineSpace = 30
         })
 
         add(
@@ -231,14 +233,14 @@ class ReceiptProvide:BaseProvide(){
                     text = "Count",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.qua,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             )
         )
@@ -249,14 +251,14 @@ class ReceiptProvide:BaseProvide(){
                     text = "Subtotal",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.subTotal,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             )
         )
@@ -267,16 +269,16 @@ class ReceiptProvide:BaseProvide(){
                     text = "Total",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
-                    setFaceType(Typeface.DEFAULT_BOLD)
+                    size = 26f
+                    typeface = Typeface.DEFAULT_BOLD
                 },
                 param2 = TextParam(
                     text = order.total,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
-                    setFaceType(Typeface.DEFAULT_BOLD)
+                    size = 26f
+                    typeface = Typeface.DEFAULT_BOLD
                 }
             )
         )
@@ -287,14 +289,14 @@ class ReceiptProvide:BaseProvide(){
                     text = "Cash payment",
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 },
                 param2 = TextParam(
                     text = order.total,
                     align = Constant.Companion.Align.ALIGN_END,
                     weight = 0.5,
                 ).apply {
-                    setTextSize(26f)
+                    size = 26f
                 }
             )
         )
@@ -304,8 +306,8 @@ class ReceiptProvide:BaseProvide(){
                 text = order.orderType,
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
     }
