@@ -6,14 +6,15 @@
 >1.自动测量文本宽度，并且自适应换行  
 >2.自定义最大宽度限制  
 >3.自定义字体大小  
->4.多种对齐方式：左对齐/右对齐/分散对齐/居中对齐  
->5.图文混排
+>4.自定义横向/纵向对齐方式  
+>5.图文混排  
+>6.自定义行距  
 
 #### **🌟使用步骤**
 
 ##### 1. BitmapOption => 配置收据的*绘制标准参数*
->`val receiptOptionKey = 1`  
->`val bitmapOption = BitmapOption()`
+>`val receiptOptionKey = 'ReceiptProvide'`  
+>`val bitmapOption = BitmapOption()`  
 
 ##### 2. 创建收据的数据提供者，在进行业务数据与绘制数据的转换
 >`val params = ReceiptProvide().convertDrawParam(generateOrder(), generateGoodsData())`
@@ -22,117 +23,142 @@
     private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
-                firstText = "Tax Invoice",
-                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
-                firstWeight = 1.0,
+                text = "Tax Invoice",
+                align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
         add(
             TextParam(
-                firstText = order.shopName,
-                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
-                firstWeight = 1.0,
+                text = order.shopName,
+                align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
             }
         )
 
         add(
             TextParam(
-                firstText = order.shopAddress,
-                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
-                firstWeight = 1.0,
+                text = order.shopAddress,
+                align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
         add(
             TextParam(
-                firstText = order.shopContact,
-                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
-                firstWeight = 1.0,
+                text = order.shopContact,
+                align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
         add(
             TextParam(
-                firstText = "Order#:${order.tableNo}",
-                firstTextAlign = Constant.Companion.Align.ALIGN_CENTER,
-                firstWeight = 1.0,
+                text = "Order#:${order.tableNo}",
+                align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
-                setTextSize(26f)
-                setFaceType(Typeface.DEFAULT_BOLD)
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
             }
         )
 
         add(
-            TextParam(
-                firstText = "Served by",
-                firstTextAlign = Constant.Companion.Align.ALIGN_START,
-                firstWeight = 0.5,
-                secondText = order.cashierID,
-                secondTextAlign = Constant.Companion.Align.ALIGN_END,
-                secondWeight = 0.5,
-            ).apply {
-                setTextSize(26f)
-            }
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Served by",
+                    weight = 0.5,
+                ).apply {
+                    size = 26f
+                },
+                param2 = TextParam(
+                    text = order.cashierID,
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.5,
+                ).apply {
+                    size = 26f
+                }
+            )
         )
 
         add(
-            TextParam(
-                firstText = "Order Date",
-                firstTextAlign = Constant.Companion.Align.ALIGN_START,
-                firstWeight = 0.3,
-                secondText = order.orderTime,
-                secondTextAlign = Constant.Companion.Align.ALIGN_END,
-                secondWeight = 0.7
-            ).apply {
-                setTextSize(26f)
-            }
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Order Date",
+                    weight = 0.3,
+                ).apply {
+                    size = 26f
+                },
+                param2 = TextParam(
+                    text = order.orderTime,
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.7,
+                ).apply {
+                    size = 26f
+                }
+            )
         )
 
         add(
-            TextParam(
-                firstText = "Transaction#",
-                firstTextAlign = Constant.Companion.Align.ALIGN_START,
-                firstWeight = 0.4,
-                secondText = order.orderNo,
-                secondTextAlign = Constant.Companion.Align.ALIGN_END,
-                secondWeight = 0.6
-            ).apply {
-                setTextSize(26f)
-            }
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Transaction#",
+                    weight = 0.4,
+                ).apply {
+                    size = 26f
+                    gravity = Constant.Companion.Gravity.CENTER
+                },
+                param2 = TextParam(
+                    text = order.orderNo,
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.6,
+                ).apply {
+                    perLineSpace = 10
+                    size = 26f
+                }
+            )
         )
 
-        add(LineDashedParam())
+        add(LineDashedParam().apply {
+            perLineSpace = 30
+        })
 
         add(
-            TextParam(
-                firstText = "Name",
-                firstTextAlign = Constant.Companion.Align.ALIGN_START,
-                firstWeight = 0.7,
-                secondText = "AMT",
-                secondTextAlign = Constant.Companion.Align.ALIGN_END,
-                secondWeight = 0.3
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Name",
+                    weight = 0.5,
+                ).apply {
+                    size = 26f
+                },
+                param2 = TextParam(
+                    text = "AMT",
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.5,
+                ).apply {
+                    size = 26f
+                }
             ).apply {
-                setTextSize(26f)
+                perLineSpace = 0
             }
         )
 
-        add(LineDashedParam())
+        add(LineDashedParam().apply {
+            perLineSpace = 30
+        })
     }
 
 
 ##### 3. 把数据提供者处理的<u>结果</u>与<u>绘制的标准参数</u>丢到<u>DrawBitmapHelper</u>中即可得到绘制的结果(Bitmap/Bitmap数组)
 >`DrawBitmapHelper.addOption(receiptOptionKey,bitmapOption)`  
->`val bitmapArray = DrawBitmapHelper.convert(receiptOptionKey, params)`
+>`val bitmapArray = DrawBitmapHelper.convert(receiptOptionKey, params)`  
 
 ##### 4.业务中使用绘制的结果
 >a.转换成Bitmap显示/预览  
