@@ -365,10 +365,14 @@ object DrawBitmapHelper {
             //不需要换行处理
             itemHeight = measure.second.toFloat()
             endYInCanvas = startYInCanvas.plus(measure.second)
-            val startX = when(align){
-                Constant.Companion.Align.ALIGN_END-> defaultStartX.plus(elementMaxWidth.minus(width)).toFloat()
-                Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2)).plus(defaultStartX).toFloat()
-                else ->defaultStartX
+            val startX = when (align) {
+                Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(elementMaxWidth.minus(width))
+                    .toFloat()
+
+                Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2))
+                    .plus(defaultStartX).toFloat()
+
+                else -> defaultStartX
             }
             result.add(
                 TextElement(
@@ -424,7 +428,9 @@ object DrawBitmapHelper {
     ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
         var tempStartYInCanvas = startYInCanvas
-        val char = text.toCharArray()
+        val contentChar = text.split(" ")
+        val isEnglishContent = contentChar.size != 1
+        val char = if (isEnglishContent) contentChar else text.toCharArray().toList()
         val charBuilder = StringBuilder()
         val tempCharBuilder = StringBuilder()
         var sumItemY = 0f
@@ -447,10 +453,17 @@ object DrawBitmapHelper {
                     charBuilder.append(value)
                 }
                 val width = measureText(paint, charBuilder.toString()).first
-                val startX = when(align){
-                    Constant.Companion.Align.ALIGN_END-> defaultStartX.plus(elementMaxWidth.minus(width)).toFloat()
-                    Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2)).toFloat()
-                    else ->defaultStartX
+                val startX = when (align) {
+                    Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(
+                        elementMaxWidth.minus(
+                            width
+                        )
+                    ).toFloat()
+
+                    Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2)
+                        .minus(width.div(2)).toFloat()
+
+                    else -> defaultStartX
                 }
                 result.add(
                     TextElement(
@@ -475,11 +488,28 @@ object DrawBitmapHelper {
                     tempStartYInCanvas = tempStartYInCanvas.plus(10)
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
+                    if (isEnglishContent) {
+                        tempCharBuilder.append(" ")
+                        charBuilder.append(" ")
+                    }
                 }
             } else {
                 charBuilder.append(value)
+                if (isEnglishContent) {
+                    charBuilder.append(" ")
+                }
             }
+        }
 
+        if (tempCharBuilder.isNotEmpty()) {
+            //一般只有一个
+            val resultFinal = convertEnterLineElement(
+                tempCharBuilder.toString(),
+                align, tempStartYInCanvas, defaultStartX, elementMaxWidth, paint, sourceItem
+            )
+            tempStartYInCanvas += resultFinal.second
+            sumItemY += resultFinal.second
+            result.addAll(resultFinal.third)
         }
         return Triple(tempStartYInCanvas, sumItemY, result)
     }

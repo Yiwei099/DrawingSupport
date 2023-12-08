@@ -31,7 +31,11 @@ class MainActivity : AppCompatActivity() {
 
         DrawBitmapHelper.addOption(ReceiptProvide.KEY, BitmapOption())
         val receiptProvide = ReceiptProvide()
-        DrawBitmapHelper.addOption(LabelProvide.KEY,BitmapOption())
+        DrawBitmapHelper.addOption(
+            LabelProvide.KEY, BitmapOption(
+                maxWidth = 400
+            )
+        )
         val labelProvide = LabelProvide()
 
         val im = findViewById<ImageView>(R.id.imResult)
@@ -40,7 +44,7 @@ class MainActivity : AppCompatActivity() {
             recycleBitmap()
             val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
             val params =
-                receiptProvide.convertDrawParam(generateOrder(), generateGoodsData(),bitmapCode)
+                receiptProvide.convertDrawParam(generateOrder(), generateGoodsData(), bitmapCode)
             bitmapCode.recycle()
             val bitmapArray = DrawBitmapHelper.convert(ReceiptProvide.KEY, params)
             bitmap = BitmapFactory.decodeByteArray(
@@ -51,19 +55,25 @@ class MainActivity : AppCompatActivity() {
             im.setImageBitmap(bitmap)
         }
 
-        findViewById<Button>(R.id.tvRefreshLabel).setOnClickListener{
+        findViewById<Button>(R.id.tvRefreshLabel).setOnClickListener {
             recycleBitmap()
-            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
-            val params =
-                labelProvide.convertDrawParam(Goods(),bitmapCode)
-            bitmapCode.recycle()
-            val bitmapArray = DrawBitmapHelper.convert(LabelProvide.KEY, params)
-            bitmap = BitmapFactory.decodeByteArray(
-                bitmapArray,
-                0,
-                bitmapArray.size
-            )
-            im.setImageBitmap(bitmap)
+            Util.getInstance().zoomBitmap(
+                BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
+                240.0,
+                80.0
+            )?.let {
+                val params =
+                    labelProvide.convertDrawParam(Goods(), it)
+                it.recycle()
+                val bitmapArray = DrawBitmapHelper.convert(LabelProvide.KEY, params)
+                bitmap = BitmapFactory.decodeByteArray(
+                    bitmapArray,
+                    0,
+                    bitmapArray.size
+                )
+                im.setImageBitmap(bitmap)
+            }
+
         }
     }
 
@@ -128,7 +138,7 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun recycleBitmap(){
+    private fun recycleBitmap() {
         if (bitmap != null) {
             bitmap?.recycle()
             bitmap = null
