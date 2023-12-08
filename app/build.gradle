@@ -5,12 +5,12 @@ plugins {
 
 android {
     namespace 'com.eiviayw.drawingsupport'
-    compileSdk 33
+    compileSdk rootProject.compileSdkVersion
 
     defaultConfig {
         applicationId "com.eiviayw.drawingsupport"
-        minSdk 24
-        targetSdk 33
+        minSdk rootProject.minSdkVersion
+        targetSdk rootProject.compileSdkVersion
         versionCode 1
         versionName "1.0"
 
