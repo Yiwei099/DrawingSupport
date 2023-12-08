@@ -1,4 +1,4 @@
-package com.eiviayw.drawingsupport
+package com.eiviayw.drawingsupport.receipt
 
 import android.graphics.Bitmap
 import android.graphics.Typeface
@@ -23,34 +23,31 @@ import java.io.ByteArrayOutputStream
  *
  * 收据数据提供者
  */
-class ReceiptProvide:BaseProvide(){
-    override fun generateDrawParam(): List<BaseParam> {
-        return super.generateDrawParam()
-    }
-
-    fun convertDrawParam(order: Order,goodsData:List<Goods>,bitmap: Bitmap)
-    = mutableListOf<BaseParam>().apply {
-        addAll(convertOrderHeader(order))
-        addAll(convertOrderGoods(goodsData))
-        addAll(convertOrderFooter(order))
-        add(MultiElementParam(
-            param1 = GraphicsParam(
-                compressBitmapToByteArray(bitmap),
-                bitmap.width,
-                bitmap.height
-            ),
-            param2 = TextParam(
-                text = "00002",
-                align = Constant.Companion.Align.ALIGN_CENTER,
-            ).apply {
-                size = 26f
-                typeface = Typeface.DEFAULT_BOLD
-            }
-        ).apply {
-            perLineSpace = 100
-        })
-
-    }
+class ReceiptProvide : BaseProvide() {
+    fun convertDrawParam(order: Order, goodsData: List<Goods>, bitmap: Bitmap) =
+        mutableListOf<BaseParam>().apply {
+            addAll(convertOrderHeader(order))
+            addAll(convertOrderGoods(goodsData))
+            addAll(convertOrderFooter(order))
+            add(
+                GraphicsParam(
+                    compressBitmapToByteArray(bitmap),
+                    bitmap.width,
+                    bitmap.height
+                ).apply {
+                    perLineSpace = 40
+                }
+            )
+            add(
+                TextParam(
+                    text = "00002",
+                    align = Constant.Companion.Align.ALIGN_CENTER,
+                ).apply {
+                    size = 26f
+                    typeface = Typeface.DEFAULT_BOLD
+                }
+            )
+        }
 
     private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
         add(
@@ -145,6 +142,7 @@ class ReceiptProvide:BaseProvide(){
                     weight = 0.4,
                 ).apply {
                     size = 26f
+                    gravity = Constant.Companion.Gravity.CENTER
                 },
                 param2 = TextParam(
                     text = order.orderNo,
@@ -216,7 +214,7 @@ class ReceiptProvide:BaseProvide(){
                     align = Constant.Companion.Align.ALIGN_START,
                     weight = 0.7
                 ).apply {
-                   perLineSpace =  if (index == goodsData.size -1) 0 else 18
+                    perLineSpace = if (index == goodsData.size - 1) 0 else 18
                     size = 26f
                     typeface = Typeface.DEFAULT_BOLD
                 }
@@ -314,9 +312,7 @@ class ReceiptProvide:BaseProvide(){
         )
     }
 
-    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val ops = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
-        return ops.toByteArray()
+    companion object {
+        const val KEY = "ReceiptProvide"
     }
 }

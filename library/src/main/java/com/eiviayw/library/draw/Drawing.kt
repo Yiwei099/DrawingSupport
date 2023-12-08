@@ -56,8 +56,8 @@ class Drawing private constructor() {
      */
     fun drawDashedLine(
         element: LineDashedElement,
-        canvas: Canvas,paint: Paint
-    ){
+        canvas: Canvas, paint: Paint
+    ) {
         val mPath = Path()
         mPath.moveTo(element.startX, element.startY)
         mPath.lineTo(element.endX, element.startY)
@@ -78,30 +78,20 @@ class Drawing private constructor() {
         canvas: Canvas,
         paint: Paint
     ) {
-        when (textElement.align) {
-            Constant.Companion.Align.ALIGN_CENTER -> {
-                val startX =
-                    getCenterStart(bitmapOption.maxWidth).minus(textElement.textWidth.div(2))
-                        .toFloat()
-                canvas.drawText(textElement.text, startX, textElement.startY, paint)
-            }
-            else -> {
-                canvas.drawText(textElement.text, textElement.startX, textElement.startY, paint)
-            }
-        }
+        canvas.drawText(textElement.text, textElement.startX, textElement.startY, paint)
     }
 
     fun drawGraphics(
         graphicsElement: GraphicsElement,
         canvas: Canvas,
         paint: Paint
-    ){
+    ) {
         val bitmap = BitmapFactory.decodeByteArray(
             graphicsElement.bitmapData,
             0,
             graphicsElement.bitmapData.size
         )
-        canvas.drawBitmap(bitmap,graphicsElement.startX,graphicsElement.startY,paint)
+        canvas.drawBitmap(bitmap, graphicsElement.startX, graphicsElement.startY, paint)
         bitmap.recycle()
     }
     //</editor-fold desc="绘制">

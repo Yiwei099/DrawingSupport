@@ -1,6 +1,8 @@
 package com.eiviayw.library.provide
 
+import android.graphics.Bitmap
 import com.eiviayw.library.bean.param.BaseParam
+import java.io.ByteArrayOutputStream
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -13,5 +15,11 @@ import com.eiviayw.library.bean.param.BaseParam
 open class BaseProvide{
     open fun generateDrawParam():List<BaseParam>{
         return emptyList()
+    }
+
+    protected fun compressBitmapToByteArray(bitmap: Bitmap, quality: Int = 100): ByteArray {
+        val ops = ByteArrayOutputStream()
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, ops)
+        return ops.toByteArray()
     }
 }

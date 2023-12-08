@@ -3,14 +3,15 @@ package com.eiviayw.drawingsupport
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
+import android.widget.Button
 import android.widget.ImageView
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import com.eiviayw.drawingsupport.bean.Goods
 import com.eiviayw.drawingsupport.bean.Order
+import com.eiviayw.drawingsupport.label.LabelProvide
+import com.eiviayw.drawingsupport.receipt.ReceiptProvide
 import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.draw.DrawBitmapHelper
-import java.io.ByteArrayOutputStream
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -28,18 +29,35 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DrawBitmapHelper.addOption(1, BitmapOption())
+        DrawBitmapHelper.addOption(ReceiptProvide.KEY, BitmapOption())
         val receiptProvide = ReceiptProvide()
+        DrawBitmapHelper.addOption(LabelProvide.KEY,BitmapOption())
+        val labelProvide = LabelProvide()
 
         val im = findViewById<ImageView>(R.id.imResult)
 
-        findViewById<TextView>(R.id.tvRefresh).setOnClickListener {
+        findViewById<Button>(R.id.tvRefresh).setOnClickListener {
             recycleBitmap()
             val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
             val params =
                 receiptProvide.convertDrawParam(generateOrder(), generateGoodsData(),bitmapCode)
             bitmapCode.recycle()
-            val bitmapArray = DrawBitmapHelper.convert(1, params)
+            val bitmapArray = DrawBitmapHelper.convert(ReceiptProvide.KEY, params)
+            bitmap = BitmapFactory.decodeByteArray(
+                bitmapArray,
+                0,
+                bitmapArray.size
+            )
+            im.setImageBitmap(bitmap)
+        }
+
+        findViewById<Button>(R.id.tvRefreshLabel).setOnClickListener{
+            recycleBitmap()
+            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
+            val params =
+                labelProvide.convertDrawParam(Goods(),bitmapCode)
+            bitmapCode.recycle()
+            val bitmapArray = DrawBitmapHelper.convert(LabelProvide.KEY, params)
             bitmap = BitmapFactory.decodeByteArray(
                 bitmapArray,
                 0,

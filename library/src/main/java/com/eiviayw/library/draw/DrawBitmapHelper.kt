@@ -30,7 +30,7 @@ import java.io.ByteArrayOutputStream
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  */
 object DrawBitmapHelper {
-    private val optionMap: MutableMap<Int, BitmapOption> = mutableMapOf()
+    private val optionMap: MutableMap<String, BitmapOption> = mutableMapOf()
 
     /**
      * 绘制总入口
@@ -39,7 +39,7 @@ object DrawBitmapHelper {
      * @param sourceData 图片数据源
      * @return Bitmap数组
      */
-    fun convert(bitmapType: Int, sourceData: List<BaseParam>): ByteArray {
+    fun convert(bitmapType: String, sourceData: List<BaseParam>): ByteArray {
         //获取当前图片样式模版
         val bitmapOption = optionMap[bitmapType] ?: BitmapOption()
         val mainPaint = Paint().apply {
@@ -225,7 +225,7 @@ object DrawBitmapHelper {
                         paint,
                         sourceItem.text,
                         sourceItem.align,
-                        defaultStartX,
+                        if (sourceItem.align == Constant.Companion.Align.ALIGN_START) defaultStartX else 0f,
                         startYInCanvas
                     )
                     startYInCanvas = elementResult.first
@@ -316,7 +316,7 @@ object DrawBitmapHelper {
         when (sourceItem.gravity) {
             Constant.Companion.Gravity.CENTER -> {
                 handleItem.data4.forEach {
-                    it.startY = startYInCanvas.minus((targetItem.data3))
+                    it.startY = startYInCanvas.minus((targetItem.data3.div(2)))
                         .plus(handleItem.data3.div(2))
                     it.endY = it.startY.plus(handleItem.data3)
                 }
@@ -365,13 +365,11 @@ object DrawBitmapHelper {
             //不需要换行处理
             itemHeight = measure.second.toFloat()
             endYInCanvas = startYInCanvas.plus(measure.second)
-            val startX =
-                if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
-                    elementMaxWidth.minus(
-                        width
-                    )
-                )
-                    .toFloat() else defaultStartX
+            val startX = when(align){
+                Constant.Companion.Align.ALIGN_END-> defaultStartX.plus(elementMaxWidth.minus(width)).toFloat()
+                Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2)).plus(defaultStartX).toFloat()
+                else ->defaultStartX
+            }
             result.add(
                 TextElement(
                     text = text,
@@ -449,11 +447,11 @@ object DrawBitmapHelper {
                     charBuilder.append(value)
                 }
                 val width = measureText(paint, charBuilder.toString()).first
-                val startX =
-                    if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
-                        elementMaxWidth.minus(width)
-                    )
-                        .toFloat() else defaultStartX
+                val startX = when(align){
+                    Constant.Companion.Align.ALIGN_END-> defaultStartX.plus(elementMaxWidth.minus(width)).toFloat()
+                    Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2)).toFloat()
+                    else ->defaultStartX
+                }
                 result.add(
                     TextElement(
                         text = charBuilder.toString(),
@@ -474,7 +472,7 @@ object DrawBitmapHelper {
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
-                    tempStartYInCanvas = tempStartYInCanvas.plus(sourceItem.perLineSpace)
+                    tempStartYInCanvas = tempStartYInCanvas.plus(10)
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }
@@ -530,7 +528,7 @@ object DrawBitmapHelper {
 
                 return DataEntity4(
                     item.width.toFloat(),
-                    item.height.toFloat(),
+                    startYInCanvas.plus(item.height.toFloat()),
                     item.height.toFloat(),
                     mutableListOf<BaseElement>().apply {
                         add(
@@ -559,7 +557,7 @@ object DrawBitmapHelper {
      * @param key 索引
      * @param value 图片模版
      */
-    fun addOption(key: Int, value: BitmapOption): DrawBitmapHelper {
+    fun addOption(key: String, value: BitmapOption): DrawBitmapHelper {
         optionMap[key] = value
         return this
     }
@@ -568,7 +566,7 @@ object DrawBitmapHelper {
      * 增加图片模版
      * @param options 多种图片模版
      */
-    fun addOptions(options: Map<Int, BitmapOption>): DrawBitmapHelper {
+    fun addOptions(options: Map<String, BitmapOption>): DrawBitmapHelper {
         optionMap.putAll(options)
         return this
     }
