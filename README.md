@@ -10,17 +10,35 @@
 >5.图文混排  
 >6.自定义行距  
 
+#### **🌟获取方式**
+>1⃣️ Add it in your root build.gradle at the end of repositories:   
+```
+dependencyResolutionManagement {
+  repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
+  repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+  }
+}
+```
+>2⃣️ Add the dependency:  
+```
+implementation 'com.github.Yiwei099:DrawingSupport:1.0.0'
+```  
+
 #### **🌟使用步骤**
+>1⃣️ BitmapOption => 配置收据的*绘制标准参数*
+```
+val receiptOptionKey = "ReceiptProvide"  
+val bitmapOption = BitmapOption()
+```
 
-##### 1. BitmapOption => 配置收据的*绘制标准参数*
->`val receiptOptionKey = 'ReceiptProvide'`  
->`val bitmapOption = BitmapOption()`  
+>2⃣️ 创建收据的数据提供者，在进行业务数据与绘制数据的转换
+```
+val params = ReceiptProvide().convertDrawParam(generateOrder(), generateGoodsData())
 
-##### 2. 创建收据的数据提供者，在进行业务数据与绘制数据的转换
->`val params = ReceiptProvide().convertDrawParam(generateOrder(), generateGoodsData())`
-  
-###### Ps：数据转换部分实例  
-    private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
+//数据转换部分实例  
+private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
                 text = "Tax Invoice",
@@ -154,17 +172,19 @@
             perLineSpace = 30
         })
     }
+```
 
+>3⃣️ 把数据提供者处理的<u>结果</u>与<u>绘制的标准参数</u>丢到<u>DrawBitmapHelper</u>中即可得到绘制的结果(Bitmap数组)
+```
+DrawBitmapHelper.addOption(receiptOptionKey,bitmapOption)
+val bitmapArray = DrawBitmapHelper.convert(receiptOptionKey, params)
+```
 
-##### 3. 把数据提供者处理的<u>结果</u>与<u>绘制的标准参数</u>丢到<u>DrawBitmapHelper</u>中即可得到绘制的结果(Bitmap/Bitmap数组)
->`DrawBitmapHelper.addOption(receiptOptionKey,bitmapOption)`  
->`val bitmapArray = DrawBitmapHelper.convert(receiptOptionKey, params)`  
-
-##### 4.业务中使用绘制的结果
+##### 业务中使用绘制的结果
 >a.转换成Bitmap显示/预览  
->b.存储或发送打印
+>b.存储或发送打印  
 
-效果预览 *具体使用细节请查阅 **MainActivity.kt***
+效果预览 *具体使用细节请查阅 **MainActivity.kt***  
 ![Image Text](https://github.com/Yiwei099/DrawingSupport/blob/master/app/src/main/res/drawable/receipt.png)
 
 ### Drawing Support by receipt
