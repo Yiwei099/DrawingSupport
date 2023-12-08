@@ -18,6 +18,7 @@ class BitmapOption(
     val endIndentation: Float = 20f,//结束方向边距
     val bottomBlankHeight: Int = 10,//底部留白
     val antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
+    val quality:Int = 100,//生成的图像质量：0~100
 ){
     /**
      * 图片内容有效宽度

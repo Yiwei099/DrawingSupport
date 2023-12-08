@@ -6,8 +6,8 @@ import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Rect
 import android.text.TextUtils
-import android.util.Half.toFloat
 import com.eiviayw.library.Constant
+import com.eiviayw.library.bean.DataEntity4
 import com.eiviayw.library.bean.element.BaseElement
 import com.eiviayw.library.bean.element.GraphicsElement
 import com.eiviayw.library.bean.element.LineDashedElement
@@ -37,6 +37,7 @@ object DrawBitmapHelper {
      * 绘制前数据处理
      * @param bitmapType 图片类型
      * @param sourceData 图片数据源
+     * @return Bitmap数组
      */
     fun convert(bitmapType: Int, sourceData: List<BaseParam>): ByteArray {
         //获取当前图片样式模版
@@ -88,7 +89,7 @@ object DrawBitmapHelper {
             }
         }
 
-        val resultArray = compressBitmapToByteArray(bitmap)
+        val resultArray = compressBitmapToByteArray(bitmap, bitmapOption.quality)
         bitmap.recycle()
         return resultArray
     }
@@ -98,6 +99,7 @@ object DrawBitmapHelper {
      * @param bitmapOption 当前图像的标准参数
      * @param sourceData 业务数据源
      * @param paint 画笔
+     * @return 绘制元素块集合、最终绘制位置
      */
     private fun convertSourceDataToElement(
         bitmapOption: BitmapOption,
@@ -114,7 +116,7 @@ object DrawBitmapHelper {
         for (index in sourceData.indices) {
             when (val sourceItem = sourceData[index]) {
                 is MultiElementParam -> {
-
+                    //处理第一个元素
                     val firstItem = handleMultiParamItem(
                         sourceItem.param1,
                         paint,
@@ -122,60 +124,92 @@ object DrawBitmapHelper {
                         defaultStartX,
                         startYInCanvas,
                     )
+
+                    //处理第二个元素
                     val secondItem = handleMultiParamItem(
                         sourceItem.param2,
                         paint,
                         maxWidth,
-                        firstItem.first,
+                        firstItem.data1,
                         startYInCanvas,
                     )
+                    //处理第三个元素
                     val thirdItem = handleMultiParamItem(
                         sourceItem.param3,
                         paint,
                         maxWidth,
-                        secondItem.first,
+                        secondItem.data1,
                         startYInCanvas,
                     )
 
-                    val maxItemHeight = getMaxFromMany(
-                        firstItem.second,
-                        secondItem.second,
-                        thirdItem.second
+                    //更新最新的Y值(当前混排元素中取最高的元素)
+                    startYInCanvas = getMaxFromMany(
+                        firstItem.data2,
+                        secondItem.data2,
+                        thirdItem.data2
                     )
 
-                    /*if (maxItemHeight == firstItem.second){
-                        //第一个元素最高
-                        if (sourceItem.param2.gravity == Constant.Companion.Gravity.CENTER){
-                            secondItem.third.forEach {
+                    //获取当前混排元素中最高的Item
+                    val maxItemHeight = getMaxFromMany(
+                        firstItem.data3,
+                        secondItem.data3,
+                        thirdItem.data3
+                    )
 
-                            }
-                        }else if (sourceItem.param2.gravity == Constant.Companion.Gravity.BOTTOM){
-                            secondItem.third.forEach {
-
-                            }
-                        }else{
-                            //nothing to do
+                    //处理垂直对齐方式
+                    when (maxItemHeight) {
+                        firstItem.data3 -> {
+                            //第一个元素最高
+                            handleElementGravity(
+                                sourceItem.param2,
+                                secondItem,
+                                startYInCanvas,
+                                firstItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param3,
+                                thirdItem,
+                                startYInCanvas,
+                                firstItem
+                            )
                         }
 
-                        if (sourceItem.param3.gravity == Constant.Companion.Gravity.CENTER){
-                            thirdItem.third.forEach {
-
-                            }
-                        }else if (sourceItem.param3.gravity == Constant.Companion.Gravity.BOTTOM){
-                            thirdItem.third.forEach {
-
-                            }
-                        }else{
-                            //nothing to do
+                        secondItem.data3 -> {
+                            //第二个元素最高
+                            handleElementGravity(
+                                sourceItem.param1,
+                                firstItem,
+                                startYInCanvas,
+                                secondItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param3,
+                                thirdItem,
+                                startYInCanvas,
+                                secondItem
+                            )
                         }
-                    }else if (maxItemHeight == secondItem.second){
-                        //第二个元素最高
 
-                    }else{
-                        //第三个元素最高
-                    }*/
+                        else -> {
+                            //第三个元素最高
+                            handleElementGravity(
+                                sourceItem.param1,
+                                firstItem,
+                                startYInCanvas,
+                                thirdItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param3,
+                                secondItem,
+                                startYInCanvas,
+                                thirdItem
+                            )
+                        }
+                    }
 
-                    startYInCanvas = maxItemHeight
+                    result.addAll(firstItem.data4)
+                    result.addAll(secondItem.data4)
+                    result.addAll(thirdItem.data4)
 
                     startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
@@ -195,7 +229,7 @@ object DrawBitmapHelper {
                         startYInCanvas
                     )
                     startYInCanvas = elementResult.first
-                    result.addAll(elementResult.second)
+                    result.addAll(elementResult.third)
                     startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
@@ -241,8 +275,6 @@ object DrawBitmapHelper {
                 }
 
                 is GraphicsParam -> {
-                    paint.textSize = sourceItem.size
-                    paint.typeface = sourceItem.typeface
                     result.add(
                         GraphicsElement(sourceItem.bitmapData).apply {
                             setStartXValue(bitmapOption.getCenterX().minus(sourceItem.width.div(2)))
@@ -268,6 +300,52 @@ object DrawBitmapHelper {
         return Pair(result, startYInCanvas)
     }
 
+    /**
+     * 处理纵向对齐方式
+     * @param sourceItem 业务源元素块
+     * @param handleItem 需要处理对齐的元素块
+     * @param startYInCanvas 最新的Y位置
+     * @param targetItem 被对齐的元素块(参照元素块)
+     */
+    private fun handleElementGravity(
+        sourceItem: BaseParam,
+        handleItem: DataEntity4<Float, Float, Float, List<BaseElement>>,
+        startYInCanvas: Float,
+        targetItem: DataEntity4<Float, Float, Float, List<BaseElement>>
+    ) {
+        when (sourceItem.gravity) {
+            Constant.Companion.Gravity.CENTER -> {
+                handleItem.data4.forEach {
+                    it.startY = startYInCanvas.minus((targetItem.data3))
+                        .plus(handleItem.data3.div(2))
+                    it.endY = it.startY.plus(handleItem.data3)
+                }
+            }
+
+            Constant.Companion.Gravity.BOTTOM -> {
+                handleItem.data4.forEach {
+                    it.endY = targetItem.data2
+                    it.startY = it.endY.minus(handleItem.data3)
+                }
+            }
+
+            else -> {
+                //nothing to do
+            }
+        }
+    }
+
+    /**
+     * 业务源文本元素块转换成绘制文本元素块
+     * @param elementMaxWidth 元素快的最大宽度
+     * @param sourceItem 业务源元素快
+     * @param paint 画笔
+     * @param text 文本内容
+     * @param align 横向对齐方式
+     * @param defaultStartX 默认起始X位置
+     * @param startYInCanvas 最终绘制位置
+     * @return 最终绘制位置、当前元素块高度、绘制元素块集合
+     */
     private fun handleTextParamToElement(
         elementMaxWidth: Double,
         sourceItem: TextParam,
@@ -276,14 +354,16 @@ object DrawBitmapHelper {
         align: Int,
         defaultStartX: Float,
         startYInCanvas: Float,
-    ): Pair<Float,List<BaseElement>> {
+    ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
         var endYInCanvas = 0f
+        var itemHeight = 0f
         val measure = measureText(paint, text)
         val width = measure.first
 
         if (width < elementMaxWidth) {
             //不需要换行处理
+            itemHeight = measure.second.toFloat()
             endYInCanvas = startYInCanvas.plus(measure.second)
             val startX =
                 if (align == Constant.Companion.Align.ALIGN_END) defaultStartX.plus(
@@ -318,12 +398,23 @@ object DrawBitmapHelper {
                 sourceItem,
             )
             endYInCanvas = resultY.first
+            itemHeight = resultY.second
             result.addAll(resultY.third)
         }
 
-        return Pair(endYInCanvas,result)
+        return Triple(endYInCanvas, itemHeight, result)
     }
 
+    /**
+     * 文本元素自适应换行
+     * @param text 文本内容
+     * @param align 横向对齐方式
+     * @param startYInCanvas 最新的Y位置
+     * @param defaultStartX 默认起始X位置
+     * @param elementMaxWidth 元素快的最大宽度
+     * @param paint 画笔
+     * @param sourceItem 业务源元素快
+     */
     private fun convertEnterLineElement(
         text: String,
         align: Int,
@@ -332,7 +423,7 @@ object DrawBitmapHelper {
         elementMaxWidth: Double,
         paint: Paint,
         sourceItem: TextParam,
-    ): Triple<Float, Float,List<BaseElement>> {
+    ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
         var tempStartYInCanvas = startYInCanvas
         val char = text.toCharArray()
@@ -392,7 +483,7 @@ object DrawBitmapHelper {
             }
 
         }
-        return Triple(tempStartYInCanvas, sumItemY,result)
+        return Triple(tempStartYInCanvas, sumItemY, result)
     }
 
     /**
@@ -402,7 +493,7 @@ object DrawBitmapHelper {
      * @param maxWidth 画布最大宽度
      * @param defaultStartX X的起始位置
      * @param startYInCanvas Y的起始位置
-     * @return 当前元素的宽高数据
+     * @return 元素宽度，最新的Y值，元素高度，元素转换结果
      */
     private fun handleMultiParamItem(
         item: BaseParam,
@@ -410,7 +501,7 @@ object DrawBitmapHelper {
         maxWidth: Float,
         defaultStartX: Float,
         startYInCanvas: Float,
-    ): Triple<Float, Float,List<BaseElement>> {
+    ): DataEntity4<Float, Float, Float, List<BaseElement>> {
         when (item) {
             is TextParam -> {
                 //填充画笔
@@ -427,12 +518,36 @@ object DrawBitmapHelper {
                     defaultStartX,
                     startYInCanvas
                 )
-                return Triple(itemWidth.toFloat(), itemHeight.first,itemHeight.second)
+                return DataEntity4(
+                    itemWidth.toFloat(),
+                    itemHeight.first,
+                    itemHeight.second,
+                    itemHeight.third
+                )
+            }
+
+            is GraphicsParam -> {
+
+                return DataEntity4(
+                    item.width.toFloat(),
+                    item.height.toFloat(),
+                    item.height.toFloat(),
+                    mutableListOf<BaseElement>().apply {
+                        add(
+                            GraphicsElement(item.bitmapData).apply {
+                                setStartXValue(defaultStartX)
+                                setEndXValue(defaultStartX.plus(item.width))
+                                setStartYValue(startYInCanvas)
+                                setEndYValue(startYInCanvas.plus(item.height))
+                                setLineSpace(item.perLineSpace)
+                            }
+                        )
+                    })
             }
 
             else -> {
                 //暂未支持的类型
-                return Triple(defaultStartX, 0f, emptyList<BaseElement>())
+                return DataEntity4(defaultStartX, 0f, 0f, emptyList<BaseElement>())
             }
         }
     }
@@ -463,14 +578,24 @@ object DrawBitmapHelper {
     }
     //</editor-fold desc="图片模版参数管理">
 
-    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
+    /**
+     * Bitmap转换成Bitmap数组
+     * @param bitmap 图像
+     * @param quality 质量
+     * @return Bitmap数组
+     */
+    private fun compressBitmapToByteArray(bitmap: Bitmap, quality: Int): ByteArray {
         val ops = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
+        bitmap.compress(Bitmap.CompressFormat.PNG, quality, ops)
         return ops.toByteArray()
     }
 
-    private fun isEmpty(str: String?): Boolean = TextUtils.isEmpty(str)
 
+    /**
+     * 从一堆数中取最大值
+     * @param  values 一堆数
+     * @return 最大值
+     */
     private fun getMaxFromMany(vararg values: Float): Float {
         var max = 0f
         values.forEach {
@@ -487,6 +612,7 @@ object DrawBitmapHelper {
      * 获取当前内容宽度与高度
      * @param paint 画笔
      * @param text 内容
+     * @return 宽、高
      */
     private fun measureText(paint: Paint, text: String): Pair<Int, Int> {
         val rect = Rect()

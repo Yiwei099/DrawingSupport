@@ -28,26 +28,28 @@ class ReceiptProvide:BaseProvide(){
         return super.generateDrawParam()
     }
 
-    fun convertDrawParam(order: Order,goodsData:List<Goods>,bitmap: Bitmap) = mutableListOf<BaseParam>().apply {
+    fun convertDrawParam(order: Order,goodsData:List<Goods>,bitmap: Bitmap)
+    = mutableListOf<BaseParam>().apply {
         addAll(convertOrderHeader(order))
         addAll(convertOrderGoods(goodsData))
         addAll(convertOrderFooter(order))
-        add(GraphicsParam(
-            compressBitmapToByteArray(bitmap),
-            bitmap.width,
-            bitmap.height
-        ).apply {
-            perLineSpace = 30
-        })
-        add(
-            TextParam(
+        add(MultiElementParam(
+            param1 = GraphicsParam(
+                compressBitmapToByteArray(bitmap),
+                bitmap.width,
+                bitmap.height
+            ),
+            param2 = TextParam(
                 text = "00002",
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
                 size = 26f
                 typeface = Typeface.DEFAULT_BOLD
             }
-        )
+        ).apply {
+            perLineSpace = 100
+        })
+
     }
 
     private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
