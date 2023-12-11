@@ -27,18 +27,26 @@ implementation 'com.github.Yiwei099:DrawingSupport:1.0.0'
 ```  
 
 #### **🌟使用步骤**
->1⃣️ BitmapOption => 配置收据的*绘制标准参数*
+>2⃣️ 继承*BaseProvide*创建收据的数据提供者，并提供图像的标准参数
 ```
-val receiptOptionKey = "ReceiptProvide"  
-val bitmapOption = BitmapOption()
-```
-
->2⃣️ 创建收据的数据提供者，在进行业务数据与绘制数据的转换
-```
-val params = ReceiptProvide().convertDrawParam(generateOrder(), generateGoodsData())
-
-//数据转换部分实例  
-private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
+//创建数据提供者
+class ReceiptProvide: BaseProvide(BitmapOption()) {
+    //业务数据转换成绘制数据  
+    fun start(order: Order,goodsData: List<Goods>,bitmap: Bitmap):ByteArray{
+        val params = generateDrawParam(order, goodsData, bitmap)
+        //调用绘制即可
+        return startDraw(params)
+    }  
+    
+    //具体转换细节  
+    private fun generateDrawParam(order: Order,goodsData: List<Goods>,bitmap:Bitmap)
+     = mutableListOf<BaseParam>().apply {
+        addAll(convertOrderHeader(order))
+        ...
+      }  
+      
+    //部分细节
+    private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
                 text = "Tax Invoice",
@@ -172,12 +180,13 @@ private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply 
             perLineSpace = 30
         })
     }
+}
+
 ```
 
->3⃣️ 把数据提供者处理的<u>结果</u>与<u>绘制的标准参数</u>丢到<u>DrawBitmapHelper</u>中即可得到绘制的结果(Bitmap数组)
+>3⃣️ 使用数据提供者生成的图像数据(Bitmap数组)
 ```
-DrawBitmapHelper.addOption(receiptOptionKey,bitmapOption)
-val bitmapArray = DrawBitmapHelper.convert(receiptOptionKey, params)
+val bitmapArray = receiptProvide.start(Order, GoodsList, bitmapCode)
 ```
 
 ##### 业务中使用绘制的结果

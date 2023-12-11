@@ -9,6 +9,7 @@ import com.eiviayw.library.bean.param.GraphicsParam
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
+import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.provide.BaseProvide
 
 /**
@@ -21,11 +22,16 @@ import com.eiviayw.library.provide.BaseProvide
  *
  * 标签数据提供者
  */
-class LabelProvide : BaseProvide() {
-    fun convertDrawParam(goods: Goods, bitmap: Bitmap) = mutableListOf<BaseParam>().apply {
+class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
+    fun start(goods: Goods, bitmap: Bitmap):ByteArray{
+        val params = convertDrawParam(goods, bitmap)
+        return startDraw(params)
+    }
+
+    private fun convertDrawParam(goods: Goods, bitmap: Bitmap) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
-                text = "Swisse Vitamin c Manukau Honey"
+                text = goods.goodsName
             ).apply {
                 size = 40f
                 perLineSpace = -10
@@ -41,7 +47,7 @@ class LabelProvide : BaseProvide() {
                 bitmap.height
             ),
             param2 = TextParam(
-                text = "$18.80",
+                text = goods.totalPrice,
                 weight = 0.3
             ).apply {
                 size = 30f
@@ -52,10 +58,5 @@ class LabelProvide : BaseProvide() {
         ).apply {
             perLineSpace = 40
         })
-
-    }
-
-    companion object {
-        const val KEY = "LabelProvide"
     }
 }

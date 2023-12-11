@@ -1,52 +1,77 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="horizontal">
+    android:layout_height="match_parent">
 
-    <LinearLayout
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine025"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.25"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine050"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.5"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine075"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_percent="0.75"/>
+
+    <LinearLayout
+        android:id="@+id/llExampleOne"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/guideLine025">
 
         <Button
-            android:id="@+id/tvRefresh"
+            android:id="@+id/btExampleOne"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="预览收据"
+            android:text="示例一"
             android:textSize="22sp"
             android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_marginTop="10dp"/>
 
-        <Button
-            android:id="@+id/tvRefreshLabel"
+        <ImageView
+            android:id="@+id/imExampleOne"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="预览标签"
-            android:textSize="22sp"
-            android:padding="10dp"
-            android:layout_marginTop="10dp"
-            android:layout_marginStart="10dp"/>
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toStartOf="@id/guideLine050"
+        app:layout_constraintStart_toEndOf="@id/guideLine025">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/btExampleTwo"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:text="示例二"
+            android:textSize="22sp"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"/>
 
-            <ImageView
-                android:id="@+id/imResult"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-        </LinearLayout>
-    </ScrollView>
+        <ImageView
+            android:id="@+id/imExampleTwo"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

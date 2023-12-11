@@ -30,18 +30,16 @@ import java.io.ByteArrayOutputStream
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  */
 object DrawBitmapHelper {
-    private val optionMap: MutableMap<String, BitmapOption> = mutableMapOf()
 
     /**
      * 绘制总入口
      * 绘制前数据处理
-     * @param bitmapType 图片类型
+     * @param bitmapOption 绘制标准参数
      * @param sourceData 图片数据源
      * @return Bitmap数组
      */
-    fun convert(bitmapType: String, sourceData: List<BaseParam>): ByteArray {
+    fun convert(bitmapOption: BitmapOption, sourceData: List<BaseParam>): ByteArray {
         //获取当前图片样式模版
-        val bitmapOption = optionMap[bitmapType] ?: BitmapOption()
         val mainPaint = Paint().apply {
             //是否开启抗锯齿
             isAntiAlias = bitmapOption.antiAlias
@@ -89,7 +87,8 @@ object DrawBitmapHelper {
             }
         }
 
-        val resultArray = compressBitmapToByteArray(bitmap, bitmapOption.quality)
+        val resultArray = compressBitmapToByteArray(bitmap)
+        //释放Bitmap
         bitmap.recycle()
         return resultArray
     }
@@ -580,41 +579,14 @@ object DrawBitmapHelper {
         }
     }
 
-    //<editor-fold desc="图片模版参数管理">
-
-    /**
-     * 增加图片模版
-     * @param key 索引
-     * @param value 图片模版
-     */
-    fun addOption(key: String, value: BitmapOption): DrawBitmapHelper {
-        optionMap[key] = value
-        return this
-    }
-
-    /**
-     * 增加图片模版
-     * @param options 多种图片模版
-     */
-    fun addOptions(options: Map<String, BitmapOption>): DrawBitmapHelper {
-        optionMap.putAll(options)
-        return this
-    }
-
-    fun onDestroy() {
-        optionMap.clear()
-    }
-    //</editor-fold desc="图片模版参数管理">
-
     /**
      * Bitmap转换成Bitmap数组
      * @param bitmap 图像
-     * @param quality 质量
      * @return Bitmap数组
      */
-    private fun compressBitmapToByteArray(bitmap: Bitmap, quality: Int): ByteArray {
+    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
         val ops = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, quality, ops)
+        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
         return ops.toByteArray()
     }
 

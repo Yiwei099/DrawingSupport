@@ -10,8 +10,8 @@ import com.eiviayw.library.bean.param.GraphicsParam
 import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
+import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.provide.BaseProvide
-import java.io.ByteArrayOutputStream
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -23,31 +23,37 @@ import java.io.ByteArrayOutputStream
  *
  * 收据数据提供者
  */
-class ReceiptProvide : BaseProvide() {
-    fun convertDrawParam(order: Order, goodsData: List<Goods>, bitmap: Bitmap) =
-        mutableListOf<BaseParam>().apply {
-            addAll(convertOrderHeader(order))
-            addAll(convertOrderGoods(goodsData))
-            addAll(convertOrderFooter(order))
-            add(
-                GraphicsParam(
-                    compressBitmapToByteArray(bitmap),
-                    bitmap.width,
-                    bitmap.height
-                ).apply {
-                    perLineSpace = 40
-                }
-            )
-            add(
-                TextParam(
-                    text = "00002",
-                    align = Constant.Companion.Align.ALIGN_CENTER,
-                ).apply {
-                    size = 26f
-                    typeface = Typeface.DEFAULT_BOLD
-                }
-            )
-        }
+class ReceiptProvide: BaseProvide(BitmapOption()) {
+
+    fun start(order: Order,goodsData: List<Goods>,bitmap: Bitmap):ByteArray{
+        val params = generateDrawParam(order, goodsData, bitmap)
+        return startDraw(params)
+    }
+
+    private fun generateDrawParam(order: Order,goodsData: List<Goods>,bitmap:Bitmap): List<BaseParam>
+    = mutableListOf<BaseParam>().apply {
+        addAll(convertOrderHeader(order))
+        addAll(convertOrderGoods(goodsData))
+        addAll(convertOrderFooter(order))
+        add(
+            GraphicsParam(
+                compressBitmapToByteArray(bitmap),
+                bitmap.width,
+                bitmap.height
+            ).apply {
+                perLineSpace = 40
+            }
+        )
+        add(
+            TextParam(
+                text = "00002",
+                align = Constant.Companion.Align.ALIGN_CENTER,
+            ).apply {
+                size = 26f
+                typeface = Typeface.DEFAULT_BOLD
+            }
+        )
+    }
 
     private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
         add(

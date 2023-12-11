@@ -24,29 +24,25 @@ import com.eiviayw.library.draw.DrawBitmapHelper
  */
 class MainActivity : AppCompatActivity() {
     private var bitmap: Bitmap? = null
+    private var bitmap2: Bitmap? = null
+    private var bitmap3: Bitmap? = null
+    private var bitmap4: Bitmap? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        DrawBitmapHelper.addOption(ReceiptProvide.KEY, BitmapOption())
         val receiptProvide = ReceiptProvide()
-        DrawBitmapHelper.addOption(
-            LabelProvide.KEY, BitmapOption(
-                maxWidth = 400
-            )
-        )
         val labelProvide = LabelProvide()
 
-        val im = findViewById<ImageView>(R.id.imResult)
+        val im = findViewById<ImageView>(R.id.imExampleOne)
+        val imTwo = findViewById<ImageView>(R.id.imExampleTwo)
 
-        findViewById<Button>(R.id.tvRefresh).setOnClickListener {
-            recycleBitmap()
+        findViewById<Button>(R.id.btExampleOne).setOnClickListener {
+            bitmap?.recycle()
             val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
-            val params =
-                receiptProvide.convertDrawParam(generateOrder(), generateGoodsData(), bitmapCode)
+            val bitmapArray = receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode)
             bitmapCode.recycle()
-            val bitmapArray = DrawBitmapHelper.convert(ReceiptProvide.KEY, params)
             bitmap = BitmapFactory.decodeByteArray(
                 bitmapArray,
                 0,
@@ -55,23 +51,22 @@ class MainActivity : AppCompatActivity() {
             im.setImageBitmap(bitmap)
         }
 
-        findViewById<Button>(R.id.tvRefreshLabel).setOnClickListener {
-            recycleBitmap()
+        findViewById<Button>(R.id.btExampleTwo).setOnClickListener {
+            bitmap2?.recycle()
             Util.getInstance().zoomBitmap(
                 BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
                 240.0,
                 80.0
             )?.let {
-                val params =
-                    labelProvide.convertDrawParam(Goods(), it)
+                val bitmapArray =
+                    labelProvide.start(Goods(goodsName = "Swisse Vitamin c Manukau Honey", totalPrice = "18.80"), it)
                 it.recycle()
-                val bitmapArray = DrawBitmapHelper.convert(LabelProvide.KEY, params)
-                bitmap = BitmapFactory.decodeByteArray(
+                bitmap2 = BitmapFactory.decodeByteArray(
                     bitmapArray,
                     0,
                     bitmapArray.size
                 )
-                im.setImageBitmap(bitmap)
+                imTwo.setImageBitmap(bitmap2)
             }
 
         }
@@ -138,16 +133,13 @@ class MainActivity : AppCompatActivity() {
         )
     }
 
-    private fun recycleBitmap() {
-        if (bitmap != null) {
-            bitmap?.recycle()
-            bitmap = null
-        }
-    }
+
 
     override fun onDestroy() {
-        DrawBitmapHelper.onDestroy()
-        recycleBitmap()
+        bitmap?.recycle()
+        bitmap2?.recycle()
+        bitmap3?.recycle()
+        bitmap4?.recycle()
         super.onDestroy()
     }
 }
