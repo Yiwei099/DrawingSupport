@@ -137,7 +137,7 @@ object DrawBitmapHelper {
                         sourceItem.param3,
                         paint,
                         maxWidth,
-                        secondItem.data1,
+                        firstItem.data1.plus(secondItem.data1),
                         startYInCanvas,
                     )
 
@@ -315,9 +315,9 @@ object DrawBitmapHelper {
         when (sourceItem.gravity) {
             Constant.Companion.Gravity.CENTER -> {
                 handleItem.data4.forEach {
-                    it.startY = startYInCanvas.minus((targetItem.data3.div(2)))
-                        .plus(handleItem.data3.div(2))
-                    it.endY = it.startY.plus(handleItem.data3)
+                    it.startY = startYInCanvas.minus((targetItem.data2.div(2)))
+                        .plus(handleItem.data2.div(2))
+                    it.endY = it.startY.plus(handleItem.data2)
                 }
             }
 

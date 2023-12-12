@@ -25,15 +25,15 @@ import com.eiviayw.library.provide.BaseProvide
  */
 class ReceiptProvide: BaseProvide(BitmapOption()) {
 
-    fun start(order: Order,goodsData: List<Goods>,bitmap: Bitmap):ByteArray{
-        val params = generateDrawParam(order, goodsData, bitmap)
+    fun start(order: Order,goodsData: List<Goods>,bitmap: Bitmap,isMulti:Boolean = false):ByteArray{
+        val params = generateDrawParam(order, goodsData, bitmap,isMulti)
         return startDraw(params)
     }
 
-    private fun generateDrawParam(order: Order,goodsData: List<Goods>,bitmap:Bitmap): List<BaseParam>
+    private fun generateDrawParam(order: Order,goodsData: List<Goods>,bitmap:Bitmap,isMulti:Boolean): List<BaseParam>
     = mutableListOf<BaseParam>().apply {
-        addAll(convertOrderHeader(order))
-        addAll(convertOrderGoods(goodsData))
+        addAll(convertOrderHeader(order,isMulti))
+        addAll(if (isMulti) convertOrderGoodsByMulti(goodsData) else convertOrderGoods(goodsData))
         addAll(convertOrderFooter(order))
         add(
             GraphicsParam(
@@ -55,7 +55,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
         )
     }
 
-    private fun convertOrderHeader(order: Order) = mutableListOf<BaseParam>().apply {
+    private fun convertOrderHeader(order: Order,isMulti: Boolean = false) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
                 text = "Tax Invoice",
@@ -165,7 +165,32 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
             perLineSpace = 30
         })
 
-        add(
+        val param = if (isMulti){
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "Name",
+                    weight = 0.55,
+                ).apply {
+                    size = 26f
+                },
+                param2 = TextParam(
+                    text = "C*P",
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.2,
+                ).apply {
+                    size = 26f
+                },
+                param3 = TextParam(
+                    text = "AMT",
+                    align = Constant.Companion.Align.ALIGN_END,
+                    weight = 0.25,
+                ).apply {
+                    size = 26f
+                }
+            ).apply {
+                perLineSpace = 0
+            }
+        }else{
             MultiElementParam(
                 param1 = TextParam(
                     text = "Name",
@@ -183,7 +208,8 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
             ).apply {
                 perLineSpace = 0
             }
-        )
+        }
+        add(param)
 
         add(LineDashedParam().apply {
             perLineSpace = 30
@@ -223,6 +249,39 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
                     perLineSpace = if (index == goodsData.size - 1) 0 else 18
                     size = 26f
                     typeface = Typeface.DEFAULT_BOLD
+                }
+            )
+        }
+    }
+
+    private fun convertOrderGoodsByMulti(goodsData: List<Goods>) = mutableListOf<BaseParam>().apply {
+        goodsData.forEachIndexed { index, it ->
+            add(
+                MultiElementParam(
+                    param1 = TextParam(
+                        text = it.goodsName,
+                        weight = 0.55,
+                    ).apply {
+                        size = 26f
+                        typeface = Typeface.DEFAULT_BOLD
+                    },
+                    param2 = TextParam(
+                        text = "${it.qua}x${it.price}",
+                        align = Constant.Companion.Align.ALIGN_END,
+                        weight = 0.2,
+                    ).apply {
+                        size = 26f
+                    },
+                    param3 = TextParam(
+                        text = it.totalPrice,
+                        align = Constant.Companion.Align.ALIGN_END,
+                        weight = 0.25,
+                    ).apply {
+                        size = 26f
+                        typeface = Typeface.DEFAULT_BOLD
+                    }
+                ).apply {
+                    perLineSpace = 8
                 }
             )
         }

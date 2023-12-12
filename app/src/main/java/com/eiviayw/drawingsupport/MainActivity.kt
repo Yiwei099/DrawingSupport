@@ -37,6 +37,7 @@ class MainActivity : AppCompatActivity() {
 
         val im = findViewById<ImageView>(R.id.imExampleOne)
         val imTwo = findViewById<ImageView>(R.id.imExampleTwo)
+        val imThree = findViewById<ImageView>(R.id.imExampleThree)
 
         findViewById<Button>(R.id.btExampleOne).setOnClickListener {
             bitmap?.recycle()
@@ -68,7 +69,19 @@ class MainActivity : AppCompatActivity() {
                 )
                 imTwo.setImageBitmap(bitmap2)
             }
+        }
 
+        findViewById<Button>(R.id.btExampleThree).setOnClickListener {
+            bitmap3?.recycle()
+            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
+            val bitmapArray = receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode,true)
+            bitmapCode.recycle()
+            bitmap3 = BitmapFactory.decodeByteArray(
+                bitmapArray,
+                0,
+                bitmapArray.size
+            )
+            imThree.setImageBitmap(bitmap3)
         }
     }
 
