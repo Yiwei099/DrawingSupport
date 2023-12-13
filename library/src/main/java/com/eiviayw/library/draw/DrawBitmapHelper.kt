@@ -1,11 +1,9 @@
 package com.eiviayw.library.draw
 
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Rect
-import android.text.TextUtils
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.DataEntity4
 import com.eiviayw.library.bean.element.BaseElement
@@ -19,7 +17,7 @@ import com.eiviayw.library.bean.param.LineDashedParam
 import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
-import java.io.ByteArrayOutputStream
+import com.eiviayw.library.util.BitmapUtils
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -87,7 +85,7 @@ object DrawBitmapHelper {
             }
         }
 
-        val resultArray = compressBitmapToByteArray(bitmap)
+        val resultArray = BitmapUtils.getInstance().compressBitmapToByteArray(bitmap)
         //释放Bitmap
         bitmap.recycle()
         return resultArray
@@ -577,17 +575,6 @@ object DrawBitmapHelper {
                 return DataEntity4(defaultStartX, 0f, 0f, emptyList<BaseElement>())
             }
         }
-    }
-
-    /**
-     * Bitmap转换成Bitmap数组
-     * @param bitmap 图像
-     * @return Bitmap数组
-     */
-    private fun compressBitmapToByteArray(bitmap: Bitmap): ByteArray {
-        val ops = ByteArrayOutputStream()
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
-        return ops.toByteArray()
     }
 
 

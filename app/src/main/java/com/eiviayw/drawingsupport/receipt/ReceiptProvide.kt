@@ -169,7 +169,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
             MultiElementParam(
                 param1 = TextParam(
                     text = "Name",
-                    weight = 0.55,
+                    weight = 0.6,
                 ).apply {
                     size = 26f
                 },
@@ -183,7 +183,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
                 param3 = TextParam(
                     text = "AMT",
                     align = Constant.Companion.Align.ALIGN_END,
-                    weight = 0.25,
+                    weight = 0.2,
                 ).apply {
                     size = 26f
                 }
@@ -260,7 +260,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
                 MultiElementParam(
                     param1 = TextParam(
                         text = it.goodsName,
-                        weight = 0.55,
+                        weight = 0.6,
                     ).apply {
                         size = 26f
                         typeface = Typeface.DEFAULT_BOLD
@@ -275,7 +275,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
                     param3 = TextParam(
                         text = it.totalPrice,
                         align = Constant.Companion.Align.ALIGN_END,
-                        weight = 0.25,
+                        weight = 0.2,
                     ).apply {
                         size = 26f
                         typeface = Typeface.DEFAULT_BOLD

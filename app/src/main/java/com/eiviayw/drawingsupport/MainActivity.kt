@@ -12,6 +12,7 @@ import com.eiviayw.drawingsupport.label.LabelProvide
 import com.eiviayw.drawingsupport.receipt.ReceiptProvide
 import com.eiviayw.library.draw.BitmapOption
 import com.eiviayw.library.draw.DrawBitmapHelper
+import com.eiviayw.library.util.BitmapUtils
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -38,6 +39,7 @@ class MainActivity : AppCompatActivity() {
         val im = findViewById<ImageView>(R.id.imExampleOne)
         val imTwo = findViewById<ImageView>(R.id.imExampleTwo)
         val imThree = findViewById<ImageView>(R.id.imExampleThree)
+        val imFour = findViewById<ImageView>(R.id.imExampleFour)
 
         findViewById<Button>(R.id.btExampleOne).setOnClickListener {
             bitmap?.recycle()
@@ -54,13 +56,18 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btExampleTwo).setOnClickListener {
             bitmap2?.recycle()
-            Util.getInstance().zoomBitmap(
+            BitmapUtils.getInstance().zoomBitmap(
                 BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
                 240.0,
                 80.0
             )?.let {
                 val bitmapArray =
-                    labelProvide.start(Goods(goodsName = "Swisse Vitamin c Manukau Honey", totalPrice = "18.80"), it)
+                    labelProvide.start(
+                        Goods(
+                            goodsName = "Swisse Vitamin c Manukau Honey",
+                            totalPrice = "18.80"
+                        ), it
+                    )
                 it.recycle()
                 bitmap2 = BitmapFactory.decodeByteArray(
                     bitmapArray,
@@ -74,7 +81,8 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btExampleThree).setOnClickListener {
             bitmap3?.recycle()
             val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
-            val bitmapArray = receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode,true)
+            val bitmapArray =
+                receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode, true)
             bitmapCode.recycle()
             bitmap3 = BitmapFactory.decodeByteArray(
                 bitmapArray,
@@ -82,6 +90,24 @@ class MainActivity : AppCompatActivity() {
                 bitmapArray.size
             )
             imThree.setImageBitmap(bitmap3)
+        }
+
+        findViewById<Button>(R.id.btExampleFour).setOnClickListener {
+            bitmap4?.recycle()
+            val bitmapArray =
+                labelProvide.start(generateOrder(),
+                    Goods(
+                        goodsName = "Swisse Vitamin c Manukau Honey",
+                        totalPrice = "18.80",
+                        price = "18.80"
+                    )
+                )
+            bitmap4 = BitmapFactory.decodeByteArray(
+                bitmapArray,
+                0,
+                bitmapArray.size
+            )
+            imFour.setImageBitmap(bitmap4)
         }
     }
 
@@ -145,7 +171,6 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
-
 
 
     override fun onDestroy() {

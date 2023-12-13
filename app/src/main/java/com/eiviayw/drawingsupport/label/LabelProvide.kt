@@ -3,6 +3,7 @@ package com.eiviayw.drawingsupport.label
 import android.graphics.Bitmap
 import android.graphics.Typeface
 import com.eiviayw.drawingsupport.bean.Goods
+import com.eiviayw.drawingsupport.bean.Order
 import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.param.BaseParam
 import com.eiviayw.library.bean.param.GraphicsParam
@@ -23,7 +24,7 @@ import com.eiviayw.library.provide.BaseProvide
  * 标签数据提供者
  */
 class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
-    fun start(goods: Goods, bitmap: Bitmap):ByteArray{
+    fun start(goods: Goods, bitmap: Bitmap): ByteArray {
         val params = convertDrawParam(goods, bitmap)
         return startDraw(params)
     }
@@ -58,5 +59,70 @@ class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
         ).apply {
             perLineSpace = 40
         })
+    }
+
+    fun start(order: Order, goods: Goods): ByteArray {
+        val params = convertDrawParam(order, goods)
+        return startDraw(params)
+    }
+
+    private fun convertDrawParam(order: Order, goods: Goods) = mutableListOf<BaseParam>().apply {
+        add(
+            MultiElementParam(
+                param1 = TextParam(
+                    text = "#${order.tableNo}",
+                    weight = 0.7,
+                ),
+                param2 = TextParam(
+                    text = "${order.orderType}:1/1",
+                    weight = 0.3
+                ).apply {
+                    align = Constant.Companion.Align.ALIGN_END
+                }
+            ).apply {
+                perLineSpace = -10
+            }
+        )
+
+        add(LineDashedParam().apply {
+            perLineSpace = 30
+            typeface = Typeface.DEFAULT_BOLD
+        })
+
+        add(
+            TextParam(
+                text = goods.goodsName
+            ).apply {
+                size = 30f
+                typeface = Typeface.DEFAULT_BOLD
+            }
+        )
+
+        add(
+            TextParam(
+                text = "少糖，去冰，少甜，抹茶底，+马蹄爆爆珠，+芋泥",
+            ).apply {
+                perLineSpace = -10
+            }
+        )
+
+        add(LineDashedParam().apply {
+            perLineSpace = 30
+            typeface = Typeface.DEFAULT_BOLD
+        })
+
+        add(
+            MultiElementParam(
+                param1 = TextParam(
+                    text = order.orderTime,
+                    weight = 0.7,
+                ),
+                param2 = TextParam(
+                    text = goods.price,
+                    weight = 0.3,
+                    align = Constant.Companion.Align.ALIGN_END
+                )
+            )
+        )
     }
 }

@@ -96,5 +96,26 @@
             android:layout_height="wrap_content"/>
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:gravity="center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/guideLine075">
 
+        <Button
+            android:id="@+id/btExampleFour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="示例四"
+            android:textSize="22sp"
+            android:padding="10dp"
+            android:layout_marginTop="10dp"/>
+
+        <ImageView
+            android:id="@+id/imExampleFour"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"/>
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
