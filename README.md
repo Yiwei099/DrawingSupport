@@ -23,7 +23,7 @@ dependencyResolutionManagement {
 ```
 >2⃣️ Add the dependency:  
 ```
-implementation 'com.github.Yiwei099:DrawingSupport:1.0.0'
+implementation 'com.github.Yiwei099:DrawingSupport:$releaseVersion'
 ```  
 
 #### **🌟使用步骤**
