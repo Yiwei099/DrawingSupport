@@ -1,6 +1,7 @@
 package com.eiviayw.library.util
 
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Matrix
 import java.io.ByteArrayOutputStream
 
@@ -57,5 +58,41 @@ class BitmapUtils private constructor() {
         val ops = ByteArrayOutputStream()
         bitmap.compress(Bitmap.CompressFormat.PNG, 100, ops)
         return ops.toByteArray()
+    }
+
+    /**
+     * Bitmap数组转换成Bitmap
+     * @param data Bitmap数组
+     * @return Bitmap
+     */
+    fun byteDataToBitmap(data: ByteArray): Bitmap? = BitmapFactory.decodeByteArray(
+        data,
+        0,
+        data.size
+    )
+
+    /**
+     * 切割Bitmap
+     * @param h 单张Bitmap高度
+     * @param bitmap 被切割的Bitmap
+     * @return 切割后的Bitmap数组
+     */
+    fun cutBitmap(h: Int, bitmap: Bitmap): List<Bitmap> {
+        val width = bitmap.width
+        val height = bitmap.height
+        val full = height % h == 0
+        val n = if (height % h == 0) height / h else height / h + 1
+        val bitmaps = mutableListOf<Bitmap>()
+        for (i in 0 until n) {
+            val b = if (full) {
+                Bitmap.createBitmap(bitmap, 0, i * h, width, h)
+            } else if (i == n - 1) {
+                Bitmap.createBitmap(bitmap, 0, i * h, width, height - i * h)
+            } else {
+                Bitmap.createBitmap(bitmap, 0, i * h, width, h)
+            }
+            bitmaps.add(b)
+        }
+        return bitmaps
     }
 }
