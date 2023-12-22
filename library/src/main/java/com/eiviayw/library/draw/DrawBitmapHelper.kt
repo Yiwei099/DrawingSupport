@@ -436,7 +436,12 @@ object DrawBitmapHelper {
             //迭代字符
             val value = char[index]
 
-            val tempMeasure = measureText(paint, tempCharBuilder.append(value).toString())
+            tempCharBuilder.append(value)
+            if (isEnglishContent) {
+                tempCharBuilder.append(" ")
+            }
+
+            val tempMeasure = measureText(paint, tempCharBuilder.toString())
             val tempWidth = tempMeasure.first
             if (textHeight == 0) {
                 textHeight = tempMeasure.second
@@ -485,10 +490,6 @@ object DrawBitmapHelper {
                     tempStartYInCanvas = tempStartYInCanvas.plus(10)
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
-                    if (isEnglishContent) {
-                        tempCharBuilder.append(" ")
-                        charBuilder.append(" ")
-                    }
                 }
             } else {
                 charBuilder.append(value)

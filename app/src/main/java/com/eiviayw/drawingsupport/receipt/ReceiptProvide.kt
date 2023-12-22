@@ -46,7 +46,7 @@ class ReceiptProvide: BaseProvide(BitmapOption()) {
         )
         add(
             TextParam(
-                text = "00002",
+                text = "If you have nice things to say, please feel free to put up an outstanding review on Google. Thanks for supporting local, and we look forward to seeing you again. CHEERS",
                 align = Constant.Companion.Align.ALIGN_CENTER,
             ).apply {
                 size = 26f
