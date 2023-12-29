@@ -12,9 +12,11 @@ import com.eiviayw.library.Constant
  * @Version Copyright (c) 2023, Android Engineer YYW All Rights Reserved.
  *
  */
-open class BaseParam (
+open class BaseParam(
     var size: Float = 26f,//内容字号
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var perLineSpace: Int = 10,//行距
-    var gravity:Int = Constant.Companion.Gravity.TOP,//元素对齐方式，默认顶部对齐
-)
+    var gravity: Int = Constant.Companion.Gravity.TOP,//元素对齐方式，默认顶部对齐
+){
+    var paramType: String = javaClass.simpleName
+}
