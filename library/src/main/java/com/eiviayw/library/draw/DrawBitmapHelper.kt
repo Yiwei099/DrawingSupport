@@ -443,9 +443,7 @@ object DrawBitmapHelper {
 
             val tempMeasure = measureText(paint, tempCharBuilder.toString())
             val tempWidth = tempMeasure.first
-            if (textHeight == 0) {
-                textHeight = tempMeasure.second
-            }
+            textHeight = getMaxFromMany(textHeight.toFloat(),tempMeasure.second.toFloat()).toInt()
 
             val lastChar = index == char.size.minus(1)
             val fullWidth = tempWidth > elementMaxWidth

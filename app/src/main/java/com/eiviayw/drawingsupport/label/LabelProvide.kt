@@ -99,11 +99,20 @@ class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
         )
 
         add(
-            TextParam(
-                text = "少糖，去冰，少甜，抹茶底，+马蹄爆爆珠，+芋泥",
-            ).apply {
-                perLineSpace = -10
-            }
+            MultiElementParam(
+                TextParam(
+                    "",
+                    weight = 0.15
+                ).apply {
+                    size = 32f
+                },
+                TextParam(
+                    "- Add Vegetables($2)( $2蔬菜)",
+                    weight = 0.85
+                ).apply {
+                    size = 32f
+                }
+            )
         )
 
         add(LineDashedParam().apply {
