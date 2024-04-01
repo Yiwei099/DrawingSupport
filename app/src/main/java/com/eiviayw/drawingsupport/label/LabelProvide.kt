@@ -23,7 +23,7 @@ import com.eiviayw.library.provide.BaseProvide
  *
  * 标签数据提供者
  */
-class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
+class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400, maxHeight = 240)) {
     fun start(goods: Goods, bitmap: Bitmap): ByteArray {
         val params = convertDrawParam(goods, bitmap)
         return startDraw(params)
@@ -71,11 +71,11 @@ class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
             MultiElementParam(
                 param1 = TextParam(
                     text = "#${order.tableNo}",
-                    weight = 0.7,
+                    weight = 0.6,
                 ),
                 param2 = TextParam(
                     text = "${order.orderType}:1/1",
-                    weight = 0.3
+                    weight = 0.4
                 ).apply {
                     align = Constant.Companion.Align.ALIGN_END
                 }
@@ -110,7 +110,40 @@ class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400)) {
                     "- Add Vegetables($2)( $2蔬菜)",
                     weight = 0.85
                 ).apply {
+                    size = 22f
+                }
+            )
+        )
+
+        add(
+            MultiElementParam(
+                TextParam(
+                    "",
+                    weight = 0.15
+                ).apply {
                     size = 32f
+                },
+                TextParam(
+                    "- Add Vegetables($2)( $2蔬菜)",
+                    weight = 0.85
+                ).apply {
+                    size = 22f
+                }
+            )
+        )
+        add(
+            MultiElementParam(
+                TextParam(
+                    "",
+                    weight = 0.15
+                ).apply {
+                    size = 32f
+                },
+                TextParam(
+                    "- Add Vegetables($2)( $2蔬菜)",
+                    weight = 0.85
+                ).apply {
+                    size = 22f
                 }
             )
         )

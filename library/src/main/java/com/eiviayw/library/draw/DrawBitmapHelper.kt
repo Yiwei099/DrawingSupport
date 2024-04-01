@@ -45,7 +45,7 @@ object DrawBitmapHelper {
         }
         val result = convertSourceDataToElement(bitmapOption, sourceData, mainPaint)
 
-        val bitmap = Drawing.getInstance().createBimap(bitmapOption.maxWidth, result.second.toInt())
+        val bitmap = Drawing.getInstance().createBimap(bitmapOption.maxWidth, if (bitmapOption.maxHeight > 0) bitmapOption.maxHeight else result.second.toInt())
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
         result.first.forEach {
