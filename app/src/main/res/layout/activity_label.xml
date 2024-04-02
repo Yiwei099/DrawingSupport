@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+
+    <TextView
+        android:id="@+id/tvWidth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/width"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+
+    <EditText
+        android:id="@+id/etWidth"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/tvWidth"
+        app:layout_constraintTop_toTopOf="parent"
+        android:inputType="number"
+        android:hint="0"/>
+
+    <TextView
+        android:id="@+id/tvHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/height"
+        app:layout_constraintStart_toEndOf="@id/etWidth"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+
+    <EditText
+        android:id="@+id/etHeight"
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintStart_toEndOf="@id/tvHeight"
+        android:inputType="number"
+        android:hint="0"/>
+
+    <CheckBox
+        android:id="@+id/cbFollow"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/followEffectItem"
+        app:layout_constraintTop_toBottomOf="@id/etHeight"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <TextView
+        android:id="@+id/tvGravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/gravity"
+        app:layout_constraintTop_toBottomOf="@id/cbFollow"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <RadioGroup
+        android:id="@+id/rbGravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tvGravity"
+        app:layout_constraintStart_toStartOf="@id/tvGravity">
+
+        <RadioButton
+            android:id="@+id/rbTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/top"/>
+
+        <RadioButton
+            android:id="@+id/rbCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/center"/>
+
+        <RadioButton
+            android:id="@+id/rbBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/bottom"/>
+    </RadioGroup>
+
+    <Button
+        android:id="@+id/btRefresh"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/refresh"
+        app:layout_constraintTop_toBottomOf="@id/rbGravity"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <ImageView
+        android:id="@+id/ivPreview"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/btRefresh"
+        app:layout_constraintStart_toStartOf="parent"
+        android:contentDescription="预览效果" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

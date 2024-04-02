@@ -1,3 +1,11 @@
 <resources>
     <string name="app_name">DrawingSupport</string>
+    <string name="width">宽度：</string>
+    <string name="height">高度：</string>
+    <string name="followEffectItem">高度不足时不绘制</string>
+    <string name="top">顶部</string>
+    <string name="bottom">底部</string>
+    <string name="center">居中</string>
+    <string name="gravity">对齐于：</string>
+    <string name="refresh">刷新</string>
 </resources>

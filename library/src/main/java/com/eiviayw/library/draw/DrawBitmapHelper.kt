@@ -18,6 +18,7 @@ import com.eiviayw.library.bean.param.LineParam
 import com.eiviayw.library.bean.param.MultiElementParam
 import com.eiviayw.library.bean.param.TextParam
 import com.eiviayw.library.util.BitmapUtils
+import kotlin.math.ceil
 
 /**
  * 指路：https://github.com/Yiwei099
@@ -45,10 +46,21 @@ object DrawBitmapHelper {
         }
         val result = convertSourceDataToElement(bitmapOption, sourceData, mainPaint)
 
-        val bitmap = Drawing.getInstance().createBimap(bitmapOption.maxWidth, if (bitmapOption.maxHeight > 0) bitmapOption.maxHeight else result.second.toInt())
+        val bitmap = Drawing.getInstance().createBimap(
+            bitmapOption.maxWidth,
+            if (bitmapOption.fixedHeight()) bitmapOption.maxHeight else result.second
+        )
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
-        result.first.forEach {
+        val diffY = bitmapOption.diffContentY(result.second)
+
+        result.first.forEach loop@ {
+            it.startY += diffY
+
+            if (!effectItem(bitmapOption, ceil(it.startY).toInt())){
+                return@loop
+            }
+
             mainPaint.pathEffect = null
             mainPaint.style = Paint.Style.FILL
             mainPaint.color = Color.BLACK
@@ -80,7 +92,7 @@ object DrawBitmapHelper {
                 }
 
                 else -> {
-
+                    //未支持的类型
                 }
             }
         }
@@ -96,13 +108,13 @@ object DrawBitmapHelper {
      * @param bitmapOption 当前图像的标准参数
      * @param sourceData 业务数据源
      * @param paint 画笔
-     * @return 绘制元素块集合、最终绘制位置
+     * @return 绘制元素块集合、最终绘制位置(往上取整)
      */
     private fun convertSourceDataToElement(
         bitmapOption: BitmapOption,
         sourceData: List<BaseParam>,
         paint: Paint
-    ): Pair<List<BaseElement>, Float> {
+    ): Pair<List<BaseElement>, Int> {
         val result = mutableListOf<BaseElement>()
 
         var startYInCanvas = bitmapOption.topIndentation
@@ -110,8 +122,9 @@ object DrawBitmapHelper {
         val maxWidth = bitmapOption.getEffectiveWidth()
         val defaultStartX = bitmapOption.startIndentation
 
-        for (index in sourceData.indices) {
-            when (val sourceItem = sourceData[index]) {
+        sourceData.forEach { sourceItem ->
+
+            when (sourceItem) {
                 is MultiElementParam -> {
                     //处理第一个元素
                     val firstItem = handleMultiParamItem(
@@ -294,7 +307,7 @@ object DrawBitmapHelper {
             }
         }
 
-        return Pair(result, startYInCanvas)
+        return Pair(result, ceil(startYInCanvas).toInt())
     }
 
     /**
@@ -443,7 +456,7 @@ object DrawBitmapHelper {
 
             val tempMeasure = measureText(paint, tempCharBuilder.toString())
             val tempWidth = tempMeasure.first
-            textHeight = getMaxFromMany(textHeight.toFloat(),tempMeasure.second.toFloat()).toInt()
+            textHeight = getMaxFromMany(textHeight.toFloat(), tempMeasure.second.toFloat()).toInt()
 
             val lastChar = index == char.size.minus(1)
             val fullWidth = tempWidth > elementMaxWidth
@@ -604,6 +617,21 @@ object DrawBitmapHelper {
         val rect = Rect()
         paint.getTextBounds(text, 0, text.length, rect)
         return Pair(rect.width(), rect.height())
+    }
+
+    /**
+     * 当前元素是否需要绘制
+     * @param bitmapOption 画布参数
+     * @param tempContentY 当前元素的底部Y值
+     * @return 画布剩余高度不足时继续绘制 = true；当前元素底部Y值 < 画布最大高度 = true
+     * true = 需要绘制；false = 无需绘制
+     */
+    private fun effectItem(bitmapOption: BitmapOption, tempContentY: Int): Boolean {
+        if (!bitmapOption.followEffectItem) {
+            return true
+        }
+
+        return !bitmapOption.fixedHeight() || bitmapOption.maxHeight > tempContentY
     }
 
 }

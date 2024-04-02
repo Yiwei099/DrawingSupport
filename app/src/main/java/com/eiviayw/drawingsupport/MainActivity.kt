@@ -1,5 +1,6 @@
 package com.eiviayw.drawingsupport
 
+import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
@@ -93,21 +94,22 @@ class MainActivity : AppCompatActivity() {
         }
 
         findViewById<Button>(R.id.btExampleFour).setOnClickListener {
-            bitmap4?.recycle()
-            val bitmapArray =
-                labelProvide.start(generateOrder(),
-                    Goods(
-                        goodsName = "Swisse Vitamin c Manukau Honey",
-                        totalPrice = "18.80",
-                        price = "18.80"
-                    )
-                )
-            bitmap4 = BitmapFactory.decodeByteArray(
-                bitmapArray,
-                0,
-                bitmapArray.size
-            )
-            imFour.setImageBitmap(bitmap4)
+            startActivity(Intent(this,LabelActivity::class.java))
+//            bitmap4?.recycle()
+//            val bitmapArray =
+//                labelProvide.start(generateOrder(),
+//                    Goods(
+//                        goodsName = "Swisse Vitamin c Manukau Honey",
+//                        totalPrice = "18.80",
+//                        price = "18.80"
+//                    )
+//                )
+//            bitmap4 = BitmapFactory.decodeByteArray(
+//                bitmapArray,
+//                0,
+//                bitmapArray.size
+//            )
+//            imFour.setImageBitmap(bitmap4)
         }
     }
 
@@ -171,7 +173,6 @@ class MainActivity : AppCompatActivity() {
             )
         )
     }
-
 
     override fun onDestroy() {
         bitmap?.recycle()

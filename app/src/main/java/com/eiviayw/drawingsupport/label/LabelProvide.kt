@@ -23,7 +23,10 @@ import com.eiviayw.library.provide.BaseProvide
  *
  * 标签数据提供者
  */
-class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400, maxHeight = 240)) {
+class LabelProvide(
+    private var bitmapOption: BitmapOption = BitmapOption(maxWidth = 400, maxHeight = 240, followEffectItem = true)
+) : BaseProvide(bitmapOption) {
+
     fun start(goods: Goods, bitmap: Bitmap): ByteArray {
         val params = convertDrawParam(goods, bitmap)
         return startDraw(params)
@@ -166,5 +169,61 @@ class LabelProvide : BaseProvide(BitmapOption(maxWidth = 400, maxHeight = 240)) 
                 )
             )
         )
+    }
+
+    fun start():ByteArray {
+        val params = convertDrawParam()
+        return startDraw(params)
+    }
+
+    private fun convertDrawParam() = mutableListOf<BaseParam>().apply {
+        add(
+            TextParam(
+                text = "加拿大鹅旗舰店",
+                align = Constant.Companion.Align.ALIGN_CENTER
+            )
+        )
+        add(
+            TextParam(
+                text = "名称：羽绒服"
+            )
+        )
+//        add(
+//            TextParam(
+//                text = "颜色：黑色"
+//            )
+//        )
+//        add(
+//            TextParam(
+//                text = "尺寸：L"
+//            )
+//        )
+//        add(
+//            TextParam(
+//                text = "品牌：加拿大鹅"
+//            )
+//        )
+//        add(
+//            TextParam(
+//                text = "成分：鹅绒"
+//            )
+//        )
+//        add(
+//            TextParam(
+//                text = "质量等级：上等"
+//            )
+//        )
+//
+//        add(
+//            TextParam(
+//                text = "零售价：$40.88"
+//            )
+//        )
+//        add(
+//            TextParam(
+//                text = "折后价：$30.50"
+//            )
+//        )
+
     }
 }
