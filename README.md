@@ -32,7 +32,23 @@ implementation 'com.github.Yiwei099:DrawingSupport:$releaseVersion'
 ```  
 
 ## 详情
-### 1.元素
+### 1.图片配置
+#### a. BitmapOption - 图片配置
+```
+BitmapOption(
+    maxWidth: Int = 576,//画布宽度
+    topIndentation: Float = 40f,//顶部方向边距
+    startIndentation: Float = 20f,//开始方向边距
+    endIndentation: Float = 20f,//结束方向边距
+    bottomBlankHeight: Int = 10,//底部留白
+    antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
+    maxHeight:Int = 0,//画布高度
+    gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
+    followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
+)
+```
+
+### 2.元素
 #### a. TextParam - 纯文本
 ```
 //文本内容
