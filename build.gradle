@@ -4,7 +4,7 @@ buildscript {
         kotlin_version = "1.8.20"
         compileSdkVersion = 33
         targetSdkVersion = 33
-        minSdkVersion = 24
+        minSdkVersion = 21
     }
 
     repositories {
@@ -27,5 +27,5 @@ buildscript {
 plugins {
     id 'com.android.application' version '4.2.2' apply false
     id 'com.android.library' version '4.2.2' apply false
-    id 'org.jetbrains.kotlin.android' version '1.8.20' apply false
+    id 'org.jetbrains.kotlin.android' version '1.6.0' apply false
 }
