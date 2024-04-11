@@ -118,9 +118,11 @@ val graphicsItem = GraphicsParam(bitmapData,width,height).apply {
 #### e. MultiElementParam - 混排
 ```
 //一行最多支持三个元素，且 param1.weight + param2.weight + param3.weight <= 1.0，只有两个 param 时会自动忽略 param3.weight
+//1.0.8版本元素数量由三个扩展至五个
 val multiPairItem = MultiElementParam(
     param1 = textItem,
     param2 = textItem,
+    //..
 )
 
 //图文混排
