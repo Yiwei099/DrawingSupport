@@ -13,4 +13,7 @@ data class MultiElementParam(
     val param1:BaseParam = BaseParam(),
     val param2:BaseParam = BaseParam(),
     val param3:BaseParam = BaseParam(),
+    val param4:BaseParam = BaseParam(),
+    val param5:BaseParam = BaseParam(),
+    val paddingEnd:Int = 10
 ):BaseParam()

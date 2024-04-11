@@ -6,7 +6,6 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
-import com.eiviayw.library.Constant
 import com.eiviayw.library.bean.element.GraphicsElement
 import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement

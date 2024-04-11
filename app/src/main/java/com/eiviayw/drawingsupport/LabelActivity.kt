@@ -14,21 +14,53 @@ class LabelActivity : AppCompatActivity() {
 
     private var bitmapOption = BitmapOption()
 
+    private var width:Int = 320
+    private var height:Int = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 
         initData()
         initEven()
+        viewBinding.rb0.isChecked = true
     }
 
     private fun initEven() {
+        viewBinding.rgLabelSize.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId){
+                R.id.rb4030 ->{
+                    width = 40*8
+                    height = 30*8
+                }
+                R.id.rb4060 ->{
+                    width = 40*8
+                    height = 60*8
+                }
+                R.id.rb4080 ->{
+                    width = 40*8
+                    height = 80*8
+                }
+                R.id.rb3020 ->{
+                    width = 30*8
+                    height = 20*8
+                }
+                R.id.rb6040 ->{
+                    width = 60*8
+                    height = 40*8
+                }
+                R.id.rb0 ->{
+                    width = 320
+                    height = 0
+                }
+            }
+        }
+
         viewBinding.btRefresh.setOnClickListener {
-            val width =  viewBinding.etWidth.text.toString().trim()
-            val height =  viewBinding.etHeight.text.toString().trim()
+
             bitmapOption = BitmapOption(
-                maxWidth = if (TextUtils.isEmpty(width)) 576 else width.toInt(),
-                maxHeight = if (TextUtils.isEmpty(width)) 0 else height.toInt(),
+                maxWidth = width,
+                maxHeight = height,
                 followEffectItem = viewBinding.cbFollow.isChecked,
                 gravity = if (viewBinding.rbTop.isChecked){
                     Constant.Companion.Gravity.TOP
@@ -50,8 +82,6 @@ class LabelActivity : AppCompatActivity() {
 
     private fun initData() {
         viewBinding.apply {
-            etWidth.setText(bitmapOption.maxWidth.toString())
-            etHeight.setText(bitmapOption.maxHeight.toString())
             cbFollow.isChecked = bitmapOption.followEffectItem
             when (bitmapOption.gravity) {
                 Constant.Companion.Gravity.BOTTOM -> rbBottom.isChecked = true

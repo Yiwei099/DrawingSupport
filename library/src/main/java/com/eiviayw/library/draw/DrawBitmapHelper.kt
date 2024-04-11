@@ -48,7 +48,7 @@ object DrawBitmapHelper {
 
         val bitmap = Drawing.getInstance().createBimap(
             bitmapOption.maxWidth,
-            if (bitmapOption.fixedHeight()) bitmapOption.maxHeight else result.second
+            if (bitmapOption.fixedHeight()) bitmapOption.maxHeight else result.second.plus(20)
         )
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
@@ -126,44 +126,72 @@ object DrawBitmapHelper {
 
             when (sourceItem) {
                 is MultiElementParam -> {
+                    val paddingEnd = sourceItem.paddingEnd
                     //处理第一个元素
                     val firstItem = handleMultiParamItem(
                         sourceItem.param1,
                         paint,
-                        maxWidth,
+                        maxWidth.minus(bitmapOption.startIndentation),
                         defaultStartX,
                         startYInCanvas,
+                        paddingEnd
                     )
 
                     //处理第二个元素
                     val secondItem = handleMultiParamItem(
                         sourceItem.param2,
                         paint,
-                        maxWidth,
+                        maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1,
                         startYInCanvas,
+                        paddingEnd
                     )
                     //处理第三个元素
                     val thirdItem = handleMultiParamItem(
                         sourceItem.param3,
                         paint,
-                        maxWidth,
+                        maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1.plus(secondItem.data1),
                         startYInCanvas,
+                        paddingEnd
+                    )
+
+                    //处理第三个元素
+                    val fourItem = handleMultiParamItem(
+                        sourceItem.param4,
+                        paint,
+                        maxWidth.minus(bitmapOption.startIndentation),
+                        firstItem.data1.plus(secondItem.data1).plus(thirdItem.data1),
+                        startYInCanvas,
+                        paddingEnd
+                    )
+
+                    //处理第三个元素
+                    val fiveItem = handleMultiParamItem(
+                        sourceItem.param5,
+                        paint,
+                        maxWidth.minus(bitmapOption.startIndentation),
+                        firstItem.data1.plus(secondItem.data1).plus(thirdItem.data1).plus(fourItem.data1),
+                        startYInCanvas,
+                        paddingEnd
                     )
 
                     //更新最新的Y值(当前混排元素中取最高的元素)
                     startYInCanvas = getMaxFromMany(
                         firstItem.data2,
                         secondItem.data2,
-                        thirdItem.data2
+                        thirdItem.data2,
+                        fourItem.data2,
+                        fiveItem.data2
                     )
 
                     //获取当前混排元素中最高的Item
                     val maxItemHeight = getMaxFromMany(
                         firstItem.data3,
                         secondItem.data3,
-                        thirdItem.data3
+                        thirdItem.data3,
+                        fourItem.data3,
+                        fiveItem.data3
                     )
 
                     //处理垂直对齐方式
@@ -182,9 +210,24 @@ object DrawBitmapHelper {
                                 startYInCanvas,
                                 firstItem
                             )
+
+                            handleElementGravity(
+                                sourceItem.param4,
+                                fourItem,
+                                startYInCanvas,
+                                firstItem
+                            )
+
+                            handleElementGravity(
+                                sourceItem.param5,
+                                fiveItem,
+                                startYInCanvas,
+                                firstItem
+                            )
                         }
 
                         secondItem.data3 -> {
+
                             //第二个元素最高
                             handleElementGravity(
                                 sourceItem.param1,
@@ -198,9 +241,23 @@ object DrawBitmapHelper {
                                 startYInCanvas,
                                 secondItem
                             )
+
+                            handleElementGravity(
+                                sourceItem.param4,
+                                fourItem,
+                                startYInCanvas,
+                                secondItem
+                            )
+
+                            handleElementGravity(
+                                sourceItem.param5,
+                                fiveItem,
+                                startYInCanvas,
+                                secondItem
+                            )
                         }
 
-                        else -> {
+                        thirdItem.data3 -> {
                             //第三个元素最高
                             handleElementGravity(
                                 sourceItem.param1,
@@ -214,12 +271,85 @@ object DrawBitmapHelper {
                                 startYInCanvas,
                                 thirdItem
                             )
+                            handleElementGravity(
+                                sourceItem.param4,
+                                fourItem,
+                                startYInCanvas,
+                                thirdItem
+                            )
+
+                            handleElementGravity(
+                                sourceItem.param5,
+                                fiveItem,
+                                startYInCanvas,
+                                thirdItem
+                            )
+                        }
+
+                        fourItem.data3 -> {
+                            //第三个元素最高
+                            handleElementGravity(
+                                sourceItem.param1,
+                                firstItem,
+                                startYInCanvas,
+                                fourItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param3,
+                                secondItem,
+                                startYInCanvas,
+                                fourItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param4,
+                                thirdItem,
+                                startYInCanvas,
+                                fourItem
+                            )
+
+                            handleElementGravity(
+                                sourceItem.param5,
+                                fiveItem,
+                                startYInCanvas,
+                                fourItem
+                            )
+                        }
+
+                        fiveItem.data3 -> {
+                            //第三个元素最高
+                            handleElementGravity(
+                                sourceItem.param1,
+                                firstItem,
+                                startYInCanvas,
+                                fiveItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param3,
+                                secondItem,
+                                startYInCanvas,
+                                fiveItem
+                            )
+                            handleElementGravity(
+                                sourceItem.param4,
+                                fourItem,
+                                startYInCanvas,
+                                fiveItem
+                            )
+
+                            handleElementGravity(
+                                sourceItem.param5,
+                                thirdItem,
+                                startYInCanvas,
+                                fiveItem
+                            )
                         }
                     }
 
                     result.addAll(firstItem.data4)
                     result.addAll(secondItem.data4)
                     result.addAll(thirdItem.data4)
+                    result.addAll(fourItem.data4)
+                    result.addAll(fiveItem.data4)
 
                     startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
@@ -325,17 +455,24 @@ object DrawBitmapHelper {
     ) {
         when (sourceItem.gravity) {
             Constant.Companion.Gravity.CENTER -> {
+                val handleItemHalfContentHeight = handleItem.data3.div(2)
+                val handleItemHalfPerLineSpaceHeight = sourceItem.perLineSpace.div(2)
+                val handleItemHalfHeight = handleItemHalfContentHeight.plus(handleItemHalfPerLineSpaceHeight)
                 handleItem.data4.forEach {
-                    it.startY = startYInCanvas.minus((targetItem.data2.div(2)))
-                        .plus(handleItem.data2.div(2))
-                    it.endY = it.startY.plus(handleItem.data2)
+                    val newStartY = it.startY.plus(handleItemHalfHeight)
+                    it.startY = newStartY
+                    it.endY = newStartY.plus(handleItem.data3)
                 }
             }
 
             Constant.Companion.Gravity.BOTTOM -> {
+                val handleItemHeight = handleItem.data3
+                val handleItemPerLineSpace = sourceItem.perLineSpace
+                val targetItemEndY = targetItem.data2
                 handleItem.data4.forEach {
-                    it.endY = targetItem.data2
-                    it.startY = it.endY.minus(handleItem.data3)
+                    val newEndY = targetItemEndY.minus(handleItemPerLineSpace)
+                    it.endY = newEndY
+                    it.startY = newEndY.minus(handleItemHeight)
                 }
             }
 
@@ -389,7 +526,8 @@ object DrawBitmapHelper {
                     text = text,
                     align = align,
                     textWidth = width,
-                    maxWidth = elementMaxWidth
+                    maxWidth = elementMaxWidth,
+                    textHeight = ceil(itemHeight).toInt()
                 ).apply {
                     setStartXValue(startX)
                     setEndXValue(startX.plus(width))
@@ -483,7 +621,8 @@ object DrawBitmapHelper {
                         text = charBuilder.toString(),
                         align = align,
                         textWidth = width,
-                        maxWidth = elementMaxWidth
+                        maxWidth = elementMaxWidth,
+                        textHeight = textHeight
                     ).apply {
                         setStartXValue(startX)
                         setEndXValue(startX.plus(width))
@@ -538,6 +677,7 @@ object DrawBitmapHelper {
         maxWidth: Float,
         defaultStartX: Float,
         startYInCanvas: Float,
+        paddingEnd:Int
     ): DataEntity4<Float, Float, Float, List<BaseElement>> {
         when (item) {
             is TextParam -> {
@@ -545,9 +685,9 @@ object DrawBitmapHelper {
                 paint.textSize = item.size
                 paint.typeface = item.typeface
 
-                val itemWidth = maxWidth.times(item.weight)
+                val itemWidth = if (item.weight < 0) measureText(paint,item.text).first.toDouble() + 20 else maxWidth.times(item.weight)
                 val itemHeight = handleTextParamToElement(
-                    itemWidth,
+                    itemWidth.minus(paddingEnd),
                     item,
                     paint,
                     item.text,
@@ -556,7 +696,7 @@ object DrawBitmapHelper {
                     startYInCanvas
                 )
                 return DataEntity4(
-                    itemWidth.toFloat(),
+                    itemWidth.plus(paddingEnd).toFloat(),
                     itemHeight.first,
                     itemHeight.second,
                     itemHeight.third

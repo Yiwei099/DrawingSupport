@@ -173,6 +173,7 @@ class LabelProvide(
 
     fun start():ByteArray {
         val params = convertDrawParam()
+//        val params = covertTestDrawParam()
         return startDraw(params)
     }
 
@@ -225,5 +226,90 @@ class LabelProvide(
 //            )
 //        )
 
+    }
+
+    private fun covertTestDrawParam() = mutableListOf<BaseParam>().apply {
+        add(
+            TextParam(
+                text = "李宁"
+            ).apply {
+                size = 28f
+                typeface = Typeface.DEFAULT_BOLD
+                align = Constant.Companion.Align.ALIGN_CENTER
+            }
+        )
+
+        add(
+            TextParam(
+                text = "毛衣"
+            ).apply {
+                size = 26f
+                typeface = Typeface.DEFAULT
+            }
+        )
+
+        add(
+            TextParam(
+                text = "尺码：S"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "颜色：黑色"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "零售价：100"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "折后价：100"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "款号：001"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "品牌：李宁"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "产品标准：GB/T22-212321321312"
+            ).apply {
+                size = 26f
+            }
+        )
+
+        add(
+            TextParam(
+                text = "质量等级：优"
+            ).apply {
+                size = 26f
+            }
+        )
     }
 }

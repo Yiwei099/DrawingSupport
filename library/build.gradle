@@ -36,9 +36,6 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.8.0'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation 'com.google.android.material:material:1.5.0'
-    testImplementation 'junit:junit:4.13.2'
-    androidTestImplementation 'androidx.test.ext:junit:1.1.3'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.4.0'
 }
 
 afterEvaluate {
@@ -49,8 +46,22 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.eiviayw'
                 artifactId = 'DrawingSupport'
-                version = '1.0.7'
+                version = '1.0.8'
             }
         }
     }
 }
+
+//def JAR_PATH = "build/intermediates/runtime_library_classes_dir/debug/" // 待打包文件的位置
+//def JAR_NAME = "**/*.class" // 待打包文件的名字
+//def DESTINATION_PATH = "libs" // 生成jar包的位置
+//def NEW_NAME = "DrawingSupportV1.0.8.jar" // 生成jar包的名字
+//
+//task makeJar(type: Copy) {
+//    delete DESTINATION_PATH + NEW_NAME
+//    from(JAR_PATH + JAR_NAME)
+//    into(DESTINATION_PATH)
+//    rename(JAR_NAME, NEW_NAME)
+//}
+//
+//makeJar.dependsOn(build)

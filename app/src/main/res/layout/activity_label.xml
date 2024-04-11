@@ -2,51 +2,69 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/purple_200"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-
     <TextView
-        android:id="@+id/tvWidth"
+        android:id="@+id/tvLabelSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/width"
+        android:text="标签尺寸:"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@id/etWidth"
-        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+        app:layout_constraintTop_toTopOf="@id/rgLabelSize"
+        app:layout_constraintBottom_toBottomOf="@id/rgLabelSize"/>
 
-    <EditText
-        android:id="@+id/etWidth"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/tvWidth"
-        app:layout_constraintTop_toTopOf="parent"
-        android:inputType="number"
-        android:hint="0"/>
-
-    <TextView
-        android:id="@+id/tvHeight"
+    <RadioGroup
+        android:id="@+id/rgLabelSize"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/height"
-        app:layout_constraintStart_toEndOf="@id/etWidth"
-        app:layout_constraintTop_toTopOf="@id/etWidth"
-        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/tvLabelSize"
+        app:layout_constraintTop_toTopOf="parent">
 
-    <EditText
-        android:id="@+id/etHeight"
-        android:layout_width="100dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintTop_toTopOf="@id/etWidth"
-        app:layout_constraintStart_toEndOf="@id/tvHeight"
-        android:inputType="number"
-        android:hint="0"/>
+        <RadioButton
+            android:id="@+id/rb4030"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40*30"/>
+
+        <RadioButton
+            android:id="@+id/rb4060"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40*60"/>
+
+        <RadioButton
+            android:id="@+id/rb4080"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="40*80"/>
+
+        <RadioButton
+            android:id="@+id/rb3020"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="30*20"/>
+
+        <RadioButton
+            android:id="@+id/rb6040"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="60*40"/>
+
+        <RadioButton
+            android:id="@+id/rb0"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="宽度320，高度自适应"/>
+    </RadioGroup>
 
     <CheckBox
         android:id="@+id/cbFollow"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/followEffectItem"
-        app:layout_constraintTop_toBottomOf="@id/etHeight"
+        app:layout_constraintTop_toBottomOf="@id/rgLabelSize"
         app:layout_constraintStart_toStartOf="parent"/>
 
     <TextView
