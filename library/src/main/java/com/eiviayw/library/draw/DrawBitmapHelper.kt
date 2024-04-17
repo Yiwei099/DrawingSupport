@@ -478,8 +478,8 @@ object DrawBitmapHelper {
         baseY:Float
     ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
-        var endYInCanvas = 0f
-        var itemHeight = 0f
+        val endYInCanvas:Float
+        val itemHeight:Float
         var itemBaseY = baseY
         val measure = measureText(paint, text)
         val width = measure.first
@@ -742,18 +742,6 @@ object DrawBitmapHelper {
         val rect = Rect()
         paint.getTextBounds(text, 0, text.length, rect)
         return Pair(rect.width(), rect.height())
-    }
-
-    /**
-     * 计算绘制文字时的基线到中轴线的距离
-     *
-     * @param p
-     * @param centerY
-     * @return 基线和centerY的距离
-     */
-    fun getBaseline(p: Paint): Float {
-        val fontMetrics = p.getFontMetrics()
-        return (fontMetrics.descent - fontMetrics.ascent) / 2 - fontMetrics.descent
     }
 
     /**
