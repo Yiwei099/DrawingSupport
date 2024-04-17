@@ -44,10 +44,15 @@
             android:padding="10dp"
             android:layout_marginTop="10dp"/>
 
-        <ImageView
-            android:id="@+id/imExampleOne"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imExampleOne"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </ScrollView>
     </LinearLayout>
 
     <LinearLayout
@@ -90,10 +95,16 @@
             android:padding="10dp"
             android:layout_marginTop="10dp"/>
 
-        <ImageView
-            android:id="@+id/imExampleThree"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"/>
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <ImageView
+                android:id="@+id/imExampleThree"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </ScrollView>
+
     </LinearLayout>
 
     <LinearLayout

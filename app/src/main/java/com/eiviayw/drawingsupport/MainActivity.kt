@@ -44,15 +44,21 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btExampleOne).setOnClickListener {
             bitmap?.recycle()
-            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
-            val bitmapArray = receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode)
-            bitmapCode.recycle()
-            bitmap = BitmapFactory.decodeByteArray(
-                bitmapArray,
-                0,
-                bitmapArray.size
-            )
-            im.setImageBitmap(bitmap)
+            BitmapUtils.getInstance().zoomBitmap(
+                BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
+                240.0,
+                80.0
+            )?.let{
+                val bitmapArray = receiptProvide.start(generateOrder(), generateGoodsData(), it)
+                it.recycle()
+                bitmap = BitmapFactory.decodeByteArray(
+                    bitmapArray,
+                    0,
+                    bitmapArray.size
+                )
+                im.setImageBitmap(bitmap)
+            }
+
         }
 
         findViewById<Button>(R.id.btExampleTwo).setOnClickListener {
@@ -63,6 +69,7 @@ class MainActivity : AppCompatActivity() {
                 80.0
             )?.let {
                 val bitmapArray =
+//                    labelProvide.start()
                     labelProvide.start(
                         Goods(
                             goodsName = "Swisse Vitamin c Manukau Honey",

@@ -11,6 +11,7 @@ import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
 import com.eiviayw.library.bean.element.TextElement
 
+
 /**
  * 指路：https://github.com/Yiwei099
  *
@@ -44,7 +45,7 @@ class Drawing private constructor() {
         canvas: Canvas,
         paint: Paint
     ) {
-        canvas.drawLine(element.startX, element.startY, element.endX, element.endY, paint)
+        canvas.drawLine(element.startX, element.baseY, element.endX, element.baseY, paint)
     }
 
     /**
@@ -58,8 +59,8 @@ class Drawing private constructor() {
         canvas: Canvas, paint: Paint
     ) {
         val mPath = Path()
-        mPath.moveTo(element.startX, element.startY)
-        mPath.lineTo(element.endX, element.startY)
+        mPath.moveTo(element.startX, element.baseY)
+        mPath.lineTo(element.endX, element.baseY)
         mPath.close()
         canvas.drawPath(mPath, paint)
     }
@@ -77,7 +78,7 @@ class Drawing private constructor() {
         canvas: Canvas,
         paint: Paint
     ) {
-        canvas.drawText(textElement.text, textElement.startX, textElement.startY, paint)
+        canvas.drawText(textElement.text, textElement.startX, textElement.baseY, paint)
     }
 
     fun drawGraphics(
@@ -90,7 +91,7 @@ class Drawing private constructor() {
             0,
             graphicsElement.bitmapData.size
         )
-        canvas.drawBitmap(bitmap, graphicsElement.startX, graphicsElement.startY, paint)
+        canvas.drawBitmap(bitmap, graphicsElement.startX, graphicsElement.baseY.minus(bitmap.height), paint)
         bitmap.recycle()
     }
     //</editor-fold desc="绘制">

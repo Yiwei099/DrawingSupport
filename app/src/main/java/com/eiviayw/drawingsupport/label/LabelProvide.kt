@@ -24,7 +24,7 @@ import com.eiviayw.library.provide.BaseProvide
  * 标签数据提供者
  */
 class LabelProvide(
-    private var bitmapOption: BitmapOption = BitmapOption(maxWidth = 400, maxHeight = 240, followEffectItem = true)
+    private var bitmapOption: BitmapOption = BitmapOption(maxWidth = 400, followEffectItem = true)
 ) : BaseProvide(bitmapOption) {
 
     fun start(goods: Goods, bitmap: Bitmap): ByteArray {
@@ -38,7 +38,6 @@ class LabelProvide(
                 text = goods.goodsName
             ).apply {
                 size = 40f
-                perLineSpace = -10
             }
         )
 
@@ -49,19 +48,18 @@ class LabelProvide(
                 compressBitmapToByteArray(bitmap),
                 bitmap.width,
                 bitmap.height
+            ), param2 = TextParam(
+                weight = 0.1
             ),
-            param2 = TextParam(
+            param3 = TextParam(
                 text = goods.totalPrice,
-                weight = 0.3
+                weight = -1.0
             ).apply {
                 size = 30f
                 typeface = Typeface.DEFAULT_BOLD
-                align = Constant.Companion.Align.ALIGN_CENTER
                 gravity = Constant.Companion.Gravity.CENTER
             }
-        ).apply {
-            perLineSpace = 40
-        })
+        ))
     }
 
     fun start(order: Order, goods: Goods): ByteArray {
@@ -173,7 +171,6 @@ class LabelProvide(
 
     fun start():ByteArray {
         val params = convertDrawParam()
-//        val params = covertTestDrawParam()
         return startDraw(params)
     }
 
@@ -189,127 +186,41 @@ class LabelProvide(
                 text = "名称：羽绒服"
             )
         )
-//        add(
-//            TextParam(
-//                text = "颜色：黑色"
-//            )
-//        )
-//        add(
-//            TextParam(
-//                text = "尺寸：L"
-//            )
-//        )
-//        add(
-//            TextParam(
-//                text = "品牌：加拿大鹅"
-//            )
-//        )
-//        add(
-//            TextParam(
-//                text = "成分：鹅绒"
-//            )
-//        )
-//        add(
-//            TextParam(
-//                text = "质量等级：上等"
-//            )
-//        )
-//
-//        add(
-//            TextParam(
-//                text = "零售价：$40.88"
-//            )
-//        )
-//        add(
-//            TextParam(
-//                text = "折后价：$30.50"
-//            )
-//        )
-
-    }
-
-    private fun covertTestDrawParam() = mutableListOf<BaseParam>().apply {
-        add(
-            TextParam(
-                text = "李宁"
-            ).apply {
-                size = 28f
-                typeface = Typeface.DEFAULT_BOLD
-                align = Constant.Companion.Align.ALIGN_CENTER
-            }
-        )
-
-        add(
-            TextParam(
-                text = "毛衣"
-            ).apply {
-                size = 26f
-                typeface = Typeface.DEFAULT
-            }
-        )
-
-        add(
-            TextParam(
-                text = "尺码：S"
-            ).apply {
-                size = 26f
-            }
-        )
-
         add(
             TextParam(
                 text = "颜色：黑色"
-            ).apply {
-                size = 26f
-            }
+            )
+        )
+        add(
+            TextParam(
+                text = "尺寸：L"
+            )
+        )
+        add(
+            TextParam(
+                text = "品牌：加拿大鹅"
+            )
+        )
+        add(
+            TextParam(
+                text = "成分：鹅绒"
+            )
+        )
+        add(
+            TextParam(
+                text = "质量等级：上等"
+            )
         )
 
         add(
             TextParam(
-                text = "零售价：100"
-            ).apply {
-                size = 26f
-            }
+                text = "零售价：$40.88"
+            )
         )
-
         add(
             TextParam(
-                text = "折后价：100"
-            ).apply {
-                size = 26f
-            }
-        )
-
-        add(
-            TextParam(
-                text = "款号：001"
-            ).apply {
-                size = 26f
-            }
-        )
-
-        add(
-            TextParam(
-                text = "品牌：李宁"
-            ).apply {
-                size = 26f
-            }
-        )
-
-        add(
-            TextParam(
-                text = "产品标准：GB/T22-212321321312"
-            ).apply {
-                size = 26f
-            }
-        )
-
-        add(
-            TextParam(
-                text = "质量等级：优"
-            ).apply {
-                size = 26f
-            }
+                text = "折后价：$30.50"
+            )
         )
     }
 }

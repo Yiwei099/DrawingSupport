@@ -55,9 +55,9 @@ object DrawBitmapHelper {
         val diffY = bitmapOption.diffContentY(result.second)
 
         result.first.forEach loop@ {
-            it.startY += diffY
+            it.baseY += diffY
 
-            if (!effectItem(bitmapOption, ceil(it.startY).toInt())){
+            if (!effectItem(bitmapOption, ceil(it.baseY).toInt())){
                 return@loop
             }
 
@@ -122,6 +122,8 @@ object DrawBitmapHelper {
         val maxWidth = bitmapOption.getEffectiveWidth()
         val defaultStartX = bitmapOption.startIndentation
 
+        var baseY = startYInCanvas
+
         sourceData.forEach { sourceItem ->
 
             when (sourceItem) {
@@ -134,7 +136,8 @@ object DrawBitmapHelper {
                         maxWidth.minus(bitmapOption.startIndentation),
                         defaultStartX,
                         startYInCanvas,
-                        paddingEnd
+                        paddingEnd,
+                        baseY
                     )
 
                     //处理第二个元素
@@ -144,7 +147,8 @@ object DrawBitmapHelper {
                         maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1,
                         startYInCanvas,
-                        paddingEnd
+                        paddingEnd,
+                        baseY
                     )
                     //处理第三个元素
                     val thirdItem = handleMultiParamItem(
@@ -153,7 +157,8 @@ object DrawBitmapHelper {
                         maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1.plus(secondItem.data1),
                         startYInCanvas,
-                        paddingEnd
+                        paddingEnd,
+                        baseY
                     )
 
                     //处理第三个元素
@@ -163,7 +168,8 @@ object DrawBitmapHelper {
                         maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1.plus(secondItem.data1).plus(thirdItem.data1),
                         startYInCanvas,
-                        paddingEnd
+                        paddingEnd,
+                        baseY
                     )
 
                     //处理第三个元素
@@ -173,7 +179,8 @@ object DrawBitmapHelper {
                         maxWidth.minus(bitmapOption.startIndentation),
                         firstItem.data1.plus(secondItem.data1).plus(thirdItem.data1).plus(fourItem.data1),
                         startYInCanvas,
-                        paddingEnd
+                        paddingEnd,
+                        baseY
                     )
 
                     //更新最新的Y值(当前混排元素中取最高的元素)
@@ -201,27 +208,23 @@ object DrawBitmapHelper {
                             handleElementGravity(
                                 sourceItem.param2,
                                 secondItem,
-                                startYInCanvas,
                                 firstItem
                             )
                             handleElementGravity(
                                 sourceItem.param3,
                                 thirdItem,
-                                startYInCanvas,
                                 firstItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param4,
                                 fourItem,
-                                startYInCanvas,
                                 firstItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param5,
                                 fiveItem,
-                                startYInCanvas,
                                 firstItem
                             )
                         }
@@ -232,27 +235,23 @@ object DrawBitmapHelper {
                             handleElementGravity(
                                 sourceItem.param1,
                                 firstItem,
-                                startYInCanvas,
                                 secondItem
                             )
                             handleElementGravity(
                                 sourceItem.param3,
                                 thirdItem,
-                                startYInCanvas,
                                 secondItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param4,
                                 fourItem,
-                                startYInCanvas,
                                 secondItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param5,
                                 fiveItem,
-                                startYInCanvas,
                                 secondItem
                             )
                         }
@@ -262,26 +261,22 @@ object DrawBitmapHelper {
                             handleElementGravity(
                                 sourceItem.param1,
                                 firstItem,
-                                startYInCanvas,
                                 thirdItem
                             )
                             handleElementGravity(
                                 sourceItem.param3,
                                 secondItem,
-                                startYInCanvas,
                                 thirdItem
                             )
                             handleElementGravity(
                                 sourceItem.param4,
                                 fourItem,
-                                startYInCanvas,
                                 thirdItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param5,
                                 fiveItem,
-                                startYInCanvas,
                                 thirdItem
                             )
                         }
@@ -291,26 +286,22 @@ object DrawBitmapHelper {
                             handleElementGravity(
                                 sourceItem.param1,
                                 firstItem,
-                                startYInCanvas,
                                 fourItem
                             )
                             handleElementGravity(
                                 sourceItem.param3,
                                 secondItem,
-                                startYInCanvas,
                                 fourItem
                             )
                             handleElementGravity(
                                 sourceItem.param4,
                                 thirdItem,
-                                startYInCanvas,
                                 fourItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param5,
                                 fiveItem,
-                                startYInCanvas,
                                 fourItem
                             )
                         }
@@ -320,38 +311,34 @@ object DrawBitmapHelper {
                             handleElementGravity(
                                 sourceItem.param1,
                                 firstItem,
-                                startYInCanvas,
                                 fiveItem
                             )
                             handleElementGravity(
                                 sourceItem.param3,
                                 secondItem,
-                                startYInCanvas,
                                 fiveItem
                             )
                             handleElementGravity(
                                 sourceItem.param4,
                                 fourItem,
-                                startYInCanvas,
                                 fiveItem
                             )
 
                             handleElementGravity(
                                 sourceItem.param5,
                                 thirdItem,
-                                startYInCanvas,
                                 fiveItem
                             )
                         }
                     }
 
+                    baseY = baseY.plus(maxItemHeight).plus(sourceItem.perLineSpace)
                     result.addAll(firstItem.data4)
                     result.addAll(secondItem.data4)
                     result.addAll(thirdItem.data4)
                     result.addAll(fourItem.data4)
                     result.addAll(fiveItem.data4)
 
-                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
                 is TextParam -> {
@@ -366,11 +353,11 @@ object DrawBitmapHelper {
                         sourceItem.text,
                         sourceItem.align,
                         if (sourceItem.align == Constant.Companion.Align.ALIGN_START) defaultStartX else 0f,
-                        startYInCanvas
+                        startYInCanvas,baseY
                     )
+                    baseY = baseY.plus(elementResult.second).plus(sourceItem.perLineSpace)
                     startYInCanvas = elementResult.first
                     result.addAll(elementResult.third)
-                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
                 }
 
                 is LineParam -> {
@@ -379,18 +366,18 @@ object DrawBitmapHelper {
                     val width = maxWidth.times(sourceItem.weight)
                     val measure = measureText(paint, "-")
                     val height = measure.second
+                    baseY = baseY.plus(height)
                     result.add(
                         LineElement().apply {
                             setStartXValue(defaultStartX)
                             setEndXValue(width.toFloat())
-                            setStartYValue(startYInCanvas.minus(height))
-                            setEndYValue(startYInCanvas.minus(height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
+                            setBaseLine(baseY)
                         }
                     )
-                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
+                    baseY = baseY.plus(sourceItem.perLineSpace)
 
                 }
 
@@ -400,18 +387,18 @@ object DrawBitmapHelper {
                     val width = maxWidth.times(sourceItem.weight)
                     val measure = measureText(paint, "-")
                     val height = measure.second
+                    baseY = baseY.plus(height)
                     result.add(
                         LineDashedElement(on = sourceItem.on, off = sourceItem.off).apply {
                             setStartXValue(defaultStartX)
                             setEndXValue(width.toFloat())
-                            setStartYValue(startYInCanvas.minus(height))
-                            setEndYValue(startYInCanvas.minus(height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
+                            setBaseLine(baseY)
                         }
                     )
-                    startYInCanvas = startYInCanvas.plus(sourceItem.perLineSpace)
+                    baseY = baseY.plus(sourceItem.perLineSpace)
                 }
 
                 is GraphicsParam -> {
@@ -419,16 +406,14 @@ object DrawBitmapHelper {
                         GraphicsElement(sourceItem.bitmapData).apply {
                             setStartXValue(bitmapOption.getCenterX().minus(sourceItem.width.div(2)))
                             setEndXValue(defaultStartX.plus(sourceItem.width))
-                            setStartYValue(startYInCanvas)
-                            setEndYValue(startYInCanvas.plus(sourceItem.height))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
+                            setBaseLine(baseY.plus(sourceItem.height))
                         }
                     )
-
-                    startYInCanvas =
-                        startYInCanvas.plus(sourceItem.height).plus(sourceItem.perLineSpace)
+                    baseY = baseY.plus(sourceItem.height).plus(sourceItem.perLineSpace)
+                    startYInCanvas = startYInCanvas.plus(sourceItem.height)
                 }
 
                 else -> {
@@ -437,43 +422,32 @@ object DrawBitmapHelper {
             }
         }
 
-        return Pair(result, ceil(startYInCanvas).toInt())
+        return Pair(result, ceil(baseY).toInt())
     }
 
     /**
      * 处理纵向对齐方式
      * @param sourceItem 业务源元素块
      * @param handleItem 需要处理对齐的元素块
-     * @param startYInCanvas 最新的Y位置
      * @param targetItem 被对齐的元素块(参照元素块)
      */
     private fun handleElementGravity(
         sourceItem: BaseParam,
         handleItem: DataEntity4<Float, Float, Float, List<BaseElement>>,
-        startYInCanvas: Float,
         targetItem: DataEntity4<Float, Float, Float, List<BaseElement>>
     ) {
         when (sourceItem.gravity) {
             Constant.Companion.Gravity.CENTER -> {
-                val handleItemHalfContentHeight = handleItem.data3.div(2)
-                val handleItemHalfPerLineSpaceHeight = sourceItem.perLineSpace.div(2)
-                val handleItemHalfHeight = handleItemHalfContentHeight.plus(handleItemHalfPerLineSpaceHeight)
+                val contentHeight = targetItem.data3.minus((targetItem.data4.size - 1) * 10)
+                val targetBaseY = targetItem.data4.lastOrNull()?.baseY ?: 0f
                 handleItem.data4.forEach {
-                    val newStartY = it.startY.plus(handleItemHalfHeight)
-                    it.startY = newStartY
-                    it.endY = newStartY.plus(handleItem.data3)
+                    it.baseY = targetBaseY.minus(contentHeight.div(2))
                 }
             }
 
             Constant.Companion.Gravity.BOTTOM -> {
-                val handleItemHeight = handleItem.data3
-                val handleItemPerLineSpace = sourceItem.perLineSpace
-                val targetItemEndY = targetItem.data2
-                handleItem.data4.forEach {
-                    val newEndY = targetItemEndY.minus(handleItemPerLineSpace)
-                    it.endY = newEndY
-                    it.startY = newEndY.minus(handleItemHeight)
-                }
+                val baseY = targetItem.data4.lastOrNull()?.baseY ?: 0f
+                handleItem.data4.forEach { it.baseY = baseY }
             }
 
             else -> {
@@ -501,10 +475,12 @@ object DrawBitmapHelper {
         align: Int,
         defaultStartX: Float,
         startYInCanvas: Float,
+        baseY:Float
     ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
         var endYInCanvas = 0f
         var itemHeight = 0f
+        var itemBaseY = baseY
         val measure = measureText(paint, text)
         val width = measure.first
 
@@ -512,6 +488,9 @@ object DrawBitmapHelper {
             //不需要换行处理
             itemHeight = measure.second.toFloat()
             endYInCanvas = startYInCanvas.plus(measure.second)
+
+            itemBaseY = itemBaseY.plus(measure.second)
+
             val startX = when (align) {
                 Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(elementMaxWidth.minus(width))
                     .toFloat()
@@ -527,14 +506,13 @@ object DrawBitmapHelper {
                     align = align,
                     textWidth = width,
                     maxWidth = elementMaxWidth,
-                    textHeight = ceil(itemHeight).toInt()
+                    textHeight = ceil(itemHeight).toInt(),
                 ).apply {
                     setStartXValue(startX)
                     setEndXValue(startX.plus(width))
-                    setStartYValue(startYInCanvas)
-                    setEndYValue(endYInCanvas)
                     setTextSize(sourceItem.size)
                     setFaceType(sourceItem.typeface)
+                    setBaseLine(itemBaseY)
                 }
             )
         } else {
@@ -546,6 +524,7 @@ object DrawBitmapHelper {
                 elementMaxWidth,
                 paint,
                 sourceItem,
+                baseY
             )
             endYInCanvas = resultY.first
             itemHeight = resultY.second
@@ -573,6 +552,7 @@ object DrawBitmapHelper {
         elementMaxWidth: Double,
         paint: Paint,
         sourceItem: TextParam,
+        baseY: Float
     ): Triple<Float, Float, List<BaseElement>> {
         val result = mutableListOf<BaseElement>()
         var tempStartYInCanvas = startYInCanvas
@@ -583,6 +563,7 @@ object DrawBitmapHelper {
         val tempCharBuilder = StringBuilder()
         var sumItemY = 0f
         var textHeight = 0
+        var itemBaseY = baseY
         for (index in char.indices) {
             //迭代字符
             val value = char[index]
@@ -603,7 +584,8 @@ object DrawBitmapHelper {
                     //没达到最大宽度，但是已是最后一个字符，需要把最后的字符添加进来，否则会漏掉
                     charBuilder.append(value)
                 }
-                val width = measureText(paint, charBuilder.toString()).first
+                val measure = measureText(paint, charBuilder.toString())
+                val width = measure.first
                 val startX = when (align) {
                     Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(
                         elementMaxWidth.minus(
@@ -616,6 +598,8 @@ object DrawBitmapHelper {
 
                     else -> defaultStartX
                 }
+                itemBaseY += measure.second
+
                 result.add(
                     TextElement(
                         text = charBuilder.toString(),
@@ -626,10 +610,9 @@ object DrawBitmapHelper {
                     ).apply {
                         setStartXValue(startX)
                         setEndXValue(startX.plus(width))
-                        setStartYValue(tempStartYInCanvas)
-                        setEndYValue(tempStartYInCanvas.plus(textHeight))
                         setTextSize(sourceItem.size)
                         setFaceType(sourceItem.typeface)
+                        setBaseLine(itemBaseY)
                     }
                 )
                 tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
@@ -637,7 +620,9 @@ object DrawBitmapHelper {
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
-                    tempStartYInCanvas = tempStartYInCanvas.plus(10)
+                    itemBaseY += 10
+                    tempStartYInCanvas += 10
+                    sumItemY += 10
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }
@@ -653,7 +638,7 @@ object DrawBitmapHelper {
             //一般只有一个
             val resultFinal = convertEnterLineElement(
                 tempCharBuilder.toString(),
-                align, tempStartYInCanvas, defaultStartX, elementMaxWidth, paint, sourceItem
+                align, tempStartYInCanvas, defaultStartX, elementMaxWidth, paint, sourceItem,itemBaseY
             )
             tempStartYInCanvas += resultFinal.second
             sumItemY += resultFinal.second
@@ -677,7 +662,8 @@ object DrawBitmapHelper {
         maxWidth: Float,
         defaultStartX: Float,
         startYInCanvas: Float,
-        paddingEnd:Int
+        paddingEnd:Int,
+        baseY:Float
     ): DataEntity4<Float, Float, Float, List<BaseElement>> {
         when (item) {
             is TextParam -> {
@@ -693,7 +679,8 @@ object DrawBitmapHelper {
                     item.text,
                     item.align,
                     defaultStartX,
-                    startYInCanvas
+                    startYInCanvas,
+                    baseY
                 )
                 return DataEntity4(
                     itemWidth.plus(paddingEnd).toFloat(),
@@ -704,7 +691,6 @@ object DrawBitmapHelper {
             }
 
             is GraphicsParam -> {
-
                 return DataEntity4(
                     item.width.toFloat(),
                     startYInCanvas.plus(item.height.toFloat()),
@@ -714,9 +700,8 @@ object DrawBitmapHelper {
                             GraphicsElement(item.bitmapData).apply {
                                 setStartXValue(defaultStartX)
                                 setEndXValue(defaultStartX.plus(item.width))
-                                setStartYValue(startYInCanvas)
-                                setEndYValue(startYInCanvas.plus(item.height))
                                 setLineSpace(item.perLineSpace)
+                                setBaseLine(baseY.plus(item.height))
                             }
                         )
                     })
@@ -757,6 +742,18 @@ object DrawBitmapHelper {
         val rect = Rect()
         paint.getTextBounds(text, 0, text.length, rect)
         return Pair(rect.width(), rect.height())
+    }
+
+    /**
+     * 计算绘制文字时的基线到中轴线的距离
+     *
+     * @param p
+     * @param centerY
+     * @return 基线和centerY的距离
+     */
+    fun getBaseline(p: Paint): Float {
+        val fontMetrics = p.getFontMetrics()
+        return (fontMetrics.descent - fontMetrics.ascent) / 2 - fontMetrics.descent
     }
 
     /**

@@ -16,12 +16,19 @@ open class BaseElement(
     val id: String = "",//唯一标识(可选使用)
     var startX: Float = 0f,
     var endX: Float = 0f,
+    @Deprecated("请留意 BaseY")
     var startY: Float = 0f,
+    @Deprecated("请留意 BaseY")
     var endY: Float = 0f,
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var size: Float = 26f,//内容字号
-    var perLineSpace: Int = 10,//行距
+    private var perLineSpace: Int = 10,//行距
+    var baseY:Float = 0f
 ){
+
+    fun setBaseLine(value:Float){
+        baseY = value
+    }
     fun setStartXValue(x: Float) {
         startX = x
     }
@@ -30,10 +37,12 @@ open class BaseElement(
         endX = x
     }
 
+    @Deprecated("请留意 setBaseLine")
     fun setStartYValue(y: Float) {
         startY = y
     }
 
+    @Deprecated("请留意 setBaseLine")
     fun setEndYValue(y: Float) {
         endY = y
     }

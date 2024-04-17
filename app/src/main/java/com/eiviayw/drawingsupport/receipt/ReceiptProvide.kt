@@ -54,9 +54,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                 compressBitmapToByteArray(bitmap),
                 bitmap.width,
                 bitmap.height
-            ).apply {
-                perLineSpace = 40
-            }
+            )
         )
         add(
             TextParam(
@@ -170,15 +168,12 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                         align = Constant.Companion.Align.ALIGN_END,
                         weight = 0.6,
                     ).apply {
-                        perLineSpace = 40
                         size = 26f
                     }
                 )
             )
 
-            add(LineDashedParam().apply {
-                perLineSpace = 20
-            })
+            add(LineDashedParam())
 
             val param = if (isMulti) {
                 MultiElementParam(
@@ -202,9 +197,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                     ).apply {
                         size = 26f
                     }
-                ).apply {
-                    perLineSpace = 0
-                }
+                )
             } else {
                 MultiElementParam(
                     param1 = TextParam(
@@ -220,15 +213,11 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                     ).apply {
                         size = 26f
                     }
-                ).apply {
-                    perLineSpace = 0
-                }
+                )
             }
             add(param)
 
-            add(LineDashedParam().apply {
-                perLineSpace = 30
-            })
+            add(LineDashedParam())
         }
 
     private fun convertOrderGoods(goodsData: List<Goods>) = mutableListOf<BaseParam>().apply {
@@ -250,9 +239,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                         size = 26f
                         typeface = Typeface.DEFAULT_BOLD
                     }
-                ).apply {
-                    perLineSpace = 8
-                }
+                )
             )
 
             add(
@@ -261,7 +248,6 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                     align = Constant.Companion.Align.ALIGN_START,
                     weight = 0.7
                 ).apply {
-                    perLineSpace = if (index == goodsData.size - 1) 0 else 18
                     size = 26f
                     typeface = Typeface.DEFAULT_BOLD
                 }
@@ -304,9 +290,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         }
 
     private fun convertOrderFooter(order: Order) = mutableListOf<BaseParam>().apply {
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-        })
+        add(LineDashedParam())
 
         add(
             MultiElementParam(
@@ -428,14 +412,10 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         add(
             TextParam(
                 text = "会员：散客"
-            ).apply {
-                perLineSpace = -10
-            }
+            )
         )
 
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-        })
+        add(LineDashedParam())
         add(MultiElementParam(
             param1 = TextParam(
                 text = "商品",
@@ -457,12 +437,8 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                 text = "金额",
                 weight = 0.2
             )
-        ).apply {
-            perLineSpace = -10
-        })
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-        })
+        ))
+        add(LineDashedParam())
         for (index in 0..2){
             add(TextParam(
                 text = "超人迪加奥特曼喜羊羊与灰太狼熊出没哆啦A梦"
@@ -497,61 +473,49 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                 ).apply {
                     gravity = Constant.Companion.Gravity.BOTTOM
                 }
-            ).apply {
-                if (index == 6){
-                    perLineSpace = -10
-                }
-            })
+            ))
 
         }
 
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-        })
+        add(LineDashedParam())
         add(TextParam(
             text = "销售：1款，2件，88元"
         ))
         add(TextParam(
             text = "整单折扣：88.0%"
-        ).apply {
-            perLineSpace = 20
-        })
+        ))
         add(MultiElementParam(
             param1 = TextParam(
                 text = "应收：",
                 weight = -1.0
-            ),
+            ).apply {
+                gravity = Constant.Companion.Gravity.BOTTOM
+            },
             param2 = TextParam(
                 text = "$88.0",
             ).apply {
-                size = 40f
+                size = 60f
                 typeface = Typeface.DEFAULT_BOLD
             }
-        ).apply {
-            perLineSpace = 0
-        })
+        ))
         add(MultiElementParam(
             param1 = TextParam(
                 text = "实收：",
-                weight = -1.0
-            ),
+                weight = -1.0,
+            ).apply {
+                    gravity = Constant.Companion.Gravity.BOTTOM
+            },
             param2 = TextParam(
                 text = "$88.0",
             ).apply {
-                size = 36f
+                size = 60f
                 typeface = Typeface.DEFAULT_BOLD
             }
-        ).apply {
-            perLineSpace = 0
-        })
+        ))
         add(TextParam(
             text = "(现：50元，支50元)"
-        ).apply {
-            perLineSpace = -10
-        })
-        add(LineDashedParam().apply {
-            perLineSpace = 30
-        })
+        ))
+        add(LineDashedParam())
         add(TextParam(
             text = "操作人：周杰伦"
         ))
@@ -566,18 +530,14 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         ))
         add(TextParam(
             text = "温馨提示：7天无理由退换"
-        ).apply {
-            perLineSpace = 0
-        })
+        ))
         val bitmap = BitmapFactory.decodeResource(
             MyApplication.getInstance().resources,
             R.drawable.wechat_qr_code
         )
         BitmapUtils.getInstance().zoomBitmap(bitmap,bitmap.width.div(2).toDouble(),bitmap.height.div(2).toDouble())?.let {
             val byteArray = BitmapUtils.getInstance().compressBitmapToByteArray(it)
-            add(GraphicsParam(byteArray,it.width,it.height).apply {
-                perLineSpace = 40
-            })
+            add(GraphicsParam(byteArray,it.width,it.height))
 
             bitmap.recycle()
             it.recycle()
