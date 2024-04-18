@@ -440,14 +440,12 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         ))
         add(LineDashedParam())
         for (index in 0..2){
-            add(TextParam(
-                text = "超人迪加奥特曼喜羊羊与灰太狼熊出没哆啦A梦"
-            )
-            )
+            add(TextParam(text = "超人迪加奥特曼喜羊羊与灰太狼熊出没哆啦A梦"))
             add(MultiElementParam(
                 param1 = TextParam(
                     text = "黑色/XL码",
-                    weight = 0.2
+                    weight = 0.2,
+                    autoWrap = false
                 ),
                 param2 = TextParam(
                     text = "1",
@@ -548,7 +546,8 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         ))
         add(TextParam(
             text = "An Android library that makes developers get pos receipts extremely easy.",
-            align = Constant.Companion.Align.ALIGN_CENTER
+            align = Constant.Companion.Align.ALIGN_CENTER,
+            autoWrap = false
         ))
         add(TextParam(
             text = "一个Android库，让开发者非常容易地获得pos收据。",

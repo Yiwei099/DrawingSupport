@@ -15,4 +15,5 @@ data class TextParam(
     val text:String = "",//内容
     val weight:Double = 1.0,//第一项内容宽度所占的比重（用于限制最大宽度）
     var align:Int = Constant.Companion.Align.ALIGN_START,//文本内容对齐方式，默认开始对齐
+    val autoWrap:Boolean = true
 ):BaseParam()

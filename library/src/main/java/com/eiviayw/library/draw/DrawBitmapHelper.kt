@@ -506,32 +506,54 @@ object DrawBitmapHelper {
         var itemBaseY = baseY
         val measure = measureText(paint, text)
         val width = measure.first
-
-        if (width < elementMaxWidth) {
+        val overWidth = width > elementMaxWidth
+        if (!sourceItem.autoWrap || !overWidth) {
             //不需要换行处理
             itemHeight = measure.second.toFloat()
             endYInCanvas = startYInCanvas.plus(measure.second)
 
             itemBaseY = itemBaseY.plus(measure.second)
 
+            val tempText = if (overWidth){
+                val charBuilder = StringBuilder()
+                for (c in text.toCharArray()) {
+                    charBuilder.append(c)
+                    if (measureText(paint,charBuilder.toString()).first > elementMaxWidth){
+                        break
+                    }
+                }
+                charBuilder.deleteAt(charBuilder.lastIndex).toString()
+            }else{
+                text
+            }
+
+            val tempWidth = if (overWidth){
+                measureText(paint,tempText).first
+            }else{
+                width
+            }
+
             val startX = when (align) {
-                Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(elementMaxWidth.minus(width))
+                Constant.Companion.Align.ALIGN_END -> defaultStartX.plus(elementMaxWidth.minus(tempWidth))
                     .toFloat()
 
-                Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(width.div(2))
+                Constant.Companion.Align.ALIGN_CENTER -> elementMaxWidth.div(2).minus(tempWidth.div(2))
                     .plus(defaultStartX).toFloat()
 
                 else -> defaultStartX
             }
+
+
+
             result.add(
                 TextElement(
-                    text = text,
+                    text = tempText,
                     align = align,
-                    textWidth = width,
+                    textWidth = tempWidth,
                     maxWidth = elementMaxWidth,
                 ).apply {
                     setStartXValue(startX)
-                    setEndXValue(startX.plus(width))
+                    setEndXValue(startX.plus(tempWidth))
                     setTextSize(sourceItem.size)
                     setFaceType(sourceItem.typeface)
                     setBaseLine(itemBaseY)
