@@ -456,7 +456,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                     gravity = Constant.Companion.Gravity.BOTTOM
                 },
                 param3 = TextParam(
-                    text = "100.00",
+                    text = "$123.45",
                     weight = 0.2
                 ).apply {
                     gravity = Constant.Companion.Gravity.BOTTOM

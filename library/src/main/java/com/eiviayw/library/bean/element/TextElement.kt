@@ -16,5 +16,4 @@ data class TextElement(
     val align: Int,
     val textWidth:Int,
     val maxWidth:Double = 0.0,
-    val textHeight:Int
 ) : BaseElement()

@@ -438,20 +438,43 @@ object DrawBitmapHelper {
     ) {
         when (sourceItem.gravity) {
             Constant.Companion.Gravity.CENTER -> {
-                val contentHeight = targetItem.data3.minus((targetItem.data4.size - 1) * 10)
-                val targetBaseY = targetItem.data4.lastOrNull()?.baseY ?: 0f
-                handleItem.data4.forEach {
-                    it.baseY = targetBaseY.minus(contentHeight.div(2))
+                //半高
+                val handleHalfHeight = (handleItem.data3 - (handleItem.data4.size - 1)* 10).div(2)
+                //居中基线
+                val targetCenterLine = (targetItem.data4.lastOrNull()?.baseY ?: 0f) - (targetItem.data3 - (targetItem.data4.size - 1)* 10).div(2)
+
+                var handleMinBaseY = targetCenterLine - handleHalfHeight + 10
+
+                for (element in handleItem.data4) {
+                    element.baseY = handleMinBaseY
+                    handleMinBaseY += 10 + element.height
                 }
             }
 
             Constant.Companion.Gravity.BOTTOM -> {
-                val baseY = targetItem.data4.lastOrNull()?.baseY ?: 0f
-                handleItem.data4.forEach { it.baseY = baseY }
+                //handleItem的最后一行对齐targetItem的最后一行，但是targetItem行数必然比handleItem行数大
+                //相差行数(必然大于1)
+                val diffSize = targetItem.data4.size - handleItem.data4.size
+                for (index in targetItem.data4.size - 1 downTo 0){
+                    val handleIndex = index - diffSize
+
+                    val handleItemElement = handleItem.data4[handleIndex]
+                    val targetItemElement = targetItem.data4[index]
+                    handleItemElement.baseY = targetItemElement.baseY
+                    if (handleIndex == 0){
+                        //倒序遍历防止数组越界
+                        break
+                    }
+                }
             }
 
             else -> {
-                //nothing to do
+                //顶部对齐时，顺序一行一行对应即可
+                for (index in 0 until handleItem.data4.size){
+                    val handleItemElement = handleItem.data4[index]
+                    val targetItemElement = targetItem.data4[index]
+                    handleItemElement.baseY = targetItemElement.baseY
+                }
             }
         }
     }
@@ -506,13 +529,13 @@ object DrawBitmapHelper {
                     align = align,
                     textWidth = width,
                     maxWidth = elementMaxWidth,
-                    textHeight = ceil(itemHeight).toInt(),
                 ).apply {
                     setStartXValue(startX)
                     setEndXValue(startX.plus(width))
                     setTextSize(sourceItem.size)
                     setFaceType(sourceItem.typeface)
                     setBaseLine(itemBaseY)
+                    setElementHeight(ceil(itemHeight).toInt())
                 }
             )
         } else {
@@ -606,21 +629,21 @@ object DrawBitmapHelper {
                         align = align,
                         textWidth = width,
                         maxWidth = elementMaxWidth,
-                        textHeight = textHeight
                     ).apply {
                         setStartXValue(startX)
                         setEndXValue(startX.plus(width))
                         setTextSize(sourceItem.size)
                         setFaceType(sourceItem.typeface)
                         setBaseLine(itemBaseY)
+                        setElementHeight(textHeight)
                     }
                 )
                 tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
                 sumItemY = sumItemY.plus(textHeight)
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
+                itemBaseY += 10
                 if (fullWidth) {
-                    itemBaseY += 10
                     tempStartYInCanvas += 10
                     sumItemY += 10
                     tempCharBuilder.append(value)

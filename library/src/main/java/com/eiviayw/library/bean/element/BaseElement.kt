@@ -23,8 +23,13 @@ open class BaseElement(
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var size: Float = 26f,//内容字号
     private var perLineSpace: Int = 10,//行距
-    var baseY:Float = 0f
+    var baseY:Float = 0f,
+    var height:Int = 0
 ){
+
+    fun setElementHeight(value:Int){
+        height = value
+    }
 
     fun setBaseLine(value:Float){
         baseY = value
