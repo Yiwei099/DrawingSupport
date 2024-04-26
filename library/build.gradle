@@ -8,7 +8,7 @@ android {
     namespace 'com.eiviayw.library'
 //    compileSdkVersion rootProject.compileSdkVersion
     //Alpha构建版本
-    compileSdkVersion 29
+    compileSdkVersion 27
 
     defaultConfig {
 //        minSdkVersion rootProject.minSdkVersion
