@@ -8,7 +8,7 @@ android {
     namespace 'com.eiviayw.library'
 //    compileSdkVersion rootProject.compileSdkVersion
     //Alpha构建版本
-    compileSdkVersion 27
+    compileSdkVersion 29
 
     defaultConfig {
 //        minSdkVersion rootProject.minSdkVersion
@@ -16,8 +16,7 @@ android {
 
         //Alpha构建版本
         minSdkVersion 21
-        targetSdkVersion 27
-        vectorDrawables.useSupportLibrary =true
+        targetSdkVersion 29
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
