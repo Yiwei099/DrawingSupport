@@ -6,11 +6,17 @@ plugins {
 
 android {
     namespace 'com.eiviayw.library'
-    compileSdkVersion rootProject.compileSdkVersion
+//    compileSdkVersion rootProject.compileSdkVersion
+    //Alpha构建版本
+    compileSdkVersion 29
 
     defaultConfig {
-        minSdkVersion rootProject.minSdkVersion
-        targetSdkVersion rootProject.targetSdkVersion
+//        minSdkVersion rootProject.minSdkVersion
+//        targetSdkVersion rootProject.targetSdkVersion
+        
+        //Alpha构建版本
+        minSdkVersion 21
+        targetSdkVersion 27
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
@@ -46,7 +52,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.eiviayw'
                 artifactId = 'DrawingSupport'
-                version = '1.1.0'
+                version = '1.1.1-Alpha'
             }
         }
     }
