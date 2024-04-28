@@ -6,17 +6,12 @@ plugins {
 
 android {
     namespace 'com.eiviayw.library'
-//    compileSdkVersion rootProject.compileSdkVersion
-    //Alpha构建版本
-    compileSdkVersion 29
+    compileSdkVersion rootProject.compileSdkVersion
 
     defaultConfig {
-//        minSdkVersion rootProject.minSdkVersion
-//        targetSdkVersion rootProject.targetSdkVersion
+        minSdkVersion rootProject.minSdkVersion
+        targetSdkVersion rootProject.targetSdkVersion
 
-        //Alpha构建版本
-        minSdkVersion 21
-        targetSdkVersion 29
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
     }
@@ -37,10 +32,7 @@ android {
 }
 
 dependencies {
-
-    implementation 'androidx.core:core-ktx:1.8.0'
-    implementation 'androidx.appcompat:appcompat:1.4.1'
-    implementation 'com.google.android.material:material:1.5.0'
+    implementation 'androidx.core:core-ktx:1.5.0'
 }
 
 afterEvaluate {
