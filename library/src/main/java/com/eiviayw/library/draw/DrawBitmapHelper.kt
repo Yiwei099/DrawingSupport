@@ -62,18 +62,18 @@ object DrawBitmapHelper {
             }
 
             mainPaint.pathEffect = null
-            mainPaint.style = Paint.Style.FILL
+            mainPaint.style = it.style
+            mainPaint.strokeWidth = it.strokeWidth
             mainPaint.color = Color.BLACK
+            mainPaint.typeface = it.typeface
             when (it) {
                 is TextElement -> {
                     mainPaint.textSize = it.size
-                    mainPaint.typeface = it.typeface
                     Drawing.getInstance().drawText(it, bitmapOption, canvas, mainPaint)
                 }
 
                 is LineElement -> {
                     mainPaint.textSize = it.size
-                    mainPaint.typeface = it.typeface
                     Drawing.getInstance().drawLine(it, canvas, mainPaint)
                 }
 
@@ -87,7 +87,6 @@ object DrawBitmapHelper {
 
                 is GraphicsElement -> {
                     mainPaint.textSize = it.size
-                    mainPaint.typeface = it.typeface
                     Drawing.getInstance().drawGraphics(it, canvas, mainPaint)
                 }
 
@@ -375,6 +374,9 @@ object DrawBitmapHelper {
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
                             setBaseLine(baseY)
+
+                            strokeWidth = sourceItem.strokeWidth
+                            style = sourceItem.style
                         }
                     )
                     baseY = baseY.plus(sourceItem.perLineSpace)
@@ -396,6 +398,8 @@ object DrawBitmapHelper {
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
                             setBaseLine(baseY)
+                            strokeWidth = sourceItem.strokeWidth
+                            style = sourceItem.style
                         }
                     )
                     baseY = baseY.plus(sourceItem.perLineSpace)
@@ -558,6 +562,8 @@ object DrawBitmapHelper {
                     setFaceType(sourceItem.typeface)
                     setBaseLine(itemBaseY)
                     setElementHeight(ceil(itemHeight).toInt())
+                    strokeWidth = sourceItem.strokeWidth
+                    style = sourceItem.style
                 }
             )
         } else {
@@ -658,6 +664,8 @@ object DrawBitmapHelper {
                         setFaceType(sourceItem.typeface)
                         setBaseLine(itemBaseY)
                         setElementHeight(textHeight)
+                        strokeWidth = sourceItem.strokeWidth
+                        style = sourceItem.style
                     }
                 )
                 tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)

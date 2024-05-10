@@ -1,5 +1,6 @@
 package com.eiviayw.library.bean.element
 
+import android.graphics.Paint
 import android.graphics.Typeface
 
 
@@ -24,7 +25,9 @@ open class BaseElement(
     var size: Float = 26f,//内容字号
     private var perLineSpace: Int = 10,//行距
     var baseY:Float = 0f,
-    var height:Int = 0
+    var height:Int = 0,
+    var style: Paint.Style? = Paint.Style.FILL,
+    var strokeWidth:Float = 0f
 ){
 
     fun setElementHeight(value:Int){
