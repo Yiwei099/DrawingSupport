@@ -67,29 +67,17 @@ object DrawBitmapHelper {
             mainPaint.strokeWidth = it.strokeWidth
             mainPaint.color = Color.BLACK
             mainPaint.typeface = it.typeface
+            mainPaint.textSize = it.size
             when (it) {
-                is TextElement -> {
-                    mainPaint.textSize = it.size
-                    Drawing.getInstance().drawText(it, bitmapOption, canvas, mainPaint)
-                }
-
-                is LineElement -> {
-                    mainPaint.textSize = it.size
-                    Drawing.getInstance().drawLine(it, canvas, mainPaint)
-                }
-
+                is TextElement -> Drawing.getInstance().drawText(it, bitmapOption, canvas, mainPaint)
+                is LineElement -> Drawing.getInstance().drawLine(it, canvas, mainPaint)
                 is LineDashedElement -> {
                     val effects = DashPathEffect(floatArrayOf(it.on, it.off), 0f)
                     mainPaint.pathEffect = effects
 
                     Drawing.getInstance().drawDashedLine(it, canvas, mainPaint)
                 }
-
-                is GraphicsElement -> {
-                    mainPaint.textSize = it.size
-                    Drawing.getInstance().drawGraphics(it, canvas, mainPaint)
-                }
-
+                is GraphicsElement -> Drawing.getInstance().drawGraphics(it, canvas, mainPaint)
                 else -> {
                     //未支持的类型
                 }
@@ -124,6 +112,13 @@ object DrawBitmapHelper {
         var baseY = startYInCanvas
 
         sourceData.forEach { sourceItem ->
+            paint.reset()
+
+            paint.textSize = sourceItem.size
+            paint.typeface = sourceItem.typeface
+            paint.flags = sourceItem.flags
+            paint.style = sourceItem.style
+            paint.strokeWidth = sourceItem.strokeWidth
 
             when (sourceItem) {
                 is MultiElementParam -> {
@@ -342,9 +337,6 @@ object DrawBitmapHelper {
 
                 is TextParam -> {
                     //填充画笔
-                    paint.textSize = sourceItem.size
-                    paint.typeface = sourceItem.typeface
-
                     val elementResult = handleTextParamToElement(
                         maxWidth.toDouble(),
                         sourceItem,
@@ -360,8 +352,6 @@ object DrawBitmapHelper {
                 }
 
                 is LineParam -> {
-                    paint.textSize = sourceItem.size
-                    paint.typeface = sourceItem.typeface
                     val width = maxWidth.times(sourceItem.weight)
                     val measure = measureText(paint, "-")
                     val height = measure.second
@@ -452,11 +442,11 @@ object DrawBitmapHelper {
                 //居中基线
                 val targetCenterLine = (targetItem.data4.lastOrNull()?.baseY ?: 0f) - (targetItem.data3 - (targetItem.data4.size - 1)* 10).div(2)
 
-                var handleMinBaseY = targetCenterLine - handleHalfHeight + 10
+                var handleMinBaseY = targetCenterLine - handleHalfHeight + sourceItem.perLineSpace
 
                 for (element in handleItem.data4) {
                     element.baseY = handleMinBaseY
-                    handleMinBaseY += 10 + element.height
+                    handleMinBaseY += sourceItem.perLineSpace + element.height
                 }
             }
 
@@ -552,8 +542,6 @@ object DrawBitmapHelper {
                 else -> defaultStartX
             }
 
-
-
             result.add(
                 TextElement(
                     text = tempText,
@@ -566,6 +554,7 @@ object DrawBitmapHelper {
                     setTextSize(sourceItem.size)
                     setFaceType(sourceItem.typeface)
                     setBaseLine(itemBaseY)
+                    setLineSpace(sourceItem.perLineSpace)
                     setElementHeight(ceil(itemHeight).toInt())
                     strokeWidth = sourceItem.strokeWidth
                     style = sourceItem.style
@@ -673,16 +662,17 @@ object DrawBitmapHelper {
                         strokeWidth = sourceItem.strokeWidth
                         style = sourceItem.style
                         flags = sourceItem.flags
+                        setLineSpace(sourceItem.perLineSpace)
                     }
                 )
-                tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
                 sumItemY = sumItemY.plus(textHeight)
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
-                itemBaseY += 10
                 if (fullWidth) {
-                    tempStartYInCanvas += 10
-                    sumItemY += 10
+                    tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
+                    itemBaseY += sourceItem.perLineSpace
+                    tempStartYInCanvas += sourceItem.perLineSpace
+                    sumItemY += sourceItem.perLineSpace
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }
