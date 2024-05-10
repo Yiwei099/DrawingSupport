@@ -48,7 +48,8 @@ object DrawBitmapHelper {
 
         val bitmap = Drawing.getInstance().createBimap(
             bitmapOption.maxWidth,
-            if (bitmapOption.fixedHeight()) bitmapOption.maxHeight else result.second.plus(20)
+            if (bitmapOption.fixedHeight()) bitmapOption.maxHeight else result.second.plus(20),
+            bitmapOption.config
         )
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
@@ -56,11 +57,11 @@ object DrawBitmapHelper {
 
         result.first.forEach loop@ {
             it.baseY += diffY
-
+            mainPaint.reset()
             if (!effectItem(bitmapOption, ceil(it.baseY).toInt())){
                 return@loop
             }
-
+            mainPaint.flags = it.flags
             mainPaint.pathEffect = null
             mainPaint.style = it.style
             mainPaint.strokeWidth = it.strokeWidth
@@ -80,7 +81,6 @@ object DrawBitmapHelper {
                 is LineDashedElement -> {
                     val effects = DashPathEffect(floatArrayOf(it.on, it.off), 0f)
                     mainPaint.pathEffect = effects
-                    mainPaint.style = Paint.Style.STROKE
 
                     Drawing.getInstance().drawDashedLine(it, canvas, mainPaint)
                 }
@@ -374,7 +374,7 @@ object DrawBitmapHelper {
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
                             setBaseLine(baseY)
-
+                            flags = sourceItem.flags
                             strokeWidth = sourceItem.strokeWidth
                             style = sourceItem.style
                         }
@@ -400,6 +400,7 @@ object DrawBitmapHelper {
                             setBaseLine(baseY)
                             strokeWidth = sourceItem.strokeWidth
                             style = sourceItem.style
+                            flags = sourceItem.flags
                         }
                     )
                     baseY = baseY.plus(sourceItem.perLineSpace)
@@ -414,6 +415,10 @@ object DrawBitmapHelper {
                             setFaceType(sourceItem.typeface)
                             setLineSpace(sourceItem.perLineSpace)
                             setBaseLine(baseY.plus(sourceItem.height))
+
+                            strokeWidth = sourceItem.strokeWidth
+                            style = sourceItem.style
+                            flags = sourceItem.flags
                         }
                     )
                     baseY = baseY.plus(sourceItem.height).plus(sourceItem.perLineSpace)
@@ -564,6 +569,7 @@ object DrawBitmapHelper {
                     setElementHeight(ceil(itemHeight).toInt())
                     strokeWidth = sourceItem.strokeWidth
                     style = sourceItem.style
+                    flags = sourceItem.flags
                 }
             )
         } else {
@@ -666,6 +672,7 @@ object DrawBitmapHelper {
                         setElementHeight(textHeight)
                         strokeWidth = sourceItem.strokeWidth
                         style = sourceItem.style
+                        flags = sourceItem.flags
                     }
                 )
                 tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)

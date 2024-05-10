@@ -104,8 +104,8 @@ class Drawing private constructor() {
     /**
      * 创建图片
      */
-    fun createBimap(width: Int, height: Int): Bitmap =
-        Bitmap.createBitmap(width, height, Bitmap.Config.RGB_565)
+    fun createBimap(width: Int, height: Int,config: Bitmap.Config = Bitmap.Config.RGB_565): Bitmap =
+        Bitmap.createBitmap(width, height,config)
 
     /**
      * 创建画布(背景颜色只能是白底，不设置颜色或者设置为透明，用于打印时的效果会是纯黑色)

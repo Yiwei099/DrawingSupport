@@ -27,7 +27,8 @@ open class BaseElement(
     var baseY:Float = 0f,
     var height:Int = 0,
     var style: Paint.Style? = Paint.Style.FILL,
-    var strokeWidth:Float = 0f
+    var strokeWidth:Float = 0f,
+    var flags:Int = Paint.DEV_KERN_TEXT_FLAG or Paint.EMBEDDED_BITMAP_TEXT_FLAG
 ){
 
     fun setElementHeight(value:Int){

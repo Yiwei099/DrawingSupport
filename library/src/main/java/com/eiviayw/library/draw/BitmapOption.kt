@@ -1,5 +1,6 @@
 package com.eiviayw.library.draw
 
+import android.graphics.Bitmap
 import com.eiviayw.library.Constant
 
 /**
@@ -23,6 +24,7 @@ class BitmapOption(
     val maxHeight:Int = 0,//画布高度
     val gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
     val followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
+    val config:Bitmap.Config = Bitmap.Config.RGB_565
 ) {
     /**
      * 图片内容有效宽度

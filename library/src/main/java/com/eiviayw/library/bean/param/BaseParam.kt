@@ -19,5 +19,6 @@ open class BaseParam(
     var perLineSpace: Int = 10,//行距
     var gravity: Int = Constant.Companion.Gravity.TOP,//元素对齐方式，默认顶部对齐
     var style:Paint.Style? = Paint.Style.FILL,
-    var strokeWidth:Float = 0f
+    var strokeWidth:Float = 0f,
+    var flags:Int = Paint.DEV_KERN_TEXT_FLAG or Paint.EMBEDDED_BITMAP_TEXT_FLAG
 )
