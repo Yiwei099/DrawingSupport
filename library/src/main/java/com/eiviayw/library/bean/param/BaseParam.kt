@@ -1,5 +1,6 @@
 package com.eiviayw.library.bean.param
 
+import android.graphics.Paint
 import android.graphics.Typeface
 import com.eiviayw.library.Constant
 
@@ -17,6 +18,6 @@ open class BaseParam(
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var perLineSpace: Int = 10,//行距
     var gravity: Int = Constant.Companion.Gravity.TOP,//元素对齐方式，默认顶部对齐
-){
-    var paramType: String = javaClass.simpleName
-}
+    var style:Paint.Style? = Paint.Style.FILL,
+    var strokeWidth:Float = 0f
+)
