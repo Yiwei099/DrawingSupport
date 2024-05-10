@@ -608,7 +608,7 @@ object DrawBitmapHelper {
         val charBuilder = StringBuilder()
         val tempCharBuilder = StringBuilder()
         var sumItemY = 0f
-        var textHeight = 0
+//        var textHeight = 0
         var itemBaseY = baseY
         for (index in char.indices) {
             //迭代字符
@@ -621,7 +621,8 @@ object DrawBitmapHelper {
 
             val tempMeasure = measureText(paint, tempCharBuilder.toString())
             val tempWidth = tempMeasure.first
-            textHeight = getMaxFromMany(textHeight.toFloat(), tempMeasure.second.toFloat()).toInt()
+            //中文与数字高度不一样，换行后为纯数字会出现高度误差
+//            textHeight = getMaxFromMany(textHeight.toFloat(), tempMeasure.second.toFloat()).toInt()
 
             val lastChar = index == char.size.minus(1)
             val fullWidth = tempWidth > elementMaxWidth
@@ -658,21 +659,21 @@ object DrawBitmapHelper {
                         setTextSize(sourceItem.size)
                         setFaceType(sourceItem.typeface)
                         setBaseLine(itemBaseY)
-                        setElementHeight(textHeight)
+                        setElementHeight(tempMeasure.second)
                         strokeWidth = sourceItem.strokeWidth
                         style = sourceItem.style
                         flags = sourceItem.flags
                         setLineSpace(sourceItem.perLineSpace)
                     }
                 )
-                sumItemY = sumItemY.plus(textHeight)
+                sumItemY = sumItemY.plus(tempMeasure.second)
                 charBuilder.setLength(0)
                 tempCharBuilder.setLength(0)
                 if (fullWidth) {
-                    tempStartYInCanvas = tempStartYInCanvas.plus(textHeight)
                     itemBaseY += sourceItem.perLineSpace
                     tempStartYInCanvas += sourceItem.perLineSpace
                     sumItemY += sourceItem.perLineSpace
+                    tempStartYInCanvas = tempStartYInCanvas.plus(tempMeasure.second)
                     tempCharBuilder.append(value)
                     charBuilder.append(value)
                 }

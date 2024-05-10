@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="配置你的内容"
+        android:textSize="18sp"
+        android:textColor="@color/black"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingVertical="6dp"/>
+
+    <TextView
+        android:id="@+id/tvType"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="元素类型："
+        android:textSize="12sp"
+        android:textColor="@color/black"
+        app:layout_constraintTop_toTopOf="@id/rgGravity"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/rgGravity"/>
+
+    <RadioGroup
+        android:id="@+id/rgGravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/tvType"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle">
+
+        <RadioButton
+            android:id="@+id/rbText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="文字"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbBitmap"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="图像"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbDashLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="虚线"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbLine"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="实线"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbMulti"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="混排"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+    </RadioGroup>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

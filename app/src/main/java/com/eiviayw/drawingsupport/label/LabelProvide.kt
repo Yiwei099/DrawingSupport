@@ -1,6 +1,7 @@
 package com.eiviayw.drawingsupport.label
 
 import android.graphics.Bitmap
+import android.graphics.Paint
 import android.graphics.Typeface
 import com.eiviayw.drawingsupport.bean.Goods
 import com.eiviayw.drawingsupport.bean.Order
@@ -24,7 +25,11 @@ import com.eiviayw.library.provide.BaseProvide
  * 标签数据提供者
  */
 class LabelProvide(
-    private var bitmapOption: BitmapOption = BitmapOption(maxWidth = 400, followEffectItem = true)
+    private var bitmapOption: BitmapOption = BitmapOption(
+        maxWidth = 320,
+        maxHeight = 640,
+        followEffectItem = true
+    )
 ) : BaseProvide(bitmapOption) {
 
     fun start(goods: Goods, bitmap: Bitmap): ByteArray {
@@ -169,7 +174,7 @@ class LabelProvide(
         )
     }
 
-    fun start():ByteArray {
+    fun start(): ByteArray {
         val params = convertDrawParam()
         return startDraw(params)
     }
@@ -179,48 +184,83 @@ class LabelProvide(
             TextParam(
                 text = "加拿大鹅旗舰店",
                 align = Constant.Companion.Align.ALIGN_CENTER
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
-                text = "名称：羽绒服"
-            )
+                text = "名称：帅气的羽绒服"
+            ).apply {
+                strokeWidth = 0.74f
+                style = Paint.Style.FILL_AND_STROKE
+                flags = Paint.FILTER_BITMAP_FLAG
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
                 text = "颜色：黑色"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
                 text = "尺寸：L"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
                 text = "品牌：加拿大鹅"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
-                text = "成分：鹅绒"
-            )
+                text = "成分：100%鹅绒"
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
                 text = "质量等级：上等"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
-
+        add(
+            TextParam(
+                text = "成分含量：棉+聚酯纤维聚酯纤维聚酯纤维聚酯纤维聚酯纤维"
+            ).apply {
+//                size = 40f
+                perLineSpace = 6
+            }
+        )
+        add(
+            TextParam(
+                text = "产品标准：GB/T222-23454535454"
+            ).apply {
+                perLineSpace = 6
+            }
+        )
         add(
             TextParam(
                 text = "零售价：$40.88"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
         add(
             TextParam(
                 text = "折后价：$30.50"
-            )
+            ).apply {
+                perLineSpace = 6
+            }
         )
     }
 }

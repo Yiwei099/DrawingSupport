@@ -1,0 +1,241 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图像全局配置"
+        android:textColor="@color/black"
+        android:textSize="18sp"
+        android:paddingVertical="4dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cbFollowEffect"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="高度不足时停止绘制"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <androidx.appcompat.widget.AppCompatCheckBox
+        android:id="@+id/cbAntAlias"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="开启抗锯齿"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintStart_toEndOf="@id/cbFollowEffect"
+        app:layout_constraintTop_toTopOf="@id/cbFollowEffect"/>
+
+    <TextView
+        android:id="@+id/tvGravityHint"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:text="内容整体纵向对齐方式："
+        android:layout_marginStart="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/rgGravity"
+        app:layout_constraintBottom_toBottomOf="@id/rgGravity"/>
+
+    <RadioGroup
+        android:id="@+id/rgGravity"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toEndOf="@id/tvGravityHint"
+        app:layout_constraintTop_toBottomOf="@id/cbFollowEffect">
+
+        <RadioButton
+            android:id="@+id/rbTop"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="顶部"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbCenter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="居中"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+
+        <RadioButton
+            android:id="@+id/rbBottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="底部"
+            android:button="@null"
+            android:gravity="center"
+            android:textColor="@color/black"
+            android:textSize="12sp"/>
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/tvIndentation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="左右边距："
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:paddingVertical="4dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/rgGravity"/>
+
+    <SeekBar
+        android:id="@+id/sbIndentation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@id/tvIndentation"
+        app:layout_constraintTop_toTopOf="@id/tvIndentation"
+        android:max="20"
+        android:min="0"
+        android:progress="10"
+        app:layout_constraintBottom_toBottomOf="@id/tvIndentation"
+        app:layout_constraintEnd_toStartOf="@id/tvIndentationValue"/>
+
+    <TextView
+        android:id="@+id/tvIndentationValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="10"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/rgGravity"
+        app:layout_constraintTop_toTopOf="@id/sbIndentation"
+        app:layout_constraintBottom_toBottomOf="@id/sbIndentation"/>
+
+    <TextView
+        android:id="@+id/tvTopIndentation"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="顶部边距："
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:paddingVertical="4dp"
+        android:layout_marginStart="6dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvIndentation"/>
+
+    <SeekBar
+        android:id="@+id/sbTopIndentation"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintStart_toEndOf="@id/tvTopIndentation"
+        app:layout_constraintTop_toTopOf="@id/tvTopIndentation"
+        android:max="20"
+        android:min="0"
+        android:progress="10"
+        app:layout_constraintBottom_toBottomOf="@id/tvTopIndentation"
+        app:layout_constraintEnd_toStartOf="@id/tvTopIndentationValue"/>
+
+    <TextView
+        android:id="@+id/tvTopIndentationValue"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="10"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintEnd_toEndOf="@id/rgGravity"
+        app:layout_constraintTop_toTopOf="@id/sbTopIndentation"
+        app:layout_constraintBottom_toBottomOf="@id/sbTopIndentation"/>
+
+    <TextView
+        android:id="@+id/tvSize"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="图像尺寸："
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginStart="6dp"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+
+    <EditText
+        android:id="@+id/etWidth"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="宽度"
+        android:layout_marginTop="4dp"
+        android:background="@drawable/red_border_r3"
+        android:inputType="number"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
+        app:layout_constraintStart_toEndOf="@id/tvSize"
+        app:layout_constraintTop_toBottomOf="@id/sbTopIndentation"/>
+
+    <TextView
+        android:id="@+id/tvTimes"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="x"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:padding="6dp"
+        app:layout_constraintStart_toEndOf="@id/etWidth"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintBottom_toBottomOf="@id/etWidth"/>
+
+    <EditText
+        android:id="@+id/etHeight"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:hint="高度"
+        android:textColor="@color/black"
+        android:textSize="12sp"
+        android:paddingVertical="10dp"
+        android:paddingHorizontal="20dp"
+        android:background="@drawable/red_border_r3"
+        android:inputType="number"
+        app:layout_constraintTop_toTopOf="@id/etWidth"
+        app:layout_constraintStart_toEndOf="@id/tvTimes"/>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideLine050"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintGuide_percent="0.5"
+        android:orientation="vertical"/>
+
+    <Button
+        android:id="@+id/btCancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="取消"
+        android:layout_marginEnd="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintEnd_toStartOf="@id/guideLine050"
+        app:layout_constraintTop_toBottomOf="@id/etWidth"/>
+
+    <Button
+        android:id="@+id/btConfirm"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="确定"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        app:layout_constraintStart_toEndOf="@id/guideLine050"
+        app:layout_constraintTop_toBottomOf="@id/etWidth"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
