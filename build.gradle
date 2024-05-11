@@ -9,7 +9,7 @@ buildscript {
 //        targetSdkVersion = 29
 //        minSdkVersion = 21
 
-        kotlin_version = "1.8.20"
+        kotlin_version = "1.8.0"
         compileSdkVersion = 33
         targetSdkVersion = 33
         minSdkVersion = 24
