@@ -45,6 +45,7 @@ BitmapOption(
     maxHeight:Int = 0,//画布高度
     gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
     followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
+    config:Bitmap.Config = Bitmap.Config.RGB_565,//默认RGB_565
 )
 ```
 
@@ -65,6 +66,12 @@ val typeface = Typeface.DEFAULT
 val gravity = Constant.Companion.Gravity.TOP
 //元素底部外边距
 val perLineSpace = 10
+//画笔样式
+var style:Paint.Style? = Paint.Style.FILL,
+//描边
+var strokeWidth:Float = 0f,
+//采样
+var flags:Int = Paint.DEV_KERN_TEXT_FLAG or Paint.EMBEDDED_BITMAP_TEXT_FLAG
 
 //创建元素
 val textItem = TextParam(text,weight,align).apply{
