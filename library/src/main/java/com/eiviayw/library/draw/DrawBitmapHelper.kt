@@ -55,6 +55,11 @@ object DrawBitmapHelper {
 
         val diffY = bitmapOption.diffContentY(result.second)
 
+//        if (bitmapOption.isGravityDistributed()){
+//            //重新处理元素的Y值
+//            handleElementBaseY(diffY,bitmapOption,result.first)
+//        }
+
         result.first.forEach loop@ {
             it.baseY += diffY
             mainPaint.reset()
@@ -398,8 +403,13 @@ object DrawBitmapHelper {
 
                 is GraphicsParam -> {
                     result.add(
-                        GraphicsElement(sourceItem.bitmapData).apply {
-                            setStartXValue(bitmapOption.getCenterX().minus(sourceItem.width.div(2)))
+                        GraphicsElement(sourceItem.bitmapData,align = sourceItem.align).apply {
+                            setStartXValue(
+                                when(align){
+                                    Constant.Companion.Align.ALIGN_START -> defaultStartX
+                                    Constant.Companion.Align.ALIGN_END -> bitmapOption.maxWidth - bitmapOption.endIndentation - sourceItem.width
+                                    else-> bitmapOption.getCenterX().minus(sourceItem.width.div(2))
+                                })
                             setEndXValue(defaultStartX.plus(sourceItem.width))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
@@ -748,7 +758,7 @@ object DrawBitmapHelper {
                     item.height.toFloat(),
                     mutableListOf<BaseElement>().apply {
                         add(
-                            GraphicsElement(item.bitmapData).apply {
+                            GraphicsElement(item.bitmapData,align = item.align).apply {
                                 setStartXValue(defaultStartX)
                                 setEndXValue(defaultStartX.plus(item.width))
                                 setLineSpace(item.perLineSpace)
@@ -762,6 +772,19 @@ object DrawBitmapHelper {
                 //暂未支持的类型
                 return DataEntity4(defaultStartX, 0f, 0f, emptyList<BaseElement>())
             }
+        }
+    }
+
+    /**
+     * 处理元素的Y值
+     */
+    private fun handleElementBaseY(diffY:Int,bitmapOption: BitmapOption,elementList:List<BaseElement>){
+        val diffYByOnce = diffY / elementList.size
+        var sumBaseY = bitmapOption.topIndentation
+        elementList.forEach {
+            it.baseY = sumBaseY + it.height +it.perLineSpace + diffYByOnce
+
+            sumBaseY = it.baseY
         }
     }
 

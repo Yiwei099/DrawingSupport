@@ -1,5 +1,7 @@
 package com.eiviayw.library.bean.param
 
+import com.eiviayw.library.Constant
+
 /**
  * 指路：https://github.com/Yiwei099
  *
@@ -12,4 +14,5 @@ class GraphicsParam(
     val bitmapData: ByteArray,
     val width:Int,
     val height: Int,
+    val align:Int = Constant.Companion.Align.ALIGN_CENTER
 ):BaseParam()

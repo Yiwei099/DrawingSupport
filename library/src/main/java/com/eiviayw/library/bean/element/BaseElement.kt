@@ -23,7 +23,7 @@ open class BaseElement(
     var endY: Float = 0f,
     var typeface: Typeface = Typeface.DEFAULT,//内容样式：加粗、正常、斜体
     var size: Float = 26f,//内容字号
-    private var perLineSpace: Int = 10,//行距
+    var perLineSpace: Int = 10,//行距
     var baseY:Float = 0f,
     var height:Int = 0,
     var style: Paint.Style? = Paint.Style.FILL,

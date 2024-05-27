@@ -15,16 +15,16 @@ import com.eiviayw.library.Constant
  * 封装成独立的对象，方便应用不同的图片
  */
 class BitmapOption(
-    val maxWidth: Int = 576,//画布宽度
-    val topIndentation: Float = 40f,//顶部方向边距
-    val startIndentation: Float = 20f,//开始方向边距
-    val endIndentation: Float = 20f,//结束方向边距
-    val bottomBlankHeight: Int = 10,//底部留白
-    val antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
-    val maxHeight:Int = 0,//画布高度
-    val gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
-    val followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
-    val config:Bitmap.Config = Bitmap.Config.RGB_565
+    var maxWidth: Int = 576,//画布宽度
+    var topIndentation: Float = 10f,//顶部方向边距
+    var startIndentation: Float = 20f,//开始方向边距
+    var endIndentation: Float = 20f,//结束方向边距
+    var bottomBlankHeight: Int = 10,//底部留白
+    var antiAlias: Boolean = false,//开启抗锯齿：true-开启，false-关闭
+    var maxHeight:Int = 0,//画布高度
+    var gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
+    var followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
+    var config:Bitmap.Config = Bitmap.Config.RGB_565
 ) {
     /**
      * 图片内容有效宽度
@@ -44,6 +44,12 @@ class BitmapOption(
      * @return true - 顶部对齐；false - 非顶部对齐
      */
     private fun isGravityTop():Boolean = gravity == Constant.Companion.Gravity.TOP
+
+    /**
+     * 内容是否(上下)分散对齐
+     * @return true - 是；false - 否
+     */
+    fun isGravityDistributed() = gravity == Constant.Companion.Gravity.DISTRIBUTED
 
     /**
      * 内容是否溢出（内容高度是否超过画布最大高度限制）

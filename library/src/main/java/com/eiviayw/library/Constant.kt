@@ -38,11 +38,25 @@ class Constant private constructor() {
 
         interface Gravity{
             companion object{
+                /**
+                 * 顶部对齐
+                 */
                 const val TOP = 0
 
+                /**
+                 * 底部对齐
+                 */
                 const val BOTTOM = 1
 
+                /**
+                 * 居中对齐
+                 */
                 const val CENTER = 2
+
+                /**
+                 * 分散对齐
+                 */
+                const val DISTRIBUTED = 3
             }
         }
     }

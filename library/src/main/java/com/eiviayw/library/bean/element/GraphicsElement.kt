@@ -1,5 +1,7 @@
 package com.eiviayw.library.bean.element
 
+import com.eiviayw.library.Constant
+
 /**
  * 指路：https://github.com/Yiwei099
  *
@@ -10,5 +12,6 @@ package com.eiviayw.library.bean.element
  * 位图元素块
  */
 class GraphicsElement(
-    val bitmapData: ByteArray
+    val bitmapData: ByteArray,
+    val align: Int = Constant.Companion.Align.ALIGN_CENTER
 ): BaseElement()
