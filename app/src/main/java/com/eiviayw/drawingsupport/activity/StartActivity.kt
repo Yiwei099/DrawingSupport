@@ -27,7 +27,8 @@ class StartActivity:AppCompatActivity() {
 
             }
             btAdd.setOnClickListener{
-
+                val dialog = ParamTypeChoseDialog()
+                dialog.showNow(supportFragmentManager,null)
             }
         }
     }

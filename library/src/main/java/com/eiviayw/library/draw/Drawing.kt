@@ -6,6 +6,7 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Path
+import android.graphics.Rect
 import com.eiviayw.library.bean.element.GraphicsElement
 import com.eiviayw.library.bean.element.LineDashedElement
 import com.eiviayw.library.bean.element.LineElement
@@ -91,7 +92,12 @@ class Drawing private constructor() {
             0,
             graphicsElement.bitmapData.size
         )
-        canvas.drawBitmap(bitmap, graphicsElement.startX, graphicsElement.baseY.minus(bitmap.height), paint)
+        canvas.drawBitmap(
+            bitmap,
+            graphicsElement.startX,
+            graphicsElement.baseY.minus(bitmap.height),
+            paint
+        )
         bitmap.recycle()
     }
     //</editor-fold desc="绘制">
@@ -104,8 +110,12 @@ class Drawing private constructor() {
     /**
      * 创建图片
      */
-    fun createBimap(width: Int, height: Int,config: Bitmap.Config = Bitmap.Config.RGB_565): Bitmap =
-        Bitmap.createBitmap(width, height,config)
+    fun createBimap(
+        width: Int,
+        height: Int,
+        config: Bitmap.Config = Bitmap.Config.RGB_565
+    ): Bitmap =
+        Bitmap.createBitmap(width, height, config)
 
     /**
      * 创建画布(背景颜色只能是白底，不设置颜色或者设置为透明，用于打印时的效果会是纯黑色)

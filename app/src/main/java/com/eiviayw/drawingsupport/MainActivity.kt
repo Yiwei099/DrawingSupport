@@ -7,12 +7,11 @@ import android.os.Bundle
 import android.widget.Button
 import android.widget.ImageView
 import androidx.appcompat.app.AppCompatActivity
+import com.eiviayw.drawingsupport.activity.StartActivity
 import com.eiviayw.drawingsupport.bean.Goods
 import com.eiviayw.drawingsupport.bean.Order
 import com.eiviayw.drawingsupport.label.LabelProvide
 import com.eiviayw.drawingsupport.receipt.ReceiptProvide
-import com.eiviayw.library.draw.BitmapOption
-import com.eiviayw.library.draw.DrawBitmapHelper
 import com.eiviayw.library.util.BitmapUtils
 
 /**
@@ -45,7 +44,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btExampleOne).setOnClickListener {
             bitmap?.recycle()
             BitmapUtils.getInstance().zoomBitmap(
-                BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
+                BitmapFactory.decodeResource(this.resources, R.mipmap.barcode),
                 240.0,
                 80.0
             )?.let{
@@ -64,7 +63,7 @@ class MainActivity : AppCompatActivity() {
         findViewById<Button>(R.id.btExampleTwo).setOnClickListener {
             bitmap2?.recycle()
             BitmapUtils.getInstance().zoomBitmap(
-                BitmapFactory.decodeResource(this.resources, R.drawable.barcode),
+                BitmapFactory.decodeResource(this.resources, R.mipmap.barcode),
                 240.0,
                 80.0
             )?.let {
@@ -88,7 +87,7 @@ class MainActivity : AppCompatActivity() {
 
         findViewById<Button>(R.id.btExampleThree).setOnClickListener {
             bitmap3?.recycle()
-            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.drawable.barcode)
+            val bitmapCode = BitmapFactory.decodeResource(this.resources, R.mipmap.barcode)
             val bitmapArray =
                 receiptProvide.start(generateOrder(), generateGoodsData(), bitmapCode, true)
             bitmapCode.recycle()

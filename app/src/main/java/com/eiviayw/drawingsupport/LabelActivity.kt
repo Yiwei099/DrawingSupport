@@ -78,6 +78,15 @@ class LabelActivity : AppCompatActivity() {
             )
             viewBinding.ivPreview.setImageBitmap(bitmap)
         }
+
+        viewBinding.rbGravity.setOnCheckedChangeListener { group, checkedId ->
+            bitmapOption.gravity = when(checkedId){
+                R.id.rbCenter -> Constant.Companion.Gravity.CENTER
+                R.id.rbDistributed -> Constant.Companion.Gravity.DISTRIBUTED
+                R.id.rbBottom -> Constant.Companion.Gravity.BOTTOM
+                else -> Constant.Companion.Gravity.TOP
+            }
+        }
     }
 
     private fun initData() {
@@ -86,6 +95,7 @@ class LabelActivity : AppCompatActivity() {
             when (bitmapOption.gravity) {
                 Constant.Companion.Gravity.BOTTOM -> rbBottom.isChecked = true
                 Constant.Companion.Gravity.CENTER -> rbCenter.isChecked = true
+                Constant.Companion.Gravity.DISTRIBUTED -> rbDistributed.isChecked = true
                 else -> rbTop.isChecked = true
             }
         }

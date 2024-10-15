@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/dp1"
+    xmlns:tools="http://schemas.android.com/tools"
+    style="@style/text_12_black"
+    android:paddingVertical="@dimen/dp10"
+    android:gravity="center"
+    android:id="@+id/tvItem"
+    tools:text="文本" />

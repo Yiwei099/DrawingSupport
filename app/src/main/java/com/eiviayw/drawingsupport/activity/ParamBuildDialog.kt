@@ -8,6 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import com.eiviayw.drawingsupport.R
+import com.eiviayw.drawingsupport.databinding.DialogBuildParamBinding
 import com.eiviayw.drawingsupport.databinding.DialogSettingBinding
 import com.eiviayw.library.bean.param.BaseParam
 
@@ -17,7 +18,7 @@ class ParamBuildDialog(
 ):DialogFragment() {
 
     private lateinit var mContext: Context
-    private val viewBinding by lazy { DialogSettingBinding.inflate(layoutInflater) }
+    private val viewBinding by lazy { DialogBuildParamBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
         inflater: LayoutInflater,

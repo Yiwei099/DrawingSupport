@@ -19,10 +19,10 @@ import com.eiviayw.library.draw.BitmapOption
 
 class SettingDialog(
     private val bitmapOption: BitmapOption,
-    private val callBack:(BitmapOption)->Unit
-    ):DialogFragment() {
+    private val callBack: (BitmapOption) -> Unit
+) : DialogFragment() {
 
-    private lateinit var mContext:Context
+    private lateinit var mContext: Context
     private val viewBinding by lazy { DialogSettingBinding.inflate(layoutInflater) }
 
     override fun onCreateView(
@@ -40,9 +40,9 @@ class SettingDialog(
         initData()
     }
 
-    private fun initWindow(){
+    private fun initWindow() {
         val attributes = dialog?.window?.attributes
-        attributes?.width = 400
+        attributes?.width = 1400
         attributes?.height = 200
         attributes?.gravity = Gravity.CENTER
         dialog?.window?.attributes = attributes
@@ -53,14 +53,14 @@ class SettingDialog(
         setStyle(STYLE_NO_TITLE, R.style.BaseDialog)
         mContext = activity as Context
         dialog?.setCancelable(false)
-        dialog?.setCanceledOnTouchOutside(true)
+        dialog?.setCanceledOnTouchOutside(false)
     }
 
-    private fun initData(){
+    private fun initData() {
         viewBinding.apply {
             cbFollowEffect.isChecked = bitmapOption.followEffectItem
             cbAntAlias.isChecked = bitmapOption.antiAlias
-            when(bitmapOption.gravity){
+            when (bitmapOption.gravity) {
                 Constant.Companion.Gravity.BOTTOM -> rbBottom.isChecked = true
                 Constant.Companion.Gravity.CENTER -> rbCenter.isChecked = true
                 else -> rbTop.isChecked = true
@@ -76,7 +76,7 @@ class SettingDialog(
         }
     }
 
-    private fun initEven(){
+    private fun initEven() {
         viewBinding.apply {
             btCancel.setOnClickListener { dismiss() }
             btConfirm.setOnClickListener {
@@ -94,7 +94,7 @@ class SettingDialog(
                 bitmapOption.antiAlias = isChecked
             }
             //左右边距
-            sbIndentation.setOnSeekBarChangeListener(object :OnSeekBarChangeListener{
+            sbIndentation.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
@@ -112,7 +112,7 @@ class SettingDialog(
                 }
             })
             //顶部边距
-            sbTopIndentation.setOnSeekBarChangeListener(object :OnSeekBarChangeListener{
+            sbTopIndentation.setOnSeekBarChangeListener(object : OnSeekBarChangeListener {
                 override fun onProgressChanged(
                     seekBar: SeekBar?,
                     progress: Int,
@@ -131,9 +131,10 @@ class SettingDialog(
                 }
             })
             //内容对齐方式
-            rgGravity.setOnCheckedChangeListener(object : OnRadioGroupChildCheckedCallBack(rgGravity) {
+            rgGravity.setOnCheckedChangeListener(object :
+                OnRadioGroupChildCheckedCallBack(rgGravity) {
                 override fun onCheckedCallBack(radioGroup: RadioGroup, viewID: Int) {
-                    when(viewID){
+                    when (viewID) {
                         R.id.rbCenter -> bitmapOption.gravity = Constant.Companion.Gravity.CENTER
                         R.id.rbBottom -> bitmapOption.gravity = Constant.Companion.Gravity.BOTTOM
                         else -> bitmapOption.gravity = Constant.Companion.Gravity.TOP

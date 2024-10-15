@@ -12,4 +12,24 @@
 
         <item name="android:windowSoftInputMode">stateAlwaysHidden</item>
     </style>
+
+    <style name="text_12_black">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/sp12</item>
+    </style>
+
+    <style name="text_14_black">
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/sp14</item>
+    </style>
+
+    <style name="text_12_white">
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/sp12</item>
+    </style>
+
+    <style name="text_12_blue">
+        <item name="android:textColor">@color/blue_33ccff</item>
+        <item name="android:textSize">@dimen/sp12</item>
+    </style>
 </resources>

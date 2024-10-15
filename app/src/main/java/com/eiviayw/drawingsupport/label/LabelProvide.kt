@@ -28,7 +28,8 @@ class LabelProvide(
     private var bitmapOption: BitmapOption = BitmapOption(
         maxWidth = 320,
         maxHeight = 640,
-        followEffectItem = true
+        followEffectItem = true,
+        gravity = Constant.Companion.Gravity.DISTRIBUTED
     )
 ) : BaseProvide(bitmapOption) {
 
@@ -53,10 +54,8 @@ class LabelProvide(
                 compressBitmapToByteArray(bitmap),
                 bitmap.width,
                 bitmap.height
-            ), param2 = TextParam(
-                weight = 0.1
             ),
-            param3 = TextParam(
+            param2 = TextParam(
                 text = goods.totalPrice,
                 weight = -1.0
             ).apply {
@@ -185,7 +184,7 @@ class LabelProvide(
                 text = "加拿大鹅旗舰店",
                 align = Constant.Companion.Align.ALIGN_CENTER
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
@@ -195,42 +194,42 @@ class LabelProvide(
                 strokeWidth = 0.74f
                 style = Paint.Style.FILL_AND_STROKE
                 flags = Paint.FILTER_BITMAP_FLAG
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "颜色：黑色"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "尺寸：L"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "品牌：加拿大鹅"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "成分：100%鹅绒"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "质量等级：上等"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
@@ -238,28 +237,28 @@ class LabelProvide(
                 text = "成分含量：棉+聚酯纤维聚酯纤维聚酯纤维聚酯纤维聚酯纤维"
             ).apply {
 //                size = 40f
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "产品标准：GB/T222-23454535454"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "零售价：$40.88"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
         add(
             TextParam(
                 text = "折后价：$30.50"
             ).apply {
-                perLineSpace = 6
+                perLineSpace = 20
             }
         )
     }

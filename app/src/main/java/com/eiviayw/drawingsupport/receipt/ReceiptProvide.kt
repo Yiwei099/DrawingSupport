@@ -53,7 +53,8 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
             GraphicsParam(
                 compressBitmapToByteArray(bitmap),
                 bitmap.width,
-                bitmap.height
+                bitmap.height,
+                align = Constant.Companion.Align.ALIGN_START
             )
         )
         add(
@@ -414,7 +415,6 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                 text = "会员：散客"
             )
         )
-
         add(LineDashedParam())
         add(MultiElementParam(
             param1 = TextParam(
@@ -435,12 +435,14 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
             ),
             param5 = TextParam(
                 text = "金额",
-                weight = 0.2
+                weight = 0.2,
+                align = Constant.Companion.Align.ALIGN_END
             )
         ))
         add(LineDashedParam())
+
         for (index in 0..2){
-            add(TextParam(text = "超人迪加奥特曼喜羊羊与灰太狼熊出没哆啦A梦"))
+            add(TextParam(text = "超人迪加奥特曼喜羊羊与灰太狼熊出没哆啦A梦梦梦梦"))
             add(MultiElementParam(
                 param1 = TextParam(
                     text = "黑色/XL码",
@@ -454,7 +456,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                     gravity = Constant.Companion.Gravity.BOTTOM
                 },
                 param3 = TextParam(
-                    text = "$123.45",
+                    text = "$123.50",
                     weight = 0.2
                 ).apply {
                     gravity = Constant.Companion.Gravity.BOTTOM
@@ -467,7 +469,8 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
                 },
                 param5 = TextParam(
                     text = "88.00",
-                    weight = 0.2
+                    weight = 0.2,
+                    align = Constant.Companion.Align.ALIGN_END
                 ).apply {
                     gravity = Constant.Companion.Gravity.BOTTOM
                 }
@@ -491,6 +494,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
             },
             param2 = TextParam(
                 text = "$88.0",
+                weight = -1.0,
             ).apply {
                 size = 60f
                 typeface = Typeface.DEFAULT_BOLD
@@ -505,6 +509,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
             },
             param2 = TextParam(
                 text = "$88.0",
+                weight = -1.0,
             ).apply {
                 size = 60f
                 typeface = Typeface.DEFAULT_BOLD
@@ -531,7 +536,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         ))
         val bitmap = BitmapFactory.decodeResource(
             MyApplication.getInstance().resources,
-            R.drawable.wechat_qr_code
+            R.mipmap.wechat_qr_code
         )
         BitmapUtils.getInstance().zoomBitmap(bitmap,bitmap.width.div(2).toDouble(),bitmap.height.div(2).toDouble())?.let {
             val byteArray = BitmapUtils.getInstance().compressBitmapToByteArray(it)
@@ -547,7 +552,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         add(TextParam(
             text = "An Android library that makes developers get pos receipts extremely easy.",
             align = Constant.Companion.Align.ALIGN_CENTER,
-            autoWrap = false
+            autoWrap = true
         ))
         add(TextParam(
             text = "一个Android库，让开发者非常容易地获得pos收据。",
