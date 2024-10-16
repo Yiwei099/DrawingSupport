@@ -4,15 +4,15 @@ buildscript {
         gradle_version = "4.2.2"
 
         //Alpha构建版本
-//        kotlin_version = "1.5.0"
-//        compileSdkVersion = 29
-//        targetSdkVersion = 29
-//        minSdkVersion = 21
+        kotlin_version = "1.5.0"
+        compileSdkVersion = 29
+        targetSdkVersion = 29
+        minSdkVersion = 21
 
-        kotlin_version = "1.8.0"
-        compileSdkVersion = 33
-        targetSdkVersion = 33
-        minSdkVersion = 24
+//        kotlin_version = "1.8.0"
+//        compileSdkVersion = 33
+//        targetSdkVersion = 33
+//        minSdkVersion = 24
     }
 
     repositories {
@@ -36,6 +36,6 @@ plugins {
     id 'com.android.application' version "4.2.2" apply false
     id 'com.android.library' version "4.2.2" apply false
 //  Alpha构建版本
-//    id 'org.jetbrains.kotlin.android' version "1.5.0" apply false
-    id 'org.jetbrains.kotlin.android' version "1.8.20" apply false
+    id 'org.jetbrains.kotlin.android' version "1.5.0" apply false
+//    id 'org.jetbrains.kotlin.android' version "1.8.20" apply false
 }
