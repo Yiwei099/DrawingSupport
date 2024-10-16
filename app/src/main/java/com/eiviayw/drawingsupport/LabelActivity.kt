@@ -66,6 +66,8 @@ class LabelActivity : AppCompatActivity() {
                     Constant.Companion.Gravity.TOP
                 } else if (viewBinding.rbCenter.isChecked) {
                     Constant.Companion.Gravity.CENTER
+                } else if (viewBinding.rbDistributed.isChecked) {
+                    Constant.Companion.Gravity.DISTRIBUTED
                 }else{
                     Constant.Companion.Gravity.BOTTOM
                 }

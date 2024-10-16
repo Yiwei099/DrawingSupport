@@ -54,14 +54,14 @@ object DrawBitmapHelper {
         )
         val canvas = Drawing.getInstance().getNewCanvas(bitmap)
 
-        val diffY = bitmapOption.diffContentY(result.second)
+        var diffY = bitmapOption.diffContentY(result.second)
 
-//        if (bitmapOption.isGravityDistributed()){
-//            //重新处理元素的Y值
-//            handleElementBaseY(diffY,bitmapOption,result.first)
-//        }
+        if (bitmapOption.isGravityDistributed()){
+            handleElementBaseY(bitmapOption,result.first)
+            diffY = 0
+        }
 
-        result.first.forEach loop@{
+        result.first.forEachIndexed loop@{index, it ->
             it.baseY += diffY
             mainPaint.reset()
             if (!effectItem(bitmapOption, ceil(it.baseY).toInt())) {
@@ -352,7 +352,7 @@ object DrawBitmapHelper {
                 is TextParam -> {
                     //填充画笔
                     val elementResult = handleTextParamToElement(
-                        maxWidth.toDouble(),
+                        maxWidth.toDouble() - defaultStartX,
                         sourceItem,
                         paint,
                         sourceItem.text,
@@ -814,16 +814,17 @@ object DrawBitmapHelper {
      * 处理元素的Y值
      */
     private fun handleElementBaseY(
-        diffY: Int,
         bitmapOption: BitmapOption,
         elementList: List<BaseElement>
     ) {
-        val diffYByOnce = diffY / elementList.size
-        var sumBaseY = bitmapOption.topIndentation
-        elementList.forEach {
-            it.baseY = sumBaseY + it.height + it.perLineSpace + diffYByOnce
-
-            sumBaseY = it.baseY
+        //画布最大高度
+        val maxHeight = bitmapOption.maxHeight
+        val itemMaxHeight = (maxHeight / elementList.size).toFloat()
+        var tempSumY = 0f
+        elementList.forEachIndexed { index, it ->
+            val itemNewBaseY = itemMaxHeight.times(index + 1)
+            it.baseY = (itemMaxHeight / 2) + (it.height / 2) + tempSumY
+            tempSumY = itemNewBaseY
         }
     }
 

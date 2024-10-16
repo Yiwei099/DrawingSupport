@@ -26,5 +26,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "DrawingSupport"
-//include ':app'
+include ':app'
 include ':library'

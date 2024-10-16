@@ -204,49 +204,50 @@ class LabelProvide(
                 perLineSpace = 20
             }
         )
+//        add(
+//            TextParam(
+//                text = "尺寸：L"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
+//        add(
+//            TextParam(
+//                text = "品牌：加拿大鹅"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
+//        add(
+//            TextParam(
+//                text = "成分：100%鹅绒"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
+//        add(
+//            TextParam(
+//                text = "质量等级：上等"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
         add(
             TextParam(
-                text = "尺寸：L"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
-        add(
-            TextParam(
-                text = "品牌：加拿大鹅"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
-        add(
-            TextParam(
-                text = "成分：100%鹅绒"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
-        add(
-            TextParam(
-                text = "质量等级：上等"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
-        add(
-            TextParam(
-                text = "成分含量：棉+聚酯纤维聚酯纤维聚酯纤维聚酯纤维聚酯纤维"
+//                text = "成分含量：棉+聚酯纤维聚酯纤维聚酯纤维聚酯纤维聚酯纤维"
+                text = "成分含量：hello word hello word hello word hello word"
             ).apply {
 //                size = 40f
                 perLineSpace = 20
             }
         )
-        add(
-            TextParam(
-                text = "产品标准：GB/T222-23454535454"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
+//        add(
+//            TextParam(
+//                text = "产品标准：GB/T222-23454535454"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
         add(
             TextParam(
                 text = "零售价：$40.88"
@@ -254,12 +255,12 @@ class LabelProvide(
                 perLineSpace = 20
             }
         )
-        add(
-            TextParam(
-                text = "折后价：$30.50"
-            ).apply {
-                perLineSpace = 20
-            }
-        )
+//        add(
+//            TextParam(
+//                text = "折后价：$30.50"
+//            ).apply {
+//                perLineSpace = 20
+//            }
+//        )
     }
 }
