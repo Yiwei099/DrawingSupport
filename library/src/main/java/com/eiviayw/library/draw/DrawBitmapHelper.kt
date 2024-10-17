@@ -60,9 +60,11 @@ object DrawBitmapHelper {
 
         if (bitmapOption.isGravityDistributed()
             && bitmapOption.maxHeight != 0
-            && spaceProportion > 0.3
+            && spaceProportion > 0.2
         ) {
             handleElementBaseY(bitmapOption, result.first)
+            diffY = 0
+        } else {
             diffY = 0
         }
 

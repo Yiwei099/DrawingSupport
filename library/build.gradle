@@ -43,7 +43,7 @@ afterEvaluate {
                 from components.release
                 groupId = 'com.github.eiviayw'
                 artifactId = 'DrawingSupport'
-                version = '1.2.3-Alpha'
+                version = '1.2.4-Alpha'
 //                version = '1.1.8'
             }
         }
