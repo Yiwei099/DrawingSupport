@@ -56,16 +56,18 @@ object DrawBitmapHelper {
 
         var diffY = bitmapOption.diffContentY(result.second)
 
-        val spaceProportion = if(bitmapOption.maxHeight != 0) (diffY.toFloat() / bitmapOption.maxHeight.toFloat()) else 0f
+        val spaceProportion =
+            if (bitmapOption.maxHeight != 0) (diffY.toFloat() / bitmapOption.maxHeight.toFloat()) else 0f
 
-        if (bitmapOption.isGravityDistributed()
-            && bitmapOption.maxHeight != 0
-            && spaceProportion > 0.2
-        ) {
-            handleElementBaseY(bitmapOption, result.first)
-            diffY = 0
-        } else {
-            diffY = 0
+        if (bitmapOption.isGravityDistributed()) {
+            if (bitmapOption.maxHeight != 0 && spaceProportion > 0.2) {
+                //底部留白 > 0.2 时才处理
+                handleElementBaseY(bitmapOption, result.first)
+                diffY = 0
+            } else {
+                //否则不处理
+                diffY = 0
+            }
         }
 
         result.first.forEachIndexed loop@{ index, it ->
