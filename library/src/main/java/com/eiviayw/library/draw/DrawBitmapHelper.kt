@@ -420,6 +420,7 @@ object DrawBitmapHelper {
                                     else -> bitmapOption.getCenterX().minus(sourceItem.width.div(2))
                                 }
                             )
+                            setElementHeight(sourceItem.height)
                             setEndXValue(defaultStartX.plus(sourceItem.width))
                             setTextSize(sourceItem.size)
                             setFaceType(sourceItem.typeface)
