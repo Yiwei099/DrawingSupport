@@ -56,12 +56,17 @@ object DrawBitmapHelper {
 
         var diffY = bitmapOption.diffContentY(result.second)
 
-        if (bitmapOption.isGravityDistributed()){
-            handleElementBaseY(bitmapOption,result.first)
+        val spaceProportion = if(bitmapOption.maxHeight != 0) (diffY.toFloat() / bitmapOption.maxHeight.toFloat()) else 0f
+
+        if (bitmapOption.isGravityDistributed()
+            && bitmapOption.maxHeight != 0
+            && spaceProportion > 0.3
+        ) {
+            handleElementBaseY(bitmapOption, result.first)
             diffY = 0
         }
 
-        result.first.forEachIndexed loop@{index, it ->
+        result.first.forEachIndexed loop@{ index, it ->
             it.baseY += diffY
             mainPaint.reset()
             if (!effectItem(bitmapOption, ceil(it.baseY).toInt())) {
