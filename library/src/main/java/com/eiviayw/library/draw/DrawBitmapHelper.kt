@@ -60,9 +60,9 @@ object DrawBitmapHelper {
             if (bitmapOption.maxHeight != 0) (diffY.toFloat() / bitmapOption.maxHeight.toFloat()) else 0f
 
         if (bitmapOption.isGravityDistributed()) {
-            if (bitmapOption.maxHeight != 0 && spaceProportion > 0.2) {
-                //底部留白 > 0.2 时才处理
-                handleElementBaseY(bitmapOption, result.first)
+            if (bitmapOption.maxHeight != 0 && spaceProportion > bitmapOption.distributedCondition) {
+                //底部留白 > bitmapOption.distributedCondition 时才处理
+                handleElementBaseY(bitmapOption, result.first,result.second)
                 diffY = 0
             } else {
                 //否则不处理
@@ -825,16 +825,38 @@ object DrawBitmapHelper {
      */
     private fun handleElementBaseY(
         bitmapOption: BitmapOption,
-        elementList: List<BaseElement>
+        elementList: List<BaseElement>,
+        contentSumHeight: Int
     ) {
+
+        val firstMaxHeight = elementList.first().height + bitmapOption.topIndentation
+        val lastMaxHeight = elementList.last().height + elementList.last().perLineSpace
         //画布最大高度
-        val maxHeight = bitmapOption.maxHeight
-        val itemMaxHeight = (maxHeight / elementList.size).toFloat()
+        val maxHeight = bitmapOption.maxHeight - firstMaxHeight - lastMaxHeight
+        val maxContentHeight = contentSumHeight - firstMaxHeight - lastMaxHeight
         var tempSumY = 0f
         elementList.forEachIndexed { index, it ->
-            val itemNewBaseY = itemMaxHeight.times(index + 1)
-            it.baseY = (itemMaxHeight / 2) + (it.height / 2) + tempSumY
-            tempSumY = itemNewBaseY
+            tempSumY += when (index) {
+                0 -> {
+                    //第一个
+                    it.baseY = firstMaxHeight
+                    firstMaxHeight
+                }
+                elementList.size - 1 -> {
+                    //最后一个
+                    it.baseY = tempSumY + it.height.toFloat() + it.perLineSpace + elementList.first().perLineSpace
+                    lastMaxHeight.toFloat()
+                }
+                else -> {
+                    val contentHeight = it.height + it.perLineSpace
+                    val proportion = contentHeight.toFloat() / maxContentHeight
+                    val itemMaxHeight = maxHeight * proportion
+
+                    it.baseY = (itemMaxHeight / 2) + (it.height / 2) + tempSumY
+
+                    itemMaxHeight
+                }
+            }
         }
     }
 

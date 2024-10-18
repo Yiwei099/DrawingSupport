@@ -24,7 +24,8 @@ class BitmapOption(
     var maxHeight:Int = 0,//画布高度
     var gravity:Int = Constant.Companion.Gravity.TOP,//内容对齐方式：顶部/居中/底部，默认顶部 （只适用于固定画布高度的场景下）
     var followEffectItem:Boolean = false,//使用于固定画布高度的场景下：true - 画布剩余高度不足时终止绘制；
-    var config:Bitmap.Config = Bitmap.Config.RGB_565
+    var config:Bitmap.Config = Bitmap.Config.RGB_565,
+    var distributedCondition: Float = 0.0f
 ) {
     /**
      * 图片内容有效宽度
