@@ -536,7 +536,7 @@ class ReceiptProvide : BaseProvide(BitmapOption()) {
         ))
         val bitmap = BitmapFactory.decodeResource(
             MyApplication.getInstance().resources,
-            R.mipmap.wechat_qr_code
+            R.drawable.we_chat
         )
         BitmapUtils.getInstance().zoomBitmap(bitmap,bitmap.width.div(2).toDouble(),bitmap.height.div(2).toDouble())?.let {
             val byteArray = BitmapUtils.getInstance().compressBitmapToByteArray(it)

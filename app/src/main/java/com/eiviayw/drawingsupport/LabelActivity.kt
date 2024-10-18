@@ -8,6 +8,7 @@ import com.eiviayw.drawingsupport.databinding.ActivityLabelBinding
 import com.eiviayw.drawingsupport.label.LabelProvide
 import com.eiviayw.library.Constant
 import com.eiviayw.library.draw.BitmapOption
+import com.eiviayw.library.util.BitmapUtils
 
 class LabelActivity : AppCompatActivity() {
     private val viewBinding by lazy { ActivityLabelBinding.inflate(layoutInflater) }
@@ -61,6 +62,7 @@ class LabelActivity : AppCompatActivity() {
             bitmapOption = BitmapOption(
                 maxWidth = width,
                 maxHeight = height,
+//                topIndentation = 0f,
                 followEffectItem = viewBinding.cbFollow.isChecked,
                 gravity = if (viewBinding.rbTop.isChecked){
                     Constant.Companion.Gravity.TOP
@@ -72,13 +74,20 @@ class LabelActivity : AppCompatActivity() {
                     Constant.Companion.Gravity.BOTTOM
                 }
             )
-            val start = LabelProvide(bitmapOption).start()
-            val bitmap = BitmapFactory.decodeByteArray(
-                start,
-                0,
-                start.size
-            )
-            viewBinding.ivPreview.setImageBitmap(bitmap)
+                BitmapUtils.getInstance().zoomBitmap(
+                    BitmapFactory.decodeResource(this.resources, R.mipmap.barcode),
+                    240.0,
+                    50.0
+                )?.let {
+                    val start = LabelProvide(bitmapOption).start(it)
+                    val bitmap = BitmapFactory.decodeByteArray(
+                        start,
+                        0,
+                        start.size
+                    )
+                    viewBinding.ivPreview.setImageBitmap(bitmap)
+                }
+
         }
 
         viewBinding.rbGravity.setOnCheckedChangeListener { group, checkedId ->

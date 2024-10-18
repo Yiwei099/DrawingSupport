@@ -173,12 +173,12 @@ class LabelProvide(
         )
     }
 
-    fun start(): ByteArray {
-        val params = convertDrawParam()
+    fun start(bitmap: Bitmap): ByteArray {
+        val params = convertDrawParam(bitmap)
         return startDraw(params)
     }
 
-    private fun convertDrawParam() = mutableListOf<BaseParam>().apply {
+    private fun convertDrawParam(bitmap: Bitmap) = mutableListOf<BaseParam>().apply {
         add(
             TextParam(
                 text = "加拿大鹅旗舰店",
@@ -232,15 +232,14 @@ class LabelProvide(
 //                perLineSpace = 20
 //            }
 //        )
-        add(
-            TextParam(
+//        add(
+//            TextParam(
 //                text = "成分含量：棉+聚酯纤维聚酯纤维聚酯纤维聚酯纤维聚酯纤维"
-                text = "成分含量：hello word hello word hello word hello word"
-            ).apply {
+//            ).apply {
 //                size = 40f
-                perLineSpace = 20
-            }
-        )
+//                perLineSpace = 20
+//            }
+//        )
 //        add(
 //            TextParam(
 //                text = "产品标准：GB/T222-23454535454"
@@ -255,11 +254,31 @@ class LabelProvide(
                 perLineSpace = 20
             }
         )
+
+        add(
+            GraphicsParam(
+                compressBitmapToByteArray(bitmap),
+                bitmap.width,
+                bitmap.height
+            )
+        )
+
+//        add(
+//            TextParam(
+//                text = "434324234",
+//                align = Constant.Companion.Align.ALIGN_CENTER
+//            ).apply {
+//                perLineSpace = 20
+//                groupID = "image"
+//            }
+//        )
+
 //        add(
 //            TextParam(
 //                text = "折后价：$30.50"
 //            ).apply {
 //                perLineSpace = 20
+//                groupID = "image"
 //            }
 //        )
     }
