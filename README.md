@@ -1,5 +1,7 @@
 # DrawingSupport(一个绘制 **收据/标签/小票** 图片的工具)
 
+> [Readme_EN.md](https://github.com/Yiwei099/DrawingSupport/blob/master/README_EN.md)
+
 ## 诞生
 - 打印机品牌太多，SDK指令构造开发成本过高且文本模式打印效果不理想  
 - 打印机文本语言支持不一，海外有无法打印中文的打印机；部分语言或者符号无法打印或乱码  
