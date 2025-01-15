@@ -338,6 +338,9 @@ bitmap.recycle()
 
 ## 效果预览 
 > 具体使用细节请查阅 **MainActivity.kt***  
-![Image Text](https://github.com/Yiwei099/DrawingSupport/blob/master/app/src/main/res/drawable/receipt.png)
+![Image Text](https://github.com/Yiwei099/DrawingSupport/blob/master/app/src/main/res/mipmap-hdpi/receipt.png)
+
+## 联系我
+![Image Text](https://github.com/Yiwei099/DrawingSupport/blob/master/app/src/main/res/drawable/we_chat.jpg)
 
 ## Drawing Support by receipt(不定期更新)
