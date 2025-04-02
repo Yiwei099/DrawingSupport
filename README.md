@@ -1,5 +1,7 @@
 # DrawingSupport(一个绘制 **收据/标签/小票** 图片的工具)
 
+[![JitPack](https://jitpack.io/v/Yiwei099/DrawingSupport.svg)](https://jitpack.io/#Yiwei099/DrawingSupport)
+
 > [Readme_EN.md](https://github.com/Yiwei099/DrawingSupport/blob/master/README_EN.md)
 
 ## 诞生
